@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -25,12 +24,17 @@ class testController extends Controller
         ]);
 
         try {
-            // Send the message to RabbitMQ queue
+            // Send the message to RabbitMQ queue using injected service
             $this->rabbitMQService->sendMessageToQueue($queueName, $message);
 
             return response()->json(['status' => 'Message sent successfully'], 200);
         } catch (\Exception $e) {
-            \Log::error('Failed to send message: ' . $e->getMessage());
+            \Log::error('Failed to send message: ' . $e->getMessage(), [
+                'queue_name' => $queueName,
+                'message' => $message,
+                'exception' => $e,
+            ]);
+
             // Handle any exceptions that occur during message sending
             return response()->json(['error' => 'Failed to send message'], 500);
         }

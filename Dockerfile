@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libsocket6-perl 
 
-RUN docker-php-ext-install pdo pdo_mysql bcmath sockets
+RUN docker-php-ext-install pdo pdo_mysql bcmath sockets mbstring
 
 
 WORKDIR /var/www
