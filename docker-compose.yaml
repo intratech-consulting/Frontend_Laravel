@@ -1,0 +1,108 @@
+version: "3.8"
+
+services:
+
+  # Database
+  database:
+    image: mysql:8.0
+    environment: # Variables defined in .env
+      MYSQL_DATABASE: Hackathon_Desiderius
+      MYSQL_ROOT_PASSWORD: password
+    restart: always # Check need
+    ports: # Check need + port (if changed => also change in .env file)
+      - 3306:3306
+    volumes:
+      - db-data:/var/lib/mysql
+
+  # phpmyadmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8888:80'
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: password
+    depends_on:
+      - database
+  
+  #PHP Service
+  php:
+    build:
+      context: .
+      target: php
+      args:
+        - APP_ENV=${APP_ENV}
+    environment:
+      - APP_ENV=${APP_ENV}
+      - CONTAINER_ROLE=app
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    ports:
+      - 8000:8000
+    depends_on:
+      - database
+      - redis
+  
+ #Websocket Service
+  websocket:
+    build:
+      context: .
+      target: php
+      args:
+        - APP_ENV=${APP_ENV}
+    environment:
+      - APP_ENV=${APP_ENV}
+      - CONTAINER_ROLE=websocket
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    ports:
+      - 6001:6001
+    depends_on:
+      - database
+      - redis
+
+  # Redis Service
+  redis:
+    image: redis:alpine
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    restart: always
+    ports:
+      - 6379:6379
+
+  # Node Service
+  node:
+    build:
+      context: .
+      target: node
+    volumes:
+      - ./:/usr/src
+      - ./node_modules:/usr/src/node_modules
+    tty: true
+  
+  # Queue Service
+  queue:
+    build:
+      context: .
+      target: php
+      args:
+        - APP_ENV=${APP_ENV}
+    environment:
+      - APP_ENV=${APP_ENV}
+      - CONTAINER_ROLE=queue
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+
+  # Heartbeat Service 
+  heartbeat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+
+
+volumes:
+  db-data: 

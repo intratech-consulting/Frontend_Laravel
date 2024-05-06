@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Services\RabbitMQSendService;
+
+class ExampleController extends Controller
+{
+    protected $rabbitMQSendService;
+
+    public function __construct(RabbitMQSendService $rabbitMQSendService)
+    {
+        $this->rabbitMQSendService = $rabbitMQSendService;
+    }
+
+    public function sendMessage(Request $request)
+    {
+        $validatedData = $request->validate([
+            'message' => 'required|string|max:255',
+        ]);
+
+        $message = $validatedData['message'];
+
+        // Send message to RabbitMQ queue
+        $this->rabbitMQSendService->sendMessageToQueue('Frontend', $message);
+
+        return response()->json(['message' => 'Message sent to RabbitMQ'], 200);
+    }
+}

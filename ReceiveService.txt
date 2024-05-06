@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Services\RabbitMQReceiveService;
+
+class ExampleController extends Controller
+{
+    protected $rabbitMQReceiveService;
+
+    public function __construct(RabbitMQReceiveService $rabbitMQReceiveService)
+    {
+        $this->rabbitMQReceiveService = $rabbitMQReceiveService;
+    }
+
+    public function receiveMessage()
+    {
+        // Receive messages from RabbitMQ queue
+        $this->rabbitMQReceiveService->receiveMessagesFromQueue('Frontend');
+
+        return response()->json(['message' => 'Started receiving messages from RabbitMQ'], 200);
+    }
+}
