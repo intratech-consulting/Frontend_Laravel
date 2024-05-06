@@ -17,7 +17,12 @@ COPY . .
 
 COPY --from=composer:2.7.4 /usr/bin/composer /usr/bin/composer
 
-ENV PORT=8001
+COPY composer.json composer.lock ./
+RUN composer install --no-progress --no-interaction
+
+RUN composer require beyondcode/laravel-websockets
+
+ENV PORT=8000
 ENTRYPOINT [ "docker/entrypoint.sh" ]
 
 ##############################################################################

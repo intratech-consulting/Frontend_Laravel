@@ -129,5 +129,9 @@
                 </div>
             </div>
         </div>
+        <form method="GET" action="{{ route('test') }}">
+            @csrf
+            <button type="submit">Test Route</button>
+        </form>
     </body>
 </html>
