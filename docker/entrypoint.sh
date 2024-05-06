@@ -1,11 +1,10 @@
 #!/bin/bash
 
-if [ -f "vendor/autoload.php" ]; then
-    composer install --no-interaction --no-progress
+if [ ! -f "vendor/autoload.php" ]; then
+    composer install --no-progress --no-interaction
 fi
 
-: << COMMENT
-if [ -f ".env" ];then
+if [ ! -f ".env" ];then
     echo "Creating env file for env $APP_ENV"
     cp .env.example .env
 else
@@ -23,11 +22,9 @@ if [ "$role" = "app" ]; then
 
     php artisan serve --port=$PORT --host=0.0.0.0 --env=.env
     exec docker-php-entrypoint "$@"
-COMMENT
-
-if [ "$role" = "queue" ]; then
+elif [ "$role" = "queue" ]; then
     echo "Running the queue"
-    php /var/www/html/artisan queue:work --verbose --tries=3 --timeout=90
+    php /var/www/html/artisan queue:work --verbose --tries=3 --timeout=180
 elif [ "$role" = "websocket" ]; then
     echo "Running the websocket server"
     php artisan websockets:serve

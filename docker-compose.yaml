@@ -19,7 +19,7 @@ services:
     image: phpmyadmin/phpmyadmin
     restart: always
     ports:
-      - '8888:80'
+      - 8888:80
     environment:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: password
@@ -37,10 +37,11 @@ services:
       - APP_ENV=${APP_ENV}
       - CONTAINER_ROLE=app
     working_dir: /var/www
+    restart: always
     volumes:
       - ./:/var/www
     ports:
-      - 8000:8000
+      - 8001:8001
     depends_on:
       - database
       - redis
@@ -56,6 +57,7 @@ services:
       - APP_ENV=${APP_ENV}
       - CONTAINER_ROLE=websocket
     working_dir: /var/www
+    restart: always
     volumes:
       - ./:/var/www
     ports:
