@@ -50,5 +50,9 @@ We envision a world where hackathons serve as catalysts for positive change, dri
   </div>
 </section>
 
+
+@include('user.components.footer')
+
+
 </body>
 </html>

@@ -58,5 +58,8 @@
   </div>
 </div>
 
+
+@include('user.components.footer')
+
 </body>
 </html>
