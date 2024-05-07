@@ -8,7 +8,35 @@
 <body>
 @include('user.components.header')
 
-<h1>This is events</h1>
+                <div class="row center-lg">
+
+
+@foreach($event as $events)
+    <div class="rooms col col-2">
+        <img style="height:300px !important" width="400px" src="#" alt="" class="rooms-img">
+        <h3 class="room-title">Event at {{$events->location}}</h3>
+        <p class="room-text">{{$events->description}}</p>
+        <div>
+            <div class="details-container">
+                <img src="assets/img/check-square.svg" alt="tick" class="list-icon">
+                <p class="list-text">{{$events->max_registrations}} Registrations</p>
+            </div>
+            <div class="details-container">
+                <img src="assets/img/check-square.svg" alt="tick" class="list-icon">
+                <p class="list-text">{{$events->available_seats}} Seats Available</p>
+            </div>
+        </div>
+        <p class="amount-text">Hosted by {{$events->speaker_name}} from {{$events->speaker_company}}</p>
+        <p class="amount-text">Date: {{$events->date}}, Time: {{$events->start_time}} - {{$events->end_time}}</p>
+        <div class="buttons-container">
+            <a href="#" class="btn btn-ghost">View More</a>
+            <a href="#" class="btn btn-fill">Register</a>
+        </div>
+    </div>
+@endforeach
+       
+                   
+                </div>
 
 
 </body>

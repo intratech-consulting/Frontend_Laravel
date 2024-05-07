@@ -50,6 +50,8 @@ public function contact()
 
 public function events()
     {
-   return view('user.event');
+
+     $event = event::all();
+   return view('user.event', compact('events'));
     }
 }
