@@ -44,7 +44,6 @@ class RegisterController extends Controller
             'name' => $userData['first_name'] . ' ' . $userData['last_name'],
             'email' => $userData['email'],
             'password' => Hash::make($userData['password']),
-            // Add other fields here
             'telephone' => $userData['telephone'],
             'birthday' => $userData['birthday'],
             'country' => $userData['country'],
