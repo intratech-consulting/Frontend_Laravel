@@ -44,7 +44,7 @@ services:
       - 8000:8000
     depends_on:
       - database
-      - redis
+
   
  #Websocket Service
   websocket:
@@ -64,15 +64,6 @@ services:
       - 6001:6001
     depends_on:
       - database
-      - redis
-
-  # Redis Service
-  redis:
-    image: redis:alpine
-    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
-    restart: always
-    ports:
-      - 6379:6379
 
   # Node Service
   node:
@@ -83,20 +74,6 @@ services:
       - ./:/usr/src
       - ./node_modules:/usr/src/node_modules
     tty: true
-  
-  # Queue Service
-  queue:
-    build:
-      context: .
-      target: php
-      args:
-        - APP_ENV=${APP_ENV}
-    environment:
-      - APP_ENV=${APP_ENV}
-      - CONTAINER_ROLE=queue
-    working_dir: /var/www
-    volumes:
-      - ./:/var/www
 
   # Heartbeat Service 
   heartbeat:

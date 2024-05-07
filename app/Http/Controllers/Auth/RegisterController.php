@@ -13,6 +13,7 @@ class RegisterController extends Controller
 {
     public function showRegistrationForm()
     {
+        dd('test');
         return view('auth.register');
     }
  
@@ -35,7 +36,7 @@ class RegisterController extends Controller
             'company_id' => 'nullable|string|max:255',
             'source' => 'nullable|string|max:255',
             'user_role' => 'required|string|in:Speaker,Individual,Employee',
-            'invoice' => 'required|string|in:Yes',
+            'invoice' => 'required|string|in:Yes,No',
             'password' => 'required|string|min:8|confirmed',
         ]);
  
