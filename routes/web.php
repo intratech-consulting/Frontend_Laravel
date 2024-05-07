@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use Symfony\Component\Routing\RouteCollection;
 use App\Http\Controllers\testController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\headerController;
+use App\Http\Controllers\footerController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,9 +34,26 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware('guest')->group(function () {
+    Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('register', [RegisterController::class, 'register']);
+});
 
 Route::post('/send-message', [testController::class, 'sendMessage'])->name('send.message');
 Route::match(['get', 'post'], '/test', [testController::class, 'test'])->name('test');
+
+
+
+//header
+
+Route::get('/home', [headerController::class, 'home']);
+Route::get('/about', [headerController::class, 'about']);
+Route::get('/planning', [headerController::class, 'planning']);
+Route::get('/contact', [headerController::class, 'contact']);
+
+
+//footer
+Route::get('/privacy', [footerController::class, 'privacy']);
 
 
 require __DIR__.'/auth.php';
