@@ -13,16 +13,8 @@ class testController extends Controller
         $this->rabbitMQService = $rabbitMQService;
     }
 
-    public function sendMessage(Request $request)
+    public function sendMessage($queueName, $message)
     {
-        $queueName = 'frontend'; // Specify the queue name
-        $message = $request->input('message'); // Get the message from the request
-
-        // Validate the message (optional)
-        $request->validate([
-            'message' => 'required|string',
-        ]);
-
         try {
             // Send the message to RabbitMQ queue using injected service
             $this->rabbitMQService->sendMessageToQueue($queueName, $message);
@@ -40,8 +32,25 @@ class testController extends Controller
         }
     }
 
-    public function test()
+    public function test(Request $request)
     {
-        return view('test');
+        if ($request->isMethod('get'))
+        {
+            return view('test');
+        }
+        
+        $queueName = 'frontend';
+
+                // Validate the message
+        $request->validate([
+            'message' => 'required|string',
+        ]);
+
+            // Extract the message from the request
+        $message = $request->input('message');
+    
+            // Call sendMessage method to send the message
+        return $this->sendMessage($queueName, $message);
+
     }
 }

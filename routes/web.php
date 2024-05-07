@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
 
 
 Route::post('/send-message', [testController::class, 'sendMessage'])->name('send.message');
-Route::get('/test', [testController::class, 'test'])->name('test');
+Route::match(['get', 'post'], '/test', [testController::class, 'test'])->name('test');
+
 
 require __DIR__.'/auth.php';
