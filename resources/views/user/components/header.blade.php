@@ -13,6 +13,7 @@
   </div>
   <nav>
     <ul class="nav">
+      <li><a href="{{url('events')}}">Events</a></li>
       <li><a href="{{url('planning')}}">Planning</a></li>
       <li><a href="{{url('about')}}">About</a></li>
       <li><a href="{{url('contact')}}">Contact</a></li>

@@ -47,4 +47,9 @@ public function contact()
     {
    return view('user.contact');
     }
+
+public function events()
+    {
+   return view('user.event');
+    }
 }

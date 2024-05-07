@@ -40,9 +40,9 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [LoginController::class, 'login']);
 });
 
-Route::get('/register', function () {
-    dd('test');
-    return view('auth.register');
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register']);
 });
 
 
@@ -55,6 +55,7 @@ Route::match(['get', 'post'], '/test', [testController::class, 'test'])->name('t
 
 Route::get('/home', [headerController::class, 'home']);
 Route::get('/about', [headerController::class, 'about']);
+Route::get('/events', [headerController::class, 'events']);
 Route::get('/planning', [headerController::class, 'planning']);
 Route::get('/contact', [headerController::class, 'contact']);
 
