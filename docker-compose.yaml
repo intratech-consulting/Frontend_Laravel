@@ -4,7 +4,7 @@ services:
 
   # Database
   database:
-    image: mysql:5.7
+    image: container-registry.oracle.com/mysql/community-server:8.4
     environment: # Variables defined in .env
       MYSQL_DATABASE: Hackathon_Desiderius
       MYSQL_ROOT_PASSWORD: password
@@ -12,7 +12,22 @@ services:
     ports: # Check need + port (if changed => also change in .env file)
       - 3306:3306
     volumes:
-      - db-data:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
+    networks:
+      - backend
+    
+  # Apache Service
+  webserver:
+    image: nginx:latest
+    restart: always
+    ports:
+      - 9000:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf 
+    depends_on:
+      - php
+    networks:
+      - backend
 
   # phpmyadmin
   phpmyadmin:
@@ -42,8 +57,12 @@ services:
       - ./:/var/www
     ports:
       - 8000:8000
+    expose:
+      - 9000
     depends_on:
       - database
+    networks:
+      - backend
 
   
  #Websocket Service
@@ -64,6 +83,8 @@ services:
       - 6001:6001
     depends_on:
       - database
+    networks:
+      - backend
 
   # Node Service
   node:
@@ -84,4 +105,7 @@ services:
 
 
 volumes:
-  db-data: 
+  mysql-data: 
+
+networks:
+  backend:
