@@ -14,7 +14,7 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
-      - backend
+      - laravel_backend
     
   # Apache Service
   webserver:
@@ -27,7 +27,7 @@ services:
     depends_on:
       - php
     networks:
-      - backend
+      - laravel_backend
 
   # phpmyadmin
   phpmyadmin:
@@ -40,6 +40,8 @@ services:
       MYSQL_ROOT_PASSWORD: password
     depends_on:
       - database
+    networks:
+      - laravel_backend
   
   #PHP Service
   php:
@@ -50,6 +52,7 @@ services:
         - APP_ENV=${APP_ENV}
     environment:
       - APP_ENV=${APP_ENV}
+      - APP_KEY=${APP_KEY}
       - CONTAINER_ROLE=app
     working_dir: /var/www
     restart: always
@@ -62,39 +65,39 @@ services:
     depends_on:
       - database
     networks:
-      - backend
+      - laravel_backend
 
   
  #Websocket Service
-  #websocket:
-   # build:
-   #   context: .
-    #  target: php
-     # args:
-      #  - APP_ENV=${APP_ENV}
-    #environment:
-    #  - APP_ENV=${APP_ENV}
-    #  - CONTAINER_ROLE=websocket
-    #working_dir: /var/www
-    #restart: always
-    #volumes:
-    #  - ./:/var/www
-    #ports:
-     # - 6001:6001
-    #depends_on:
-    #  - database
-    #networks:
-    #  - backend
-
-  # Node Service
-  node:
+  websocket:
     build:
       context: .
-      target: node
+      target: php
+      args:
+        - APP_ENV=${APP_ENV}
+    environment:
+      - APP_ENV=${APP_ENV}
+      - CONTAINER_ROLE=websocket
+    working_dir: /var/www
+    restart: always
     volumes:
-      - ./:/usr/src
-      - ./node_modules:/usr/src/node_modules
-    tty: true
+      - ./:/var/www
+    ports:
+     - 6001:6001
+    depends_on:
+      - database
+    networks:
+      - laravel_backend
+
+  #Node Service
+  #node:
+   # build:
+    #  context: .
+     # target: node
+    #volumes:
+    #  - ./:/usr/src
+    #  - ./node_modules:/usr/src/node_modules
+    #tty: true
 
   # Heartbeat Service 
   heartbeat:
@@ -108,4 +111,5 @@ volumes:
   mysql-data: 
 
 networks:
-  backend:
+  laravel_backend:
+    driver: bridge

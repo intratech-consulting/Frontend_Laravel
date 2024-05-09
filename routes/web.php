@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\headerController;
 use App\Http\Controllers\footerController;
+use App\Http\Controllers\testrecieveController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,5 +64,8 @@ Route::get('/contact', [headerController::class, 'contact']);
 //footer
 Route::get('/privacy', [footerController::class, 'privacy']);
 
+
+//test display rabbit
+Route::get('/display', [testrecieveController::class, 'displayMessage'])->name('display.message');
 
 require __DIR__.'/auth.php';

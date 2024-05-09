@@ -47,6 +47,10 @@ public function planning()
 
 public function contact()
     {
+
+
+
+
    return view('user.contact');
     }
 
@@ -56,8 +60,6 @@ public function events()
 // Activate the planning RabbitMQ consumer
     $consumer = new RabbitMQConsumer();
     $consumer->consume();
-
-
 
      $event = event::all();
    return view('user.event', compact('events'));

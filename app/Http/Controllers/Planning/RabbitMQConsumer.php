@@ -1,3 +1,4 @@
+
 <?php
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -6,17 +7,22 @@ use App\Models\Event;
 
 class RabbitMQConsumer
 {
-    public function consume()
-    {
-        $connection = new AMQPStreamConnection('10.2.160.51', 15672, 'user', 'password');
-        $channel = $connection->channel();
-        
-        $channel->queue_declare('planning', false, true, false, false);
-        
-        $callback = function ($msg) {
-            $xml = simplexml_load_string($msg->body);
-            $events = $xml->xpath('//event');
-            foreach ($events as $eventData) {
+   public function consume()
+{
+    $connection = new AMQPStreamConnection('10.2.160.51', 15672, 'user', 'password');
+    $channel = $connection->channel();
+    
+    $channel->queue_declare('test', false, true, false, false);
+    
+    $callback = function ($msg) {
+        $xml = simplexml_load_string($msg->body);
+
+        // Display the XML content
+        echo "Received XML:\n";
+        echo $xml->asXML(); // Echo the XML content
+
+        $events = $xml->xpath('//event');
+        foreach ($events as $eventData) {
             $event = new Event();
             $event->date = Carbon::createFromFormat('Y-m-d', (string) $eventData->date)->toDateString();
             $event->start_time = (string) $eventData->start_time;
@@ -29,19 +35,20 @@ class RabbitMQConsumer
             $event->available_seats = (int) $eventData->available_seats;
             $event->description = (string) $eventData->description;
             $event->save();
-            }
-            
-            echo 'Events saved successfully', "\n";
-            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-        };
-
-        $channel->basic_consume('planning', '', false, false, false, false, $callback);
-
-        while (count($channel->callbacks)) {
-            $channel->wait();
         }
 
-        $channel->close();
-        $connection->close();
+        echo 'Events saved successfully', "\n";
+        $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+    };
+
+    $channel->basic_consume('test', '', false, false, false, false, $callback);
+
+    while (count($channel->callbacks)) {
+        $channel->wait();
     }
+
+    $channel->close();
+    $connection->close();
+}
+
 }
