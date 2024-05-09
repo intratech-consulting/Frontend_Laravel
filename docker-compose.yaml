@@ -66,25 +66,25 @@ services:
 
   
  #Websocket Service
-  websocket:
-    build:
-      context: .
-      target: php
-      args:
-        - APP_ENV=${APP_ENV}
-    environment:
-      - APP_ENV=${APP_ENV}
-      - CONTAINER_ROLE=websocket
-    working_dir: /var/www
-    restart: always
-    volumes:
-      - ./:/var/www
-    ports:
-      - 6001:6001
-    depends_on:
-      - database
-    networks:
-      - backend
+  #websocket:
+   # build:
+   #   context: .
+    #  target: php
+     # args:
+      #  - APP_ENV=${APP_ENV}
+    #environment:
+    #  - APP_ENV=${APP_ENV}
+    #  - CONTAINER_ROLE=websocket
+    #working_dir: /var/www
+    #restart: always
+    #volumes:
+    #  - ./:/var/www
+    #ports:
+     # - 6001:6001
+    #depends_on:
+    #  - database
+    #networks:
+    #  - backend
 
   # Node Service
   node:

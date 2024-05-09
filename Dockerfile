@@ -1,6 +1,9 @@
 # Use PHP 8.3 FPM image as the base
 FROM php:8.3-fpm as php
 
+# Install Git
+RUN apt-get update && apt-get install -y git
+
 # Install additional dependencies
 RUN apt-get update && apt-get install -y \
     unzip \
@@ -28,7 +31,7 @@ COPY composer.json composer.lock ./
 RUN composer install --no-progress --no-interaction
 
 # Install Laravel Websockets if needed
-RUN composer require beyondcode/laravel-websockets
+RUN composer require beyondcode/laravel-websockets -w
 
 # Set environment variables if needed
 ENV PORT=8000
