@@ -21,12 +21,6 @@ class testController extends Controller
 
             return response()->json(['status' => 'Message sent successfully'], 200);
         } catch (\Exception $e) {
-            \Log::error('Failed to send message: ' . $e->getMessage(), [
-                'queue_name' => $queueName,
-                'message' => $message,
-                'exception' => $e,
-            ]);
-
             // Handle any exceptions that occur during message sending
             return response()->json(['error' => 'Failed to send message'], 500);
         }
@@ -50,7 +44,7 @@ class testController extends Controller
         $message = $request->input('message');
     
             // Call sendMessage method to send the message
-        return $this->sendMessage($queueName, $message);
+         $this->sendMessage($queueName, $message);
 
     }
 }

@@ -8,13 +8,35 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+use App\Services\RabbitMQSendService;
+
  
 class RegisterController extends Controller
 {
+    protected $rabbitMQService;
+
+    public function __construct(RabbitMQSendService $rabbitMQService)
+    {
+        $this->rabbitMQService = $rabbitMQService;
+    }
+
+    public function sendMessage($queueName, $message)
+    {
+        try {
+            // Send the message to RabbitMQ queue using injected service
+            $this->rabbitMQService->sendMessageToQueue($queueName, $message);
+
+            return response()->json(['status' => 'Message sent successfully'], 200);
+        } catch (\Exception $e) {
+            // Handle any exceptions that occur during message sending
+            return response()->json(['error' => 'Failed to send message'], 500);
+        }
+    }
+
     public function showRegistrationForm()
     {
         dd('test');
-        return view('register');
+        return view('auth.register');
     }
  
     public function register(Request $request)
@@ -59,55 +81,16 @@ class RegisterController extends Controller
             'user_role' => $userData['user_role'],
             'invoice' => $userData['invoice'],
         ]);
+
+        $queueName = 'frontend';
  
         // Convert data to XML
-        $xmlData = $this->arrayToXml($userData);
- 
-        // Connect to RabbitMQ
-        $connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
-        $channel = $connection->channel();
- 
-        // Declare exchange
-        $exchange = 'register_exchange';
-        $channel->exchange_declare($exchange, 'direct', false, true, false);
- 
-        // Publish registration data to RabbitMQ
-        $message = new AMQPMessage($xmlData);
-        $channel->basic_publish($message, $exchange);
- 
-        // Close RabbitMQ connection
-        $channel->close();
-        $connection->close();
- 
+        $message = $this->arrayToXml($userData);
+
+        dd('message');
+        
+        $this->sendMessage($queueName, $message);
         // Redirect after registration
-        return redirect('/home'); // Adjust this to your desired redirect path
-    }
- 
-    // Helper function to convert array to XML
-    private function arrayToXml($array, $rootElement = null, $xml = null)
-    {
-        $_xml = $xml;
- 
-        // If there is no root element, create it
-        if ($_xml === null) {
-            $_xml = new \SimpleXMLElement($rootElement !== null ? $rootElement : '<root/>');
-        }
- 
-        // Loop through the array
-        foreach ($array as $key => $value) {
-            // If the key is numeric, prepend 'item'
-            if (is_numeric($key)) {
-                $key = "item{$key}";
-            }
- 
-            // Add the key-value pair to the XML
-            if (is_array($value)) {
-                $this->arrayToXml($value, $key, $_xml->addChild($key));
-            } else {
-                $_xml->addChild($key, htmlspecialchars($value));
-            }
-        }
- 
-        return $_xml->asXML();
-    }
+        return redirect(url('/')); // Adjust this to your desired redirect path
+    }    
 }

@@ -1,4 +1,7 @@
-FROM php:8.1 as php
+FROM php:8.3 as php
+
+# Install PHP-FPM package for PHP 8.3
+RUN apt-get update && apt-get install -y php8.3-fpm
 
 RUN apt-get update && apt-get install -y \
     unzip \

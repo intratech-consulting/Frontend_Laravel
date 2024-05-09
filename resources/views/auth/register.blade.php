@@ -1,7 +1,6 @@
 <x-guest-layout>
 <h1>Debugging Registration Form</h1>
     <form method="POST" action="{{ route('register') }}">
-    {{ csrf_field() }}
 
         <!-- First Name -->
         <div>
