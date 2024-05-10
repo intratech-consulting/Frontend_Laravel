@@ -56,7 +56,7 @@ services:
       - CONTAINER_ROLE=app
     working_dir: /var/www
     restart: always
-    command: php-fpm
+    command: php-fpm -F -R
     volumes:
       - ./:/var/www
     ports:

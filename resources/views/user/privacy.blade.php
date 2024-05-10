@@ -5,6 +5,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy</title>
   <link rel="stylesheet" href="user/privacy.css">
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+    }
+
+    .privacy-container {
+      padding: 50px;
+      max-width: 994px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center; /* Centers vertically */
+      align-items: center; /* Centers horizontally */
+      margin: 0 auto; /* Centers horizontally within parent */
+    }
+
+    .privacy-title {
+      color: #1f1f1f;
+      width: 100%;
+      font: 700 29px Raleway, sans-serif;
+    }
+
+    @media (max-width: 991px) {
+      .privacy-title {
+        max-width: 100%;
+      }
+    }
+
+    .privacy-content {
+      color: #313131;
+      letter-spacing: 0.6px;
+      margin-top: 44px;
+      width: 100%;
+      font: 400 15px/26px Public Sans, -apple-system, Roboto, Helvetica, sans-serif;
+    }
+
+    @media (max-width: 991px) {
+      .privacy-content {
+        max-width: 100%;
+        margin-top: 40px;
+      }
+    }
+
+  </style>
 </head>
 <body>
 
