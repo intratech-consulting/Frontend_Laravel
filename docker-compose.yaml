@@ -17,7 +17,7 @@ services:
       - laravel_backend
     
   # Apache Service
-  webserver:
+  nginx:
     image: nginx:latest
     restart: always
     ports:
@@ -31,11 +31,11 @@ services:
       - laravel_backend
 
  # Apache Service
-  nginx_laravel:
+  webserver:
     image: nginx:latest
     restart: always
     ports:
-      - "9999:80"
+      - 9999:80
     volumes:
       - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf #works
       - ./public:/usr/share/nginx/html

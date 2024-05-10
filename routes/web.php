@@ -26,6 +26,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/test', function () {
+    dd('this is a test');
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -67,5 +71,9 @@ Route::get('/privacy', [footerController::class, 'privacy']);
 
 //test display rabbit
 Route::get('/display', [testrecieveController::class, 'displayMessage'])->name('display.message');
+
+Route::fallback(function () {
+    abort(404, 'Page not found');
+});
 
 require __DIR__.'/auth.php';
