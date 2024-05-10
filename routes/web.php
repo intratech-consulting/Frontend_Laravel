@@ -5,11 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use Symfony\Component\Routing\RouteCollection;
 use App\Http\Controllers\testController;
-use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\headerController;
 use App\Http\Controllers\footerController;
-use App\Http\Controllers\testrecieveController;
+use App\Http\Controllers\AMQPReceiveTesterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,15 +39,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login']);
-});
-
-Route::middleware('guest')->group(function () {
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [RegisterController::class, 'register']);
-});
 
 
 Route::post('/send-message', [testController::class, 'sendMessage'])->name('send.message');
@@ -70,7 +60,7 @@ Route::get('/privacy', [footerController::class, 'privacy']);
 
 
 //test display rabbit
-Route::get('/display', [testrecieveController::class, 'displayMessage'])->name('display.message');
+Route::get('/display', [AMQPReceiveTesterController::class, 'displayMessage'])->name('display.message');
 
 Route::fallback(function () {
     abort(404, 'Page not found');

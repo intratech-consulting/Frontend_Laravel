@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\RabbitMQReceiveService;
 
-class ReceiveController extends Controller
+class AMQPReceiveTesterController extends Controller
 {
     protected $rabbitMQService;
 

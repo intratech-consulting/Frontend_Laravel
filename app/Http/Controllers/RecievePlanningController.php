@@ -1,21 +1,22 @@
-
 <?php
 
+namespace App\Http\Controllers;
 
-
+use Illuminate\Http\Request;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use Illuminate\Support\Facades\DB;
 use App\Models\Event;
 
-class RabbitMQConsumer extends Controller
+class RecievePlanningController extends Controller
 {
-   public function consume()
+    
+public function consume()
 {
     $connection = new AMQPStreamConnection('10.2.160.51', 15672, 'user', 'password');
     $channel = $connection->channel();
     
-    $channel->queue_declare('test', false, true, false, false);
+    $channel->queue_declare('planning', false, true, false, false);
     
     $callback = function ($msg) {
         $xml = simplexml_load_string($msg->body);
@@ -44,7 +45,7 @@ class RabbitMQConsumer extends Controller
         $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
     };
 
-    $channel->basic_consume('test', '', false, false, false, false, $callback);
+    $channel->basic_consume('planning', '', false, false, false, false, $callback);
 
     while (count($channel->callbacks)) {
         $channel->wait();
@@ -53,5 +54,6 @@ class RabbitMQConsumer extends Controller
     $channel->close();
     $connection->close();
 }
+
 
 }
