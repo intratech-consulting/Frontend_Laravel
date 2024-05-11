@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
-use App\Services\RabbitMQSendService;
+use App\Services\RabbitMQSendToExhangeService;
+
 
 
 class RegisteredUserController extends Controller
@@ -21,36 +22,31 @@ class RegisteredUserController extends Controller
      * Display the registration view.
      */
 
-    protected $rabbitMQService;
+     protected $rabbitMQService;
 
-    public function __construct(RabbitMQSendService $rabbitMQService)
-    {
-        $this->rabbitMQService = $rabbitMQService;
-    }
-
-    public function sendMessage($queueName, $message)
-    {
-        try {
-            // Send the message to RabbitMQ queue using injected service
-            $this->rabbitMQService->sendMessageToQueue($queueName, $message);
-
-            return response()->json(['status' => 'Message sent successfully'], 200);
-        } catch (\Exception $e) {
-            // Handle any exceptions that occur during message sending
-            return response()->json(['error' => 'Failed to send message'], 500);
-        }
-    }
+     public function __construct(RabbitMQSendToExhangeService $rabbitMQService)
+     {
+         $this->rabbitMQService = $rabbitMQService;
+     }
+ 
+     public function sendMessageToTopic($routingKey, $message)
+     {
+         try{
+             // Send message to the amq.topic exchange using RabbitMQSendService
+             $this->rabbitMQService->sendMessageToTopic($routingKey, $message);
+ 
+             return response()->json(['message' => 'Message sent successfully'], 200);
+         } catch (\Exception $e) {
+             return response()->json(['error' => $e->getMessage()], 500);
+         }
+     }
 
     public function create(): View
     {
         return view('auth.register');
     }
 
-    /**
-     * Handle an incoming registration request.
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
+
     public function store(Request $request): RedirectResponse
     {
         dd('test');
@@ -117,12 +113,13 @@ class RegisteredUserController extends Controller
         $message = $xmlMessage->asXML();
         dd($message);
         // Send message to RabbitMQ
-        $queueName = 'frontend';
-        $this->sendMessage($queueName, $message);
+        $routingKey = 'user.frontend';
 
-        event(new Registered($user));
+        $this->sendMessageToTopic($routingKey, $message);
 
-        Auth::login($user);
+        //event(new Registered($user));
+
+       // Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME);
     }

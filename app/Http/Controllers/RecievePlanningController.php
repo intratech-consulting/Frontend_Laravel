@@ -7,53 +7,58 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use Illuminate\Support\Facades\DB;
 use App\Models\Event;
+use Carbon\Carbon;
 
 class RecievePlanningController extends Controller
 {
     
-public function consume()
-{
-    $connection = new AMQPStreamConnection('10.2.160.51', 15672, 'user', 'password');
-    $channel = $connection->channel();
-    
-    $channel->queue_declare('planning', false, true, false, false);
-    
-    $callback = function ($msg) {
-        $xml = simplexml_load_string($msg->body);
+    public function consume()
+    {
+        // Establish connection to RabbitMQ
+        $connection = new AMQPStreamConnection('10.2.160.51', 5672, 'user', 'password');
+        $channel = $connection->channel();
+        
+        // Declare the queue
+        $channel->queue_declare('frontend', false, true, false, false);
+        
+        // Bind the queue to the exchange with the routing key 'event.planning'
+        $channel->queue_bind('frontend', 'amq.topic', 'event.planning');
 
-        // Display the XML content
-        echo "Received XML:\n";
-        echo $xml->asXML(); // Echo the XML content
-
-        $events = $xml->xpath('//event');
-        foreach ($events as $eventData) {
-            $event = new Event();
-            $event->date = Carbon::createFromFormat('Y-m-d', (string) $eventData->date)->toDateString();
-            $event->start_time = (string) $eventData->start_time;
-            $event->end_time = (string) $eventData->end_time;
-            $event->location = (string) $eventData->location;
-            $event->speaker_name = (string) $eventData->speaker->name;
-            $event->speaker_email = (string) $eventData->speaker->email;
-            $event->speaker_company = (string) $eventData->speaker->company;
-            $event->max_registrations = (int) $eventData->max_registrations;
-            $event->available_seats = (int) $eventData->available_seats;
-            $event->description = (string) $eventData->description;
-            $event->save();
+        echo " [*] Waiting for messages. To exit press CTRL+C\n";
+        
+        $callback = function ($msg) {
+            $xml = simplexml_load_string($msg->body);
+    
+            $events = $xml->xpath('//event');
+            foreach ($events as $eventData) {
+                $event = new Event();
+                $event->date = Carbon::createFromFormat('Y-m-d', (string) $eventData->date)->toDateString();
+                $event->start_time = (string) $eventData->start_time;
+                $event->end_time = (string) $eventData->end_time;
+                $event->location = (string) $eventData->location;
+                $event->speaker_name = (string) $eventData->speaker->name;
+                $event->speaker_email = (string) $eventData->speaker->email;
+                $event->speaker_company = (string) $eventData->speaker->company;
+                $event->max_registrations = (int) $eventData->max_registrations;
+                $event->available_seats = (int) $eventData->available_seats;
+                $event->description = (string) $eventData->description;
+                $event->save();
+            }
+    
+            echo 'Events saved successfully', "\n";
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+        };
+    
+        // Set up consumer to receive messages from the queue
+        $channel->basic_consume('frontend', '', false, false, false, false, $callback);
+    
+        // Start consuming messages
+        while (count($channel->callbacks)) {
+            $channel->wait();
         }
-
-        echo 'Events saved successfully', "\n";
-        $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-    };
-
-    $channel->basic_consume('planning', '', false, false, false, false, $callback);
-
-    while (count($channel->callbacks)) {
-        $channel->wait();
+    
+        // Close channel and connection
+        $channel->close();
+        $connection->close();
     }
-
-    $channel->close();
-    $connection->close();
-}
-
-
 }

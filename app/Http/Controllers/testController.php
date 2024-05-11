@@ -3,26 +3,27 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\RabbitMQSendService;
+use App\Services\RabbitMQSendToExhangeService;
+
 
 class testController extends Controller
 {
     protected $rabbitMQService;
 
-    public function __construct(RabbitMQSendService $rabbitMQService)
+    public function __construct(RabbitMQSendToExhangeService $rabbitMQService)
     {
         $this->rabbitMQService = $rabbitMQService;
     }
 
-    public function sendMessage($queueName, $message)
+    public function sendMessageToTopic($routingKey, $message)
     {
-        try {
-            // Send the message to RabbitMQ queue using injected service
-            $this->rabbitMQService->sendMessageToQueue($queueName, $message);
+        try{
+            // Send message to the amq.topic exchange using RabbitMQSendService
+            $this->rabbitMQService->sendMessageToTopic($routingKey, $message);
 
-            return response()->json(['status' => 'Message sent successfully'], 200);
+            return response()->json(['message' => 'Message sent successfully'], 200);
         } catch (\Exception $e) {
-            // Handle any exceptions that occur during message sending
-            return response()->json(['error' => 'Failed to send message'], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -33,7 +34,7 @@ class testController extends Controller
             return view('test');
         }
         
-        $queueName = 'frontend';
+        $routingKey = 'user.frontend';
 
                 // Validate the message
         $request->validate([
@@ -44,7 +45,10 @@ class testController extends Controller
         $message = $request->input('message');
     
             // Call sendMessage method to send the message
-         $this->sendMessage($queueName, $message);
+         $this->sendMessageToTopic($routingKey, $message);
+
+        return redirect()->back()->with('success', 'Form submitted successfully!');
+
 
     }
 }

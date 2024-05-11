@@ -1,57 +1,64 @@
-
 <?php
+namespace App\Http\Controllers\Planning;
 
-
-
+//require_once __DIR__ . '/vendor/autoload.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
-use PhpAmqpLib\Message\AMQPMessage;
-use Illuminate\Support\Facades\DB;
-use App\Models\Event;
 
-class RabbitMQConsumer extends Controller
-{
-   public function consume()
-{
-    $connection = new AMQPStreamConnection('10.2.160.51', 15672, 'user', 'password');
-    $channel = $connection->channel();
-    
-    $channel->queue_declare('test', false, true, false, false);
-    
-    $callback = function ($msg) {
+
+$connection = new AMQPStreamConnection('10.2.160.51', 5672, 'user', 'password');
+$channel = $connection->channel();
+
+$channel->queue_declare('frontend', false, false, false, false);
+
+// Bind the queue to the exchange with the routing key 'event.planning'
+$channel->queue_bind('frontend', 'amq.topic', 'event.planning');
+
+echo " [*] Waiting for messages. To exit press CTRL+C\n";
+
+$callback = function ($msg) {
+    try {
         $xml = simplexml_load_string($msg->body);
 
-        // Display the XML content
-        echo "Received XML:\n";
-        echo $xml->asXML(); // Echo the XML content
+        // Check if the XML has the correct structure
+        if ($xml->getName() === 'event') {
+            // Extract data from the XML
+            $id = (string) $xml->id;
+            $date = (string) $xml->date;
+            $start_time = (string) $xml->start_time;
+            $end_time = (string) $xml->end_time;
+            $location = (string) $xml->location;
+            $description = (string) $xml->description;
+            $max_registrations = (int) $xml->max_registrations;
+            $available_seats = (int) $xml->available_seats;
 
-        $events = $xml->xpath('//event');
-        foreach ($events as $eventData) {
-            $event = new Event();
-            $event->date = Carbon::createFromFormat('Y-m-d', (string) $eventData->date)->toDateString();
-            $event->start_time = (string) $eventData->start_time;
-            $event->end_time = (string) $eventData->end_time;
-            $event->location = (string) $eventData->location;
-            $event->speaker_name = (string) $eventData->speaker->name;
-            $event->speaker_email = (string) $eventData->speaker->email;
-            $event->speaker_company = (string) $eventData->speaker->company;
-            $event->max_registrations = (int) $eventData->max_registrations;
-            $event->available_seats = (int) $eventData->available_seats;
-            $event->description = (string) $eventData->description;
-            $event->save();
+            // Process the extracted data as needed
+            echo "Received Event ID: $id\n";
+            echo "Date: $date\n";
+            echo "Start Time: $start_time\n";
+            echo "End Time: $end_time\n";
+            echo "Location: $location\n";
+            echo "Description: $description\n";
+            echo "Max Registrations: $max_registrations\n";
+            echo "Available Seats: $available_seats\n";
+
+            // Acknowledge the message
+            $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
+        } else {
+            echo "Received invalid XML format: {$xml->getName()}\n";
         }
-
-        echo 'Events saved successfully', "\n";
-        $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
-    };
-
-    $channel->basic_consume('test', '', false, false, false, false, $callback);
-
-    while (count($channel->callbacks)) {
-        $channel->wait();
+    } catch (Exception $e) {
+        // Handle exceptions
+        echo 'Error: ', $e->getMessage(), "\n";
     }
+};
 
-    $channel->close();
-    $connection->close();
+$channel->basic_consume('frontend', '', false, false, false, false, $callback);
+
+while ($channel->is_consuming()) {
+    $channel->wait();
 }
 
-}
+$channel->close();
+$connection->close();
+
+?>

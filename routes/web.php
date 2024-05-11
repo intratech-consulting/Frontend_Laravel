@@ -22,12 +22,10 @@ use App\Http\Controllers\AMQPReceiveTesterController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('user.home');
 });
 
-Route::get('/test', function () {
-    dd('this is a test');
-});
+Route::post('/send-message-to-topic', [testController::class, 'sendMessageToTopic'])->name('send_message_to_topic');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -40,8 +38,6 @@ Route::middleware('auth')->group(function () {
 });
 
 
-
-Route::post('/send-message', [testController::class, 'sendMessage'])->name('send.message');
 Route::match(['get', 'post'], '/test', [testController::class, 'test'])->name('test');
 
 
