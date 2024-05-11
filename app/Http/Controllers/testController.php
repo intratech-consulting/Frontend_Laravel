@@ -106,10 +106,7 @@ class testController extends Controller
 
     public function test(Request $request)
     {
-        if ($request->isMethod('get'))
-        {
-            return view('test');
-        }
+        dd('test');
         
         $routingKey = 'user.frontend';
 
