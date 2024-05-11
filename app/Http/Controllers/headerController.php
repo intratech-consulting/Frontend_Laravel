@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Planning\RabbitMQConsumer;
+use App\Http\Controllers\RecievePlanningController;
 
- class headerController
+
+ class headerController extends Controller
 {
      public function about()
     {
@@ -47,6 +48,10 @@ public function planning()
 
 public function contact()
     {
+
+
+
+
    return view('user.contact');
     }
 
@@ -54,10 +59,8 @@ public function events()
     {
 
 // Activate the planning RabbitMQ consumer
-    $consumer = new RabbitMQConsumer();
+    $consumer = new RecievePlanningController();
     $consumer->consume();
-
-
 
      $event = event::all();
    return view('user.event', compact('events'));

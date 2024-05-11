@@ -1,1 +1,35 @@
+name: Deploy to Development
 
+on:
+  push:
+    branches:
+      - development
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy frontend to dev
+    runs-on: [self-hosted]
+    environment: development
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+    
+    steps:
+      - name: Deploy new version
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USER }}
+          password: ${{ env.SSH_PASSWORD }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          port: ${{ env.SSH_PORT }}
+          script: |
+            cd ~/TestServer/frontend/Laravel
+            docker compose down
+            git checkout development
+            git pull
+            docker compose up -d

@@ -5,10 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use Symfony\Component\Routing\RouteCollection;
 use App\Http\Controllers\testController;
-use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\headerController;
 use App\Http\Controllers\footerController;
+use App\Http\Controllers\AMQPReceiveTesterController;
+use App\Http\Controllers\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,8 +23,10 @@ use App\Http\Controllers\footerController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('user.home');
 });
+
+Route::post('/send-message-to-topic', [testController::class, 'sendMessageToTopic'])->name('send_message_to_topic');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -35,18 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login']);
-});
 
-Route::middleware('guest')->group(function () {
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [RegisterController::class, 'register']);
-});
-
-
-Route::post('/send-message', [testController::class, 'sendMessage'])->name('send.message');
 Route::match(['get', 'post'], '/test', [testController::class, 'test'])->name('test');
 
 
@@ -63,5 +55,14 @@ Route::get('/contact', [headerController::class, 'contact']);
 //footer
 Route::get('/privacy', [footerController::class, 'privacy']);
 
+
+//test display rabbit
+Route::get('/display', [AMQPReceiveTesterController::class, 'displayMessage'])->name('display.message');
+
+Route::fallback(function () {
+    abort(404, 'Page not found');
+});
+
+Route::post('/test', [testController::class, 'register'])->name('register_test');
 
 require __DIR__.'/auth.php';
