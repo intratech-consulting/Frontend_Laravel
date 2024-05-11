@@ -63,6 +63,9 @@
 
     .nav li {
       margin-right: 10px;
+      padding: 8px;
+      font-weight: bold;
+
     }
 
     .nav li:last-child {
@@ -74,6 +77,11 @@
       text-decoration: none;
     }
 
+.connect
+{
+background-color: #e30613;
+border-radius: 3px
+}
   </style>
 </head>
 <body>
@@ -89,6 +97,8 @@
       <li><a href="{{url('planning')}}">Planning</a></li>
       <li><a href="{{url('about')}}">About</a></li>
       <li><a href="{{url('contact')}}">Contact</a></li>
+      <li class="connect"><a href="{{ route('login') }}">Login</a></li>
+      <li class="connect"><a href="{{ route('register') }}">Register</a></li>
     </ul>
   </nav>
 </header>
