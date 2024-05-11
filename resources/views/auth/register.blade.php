@@ -1,9 +1,16 @@
-<x-guest-layout>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+@include('user.components.header')
 
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
-        <!-- First Name -->
-        <div>
+<form method="POST" action="{{ route('register_test') }}">
+    @csrf
+    <div>
             <x-input-label for="first_name" :value="__('First Name')" />
             <x-text-input id="first_name" class="block mt-1 w-full" type="text" name="first_name" :value="old('first_name')" required autofocus />
             <x-input-error :messages="$errors->get('first_name')" class="mt-2" />
@@ -74,37 +81,6 @@
             <x-input-error :messages="$errors->get('house_number')" class="mt-2" />
         </div>
 
-        <!-- Company Email -->
-        <div class="mt-4">
-            <x-input-label for="company_email" :value="__('Company Email')" />
-            <x-text-input id="company_email" class="block mt-1 w-full" type="email" name="company_email" :value="old('company_email')" />
-            <x-input-error :messages="$errors->get('company_email')" class="mt-2" />
-        </div>
-
-        <!-- Company ID -->
-        <div class="mt-4">
-            <x-input-label for="company_id" :value="__('Company ID')" />
-            <x-text-input id="company_id" class="block mt-1 w-full" type="text" name="company_id" :value="old('company_id')" />
-            <x-input-error :messages="$errors->get('company_id')" class="mt-2" />
-        </div>
-
-        <!-- Source -->
-        <div class="mt-4">
-            <x-input-label for="source" :value="__('Source')" />
-            <x-text-input id="source" class="block mt-1 w-full" type="text" name="source" :value="old('source')" />
-            <x-input-error :messages="$errors->get('source')" class="mt-2" />
-        </div>
-
-        <!-- User Role -->
-        <div class="mt-4">
-            <x-input-label for="user_role" :value="__('User Role')" />
-            <select id="user_role" name="user_role" class="block mt-1 w-full">
-                <option value="Speaker">Speaker</option>
-                <option value="Individual">Individual</option>
-                <option value="Employee">Employee</option>
-            </select>
-            <x-input-error :messages="$errors->get('user_role')" class="mt-2" />
-        </div>
 
         <!-- Invoice -->
         <div class="mt-4">
@@ -134,5 +110,8 @@
             </x-primary-button>
         </div>
     </form>
-</x-guest-layout>
+</form>
+    @include('user.components.footer')
 
+</body>
+</html>

@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\headerController;
 use App\Http\Controllers\footerController;
 use App\Http\Controllers\AMQPReceiveTesterController;
+use App\Http\Controllers\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,5 +62,7 @@ Route::get('/display', [AMQPReceiveTesterController::class, 'displayMessage'])->
 Route::fallback(function () {
     abort(404, 'Page not found');
 });
+
+Route::post('/test', [testController::class, 'register'])->name('register_test');
 
 require __DIR__.'/auth.php';
