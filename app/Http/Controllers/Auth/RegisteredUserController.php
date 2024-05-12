@@ -9,6 +9,8 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Illuminate\Routing\Controller;
+
 
 
 
@@ -32,6 +34,12 @@ class RegisteredUserController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function create()
+{
+    return view('auth.register');
+}
+
 
     public function register(Request $request)
     {

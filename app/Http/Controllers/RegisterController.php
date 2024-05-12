@@ -14,8 +14,6 @@ use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use App\Services\RabbitMQSendToExhangeService;
 
-
-
 class RegisterController extends Controller
 {
     /**
