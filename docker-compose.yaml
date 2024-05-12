@@ -10,7 +10,7 @@ services:
       MYSQL_ROOT_PASSWORD: password
     restart: always # Check need
     ports: # Check need + port (if changed => also change in .env file)
-      - 3306:3306
+      - 3307:3306
     volumes:
       - frontend-db-data:/var/lib/mysql
     networks:
