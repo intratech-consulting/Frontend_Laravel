@@ -4,114 +4,166 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+
+    <style>
+
+
+        .registration-card {
+            width: 700px;
+            padding: 50px;
+            margin: 5vh 20vw;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .registration-card h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 95%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        input[type="date"] {
+            width: calc(100% - 22px); /* Adjust width for date input */
+        }
+
+        .error-message {
+            color: #e30613;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #e30613;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #b5040a;
+        }
+    </style>
 </head>
 <body>
+
 @include('user.components.header')
 
-<form method="POST" action="{{ route('register_test') }}">
-    @csrf
-    <div>
-            <x-input-label for="first_name" :value="__('First Name')" />
-            <x-text-input id="first_name" class="block mt-1 w-full" type="text" name="first_name" :value="old('first_name')" required autofocus />
-            <x-input-error :messages="$errors->get('first_name')" class="mt-2" />
+<div class="registration-card">
+    <h2>Register Page</h2>
+
+    <form method="POST" action="{{ route('register_test') }}">
+        @csrf
+
+        <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input id="first_name" type="text" name="first_name" value="{{ old('first_name') }}" required autofocus>
         </div>
 
-        <!-- Last Name -->
-        <div class="mt-4">
-            <x-input-label for="last_name" :value="__('Last Name')" />
-            <x-text-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" :value="old('last_name')" required />
-            <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
+        <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input id="last_name" type="text" name="last_name" value="{{ old('last_name') }}" required>
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" type="email" name="email" value="{{ old('email') }}" required>
         </div>
 
-        <!-- Telephone -->
-        <div class="mt-4">
-            <x-input-label for="telephone" :value="__('Telephone')" />
-            <x-text-input id="telephone" class="block mt-1 w-full" type="text" name="telephone" :value="old('telephone')" />
-            <x-input-error :messages="$errors->get('telephone')" class="mt-2" />
+        <div class="form-group">
+            <label for="telephone">Telephone</label>
+            <input id="telephone" type="text" name="telephone" value="{{ old('telephone') }}">
         </div>
 
-        <!-- Birthday -->
-        <div class="mt-4">
-    <x-input-label for="birthday" :value="__('Birthday')" />
-    <input id="birthday" class="block mt-1 w-full" type="date" name="birthday" :value="old('birthday')" />
-    <x-input-error :messages="$errors->get('birthday')" class="mt-2" />
-</div>
-
-        <!-- Address -->
-        <div class="mt-4">
-            <x-input-label for="country" :value="__('Country')" />
-            <x-text-input id="country" class="block mt-1 w-full" type="text" name="country" :value="old('country')" />
-            <x-input-error :messages="$errors->get('country')" class="mt-2" />
+        <div class="form-group">
+            <label for="birthday">Birthday</label>
+            <input id="birthday" type="date" name="birthday" value="{{ old('birthday') }}">
         </div>
 
-        <div class="mt-4">
-            <x-input-label for="state" :value="__('State')" />
-            <x-text-input id="state" class="block mt-1 w-full" type="text" name="state" :value="old('state')" />
-            <x-input-error :messages="$errors->get('state')" class="mt-2" />
+        <div class="form-group">
+            <label for="country">Country</label>
+            <input id="country" type="text" name="country" value="{{ old('country') }}">
         </div>
 
-        <div class="mt-4">
-            <x-input-label for="city" :value="__('City')" />
-            <x-text-input id="city" class="block mt-1 w-full" type="text" name="city" :value="old('city')" />
-            <x-input-error :messages="$errors->get('city')" class="mt-2" />
+        <div class="form-group">
+            <label for="state">State</label>
+            <input id="state" type="text" name="state" value="{{ old('state') }}">
         </div>
 
-        <div class="mt-4">
-            <x-input-label for="zip" :value="__('ZIP Code')" />
-            <x-text-input id="zip" class="block mt-1 w-full" type="text" name="zip" :value="old('zip')" />
-            <x-input-error :messages="$errors->get('zip')" class="mt-2" />
+        <div class="form-group">
+            <label for="city">City</label>
+            <input id="city" type="text" name="city" value="{{ old('city') }}">
         </div>
 
-        <div class="mt-4">
-            <x-input-label for="street" :value="__('Street')" />
-            <x-text-input id="street" class="block mt-1 w-full" type="text" name="street" :value="old('street')" />
-            <x-input-error :messages="$errors->get('street')" class="mt-2" />
+        <div class="form-group">
+            <label for="zip">ZIP Code</label>
+            <input id="zip" type="text" name="zip" value="{{ old('zip') }}">
         </div>
 
-        <div class="mt-4">
-            <x-input-label for="house_number" :value="__('House Number')" />
-            <x-text-input id="house_number" class="block mt-1 w-full" type="text" name="house_number" :value="old('house_number')" />
-            <x-input-error :messages="$errors->get('house_number')" class="mt-2" />
+        <div class="form-group">
+            <label for="street">Street</label>
+            <input id="street" type="text" name="street" value="{{ old('street') }}">
         </div>
 
+        <div class="form-group">
+            <label for="house_number">House Number</label>
+            <input id="house_number" type="text" name="house_number" value="{{ old('house_number') }}">
+        </div>
 
-        <!-- Invoice -->
-        <div class="mt-4">
-            <x-input-label for="invoice" :value="__('Invoice')" />
-            <select id="invoice" name="invoice" class="block mt-1 w-full">
+        <div class="form-group">
+            <label for="invoice">Invoice</label>
+            <select id="invoice" name="invoice">
                 <option value="Yes">Yes</option>
             </select>
-            <x-input-error :messages="$errors->get('invoice')" class="mt-2" />
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password" required autocomplete="new-password">
         </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-            <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required />
+        <div class="form-group">
+            <label for="password_confirmation">Confirm Password</label>
+            <input id="password_confirmation" type="password" name="password_confirmation" required>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Register') }}
-            </x-primary-button>
+        <div class="button-container">
+            <button type="submit">Register</button>
         </div>
     </form>
-</form>
-    @include('user.components.footer')
+</div>
+
+
+@include('user.components.footer')
 
 </body>
 </html>
