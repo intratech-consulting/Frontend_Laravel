@@ -48,10 +48,6 @@ public function planning()
 
 public function contact()
     {
-
-
-
-
    return view('user.contact');
     }
 
@@ -64,5 +60,12 @@ public function events()
 
      $event = event::all();
    return view('user.event', compact('events'));
+    }
+
+
+
+public function registration()
+    {
+   return view('auth.role-register');
     }
 }

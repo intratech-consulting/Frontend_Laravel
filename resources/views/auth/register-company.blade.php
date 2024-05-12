@@ -79,7 +79,7 @@
 @include('user.components.header')
 
 <div class="registration-card">
-    <h2>Register Page Geust</h2>
+    <h2>Register Page Company</h2>
 
     <form method="POST" action="{{ route('register_test') }}">
         @csrf

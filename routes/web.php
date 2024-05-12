@@ -7,6 +7,8 @@ use App\Http\Controllers\headerController;
 use App\Http\Controllers\footerController;
 use App\Http\Controllers\AMQPReceiveTesterController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\RoleRegisterController;
+
 
 
 /*
@@ -45,6 +47,14 @@ Route::middleware('web')->group(function () {
     Route::get('/events', [headerController::class, 'events']);
     Route::get('/planning', [headerController::class, 'planning']);
     Route::get('/contact', [headerController::class, 'contact']);
+    Route::get('/registration', [headerController::class, 'registration']);
+
+
+
+    //role register
+    Route::get('/register_speaker', [RoleRegisterController::class, 'register_speaker']);
+    Route::get('/register_company', [RoleRegisterController::class, 'register_company']);
+
 
     // Footer Routes
     Route::get('/privacy', [footerController::class, 'privacy']);

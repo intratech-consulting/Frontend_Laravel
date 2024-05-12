@@ -98,7 +98,7 @@ border-radius: 3px
       <li><a href="{{url('about')}}">About</a></li>
       <li><a href="{{url('contact')}}">Contact</a></li>
       <li class="connect"><a href="{{ route('login') }}">Login</a></li>
-      <li class="connect"><a href="{{ route('register') }}">Register</a></li>
+      <li class="connect"><a href="{{url('registration')}}">Register</a></li>
     </ul>
   </nav>
 </header>

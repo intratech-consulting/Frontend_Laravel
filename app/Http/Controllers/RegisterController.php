@@ -54,4 +54,15 @@ class RegisterController extends Controller
     {
         dd('test');
     }
+
+   public function register_speaker()
+    {
+   return view('auth.register-speaker');
+    }
+
+ public function register_company()
+    {
+   return view('auth.register-company');
+    }
+
 }
