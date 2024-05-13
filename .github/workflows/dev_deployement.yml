@@ -11,17 +11,25 @@ jobs:
     name: Deploy frontend to dev
     runs-on: [self-hosted]
     environment: development
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
     
-    steps:         
+    steps:
       - name: Deploy new version
-        run: |
-          sudo apt-get install sshpass
-          sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<'ENDSSH'
-          eval $(ssh-agent)
-          ssh-add ~/.ssh/github_intratechconsulting
-          cd ~/TestServer/frontend
-          docker compose down
-          git checkout development
-          git pull
-          docker compose up --build -d
-          ENDSSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USER }}
+          password: ${{ env.SSH_PASSWORD }}
+          key: ${{ env.SSH_PRIVATE_KEY }}
+          port: ${{ env.SSH_PORT }}
+          script: |
+            cd ~/TestServer/frontend/Laravel
+            docker compose down
+            git checkout development
+            git pull
+            docker compose up --build -d
