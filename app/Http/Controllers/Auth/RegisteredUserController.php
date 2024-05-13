@@ -59,6 +59,7 @@ class RegisteredUserController extends Controller
             'invoice' => ['required'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
+
         /*
         // Create the user
         $user = User::create([

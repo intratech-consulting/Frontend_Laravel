@@ -26,7 +26,7 @@
                 <p class="list-text">{{$events->available_seats}} Seats Available</p>
             </div>
         </div>
-        <p class="amount-text">Hosted by {{$events->speaker_name}} from {{$events->speaker_company}}</p>
+        <p class="amount-text">Hosted by {{$events->speaker_user_id}} from {{$events->speaker_company_id}}</p>
         <p class="amount-text">Date: {{$events->date}}, Time: {{$events->start_time}} - {{$events->end_time}}</p>
         <div class="buttons-container">
             <a href="#" class="btn btn-ghost">View More</a>

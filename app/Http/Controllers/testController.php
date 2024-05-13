@@ -9,6 +9,8 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Providers\RouteServiceProvider;
+
 
 
 
@@ -53,11 +55,10 @@ class testController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
 
         ]);
-        /*
-        // Create the user
-// In the place of "$user =" change it to return
+        
         $user = User::create([
-            'name' => $userData['first_name'] . ' ' . $userData['last_name'],
+            'first_name' => $userData['first_name'],
+            'last_name' => $userData['last_name'],
             'email' => $userData['email'],
             'password' => Hash::make($userData['password']),
             'telephone' => $userData['telephone'],
@@ -70,15 +71,19 @@ class testController extends Controller
             'house_number' => $userData['house_number'],
             'source' => 'frontend',
             'invoice' => $userData['invoice'],
+            'user_role' => 'individual',
+            'routing_key' => 'user.frontend',
+            'crud_operation' => 'create',
+
         ]);
 
 
-        dd($user);
-*/
+        $userId = $user->id;
+        
         
         $xmlMessage = new \SimpleXMLElement('<user/>');
         $xmlMessage->addChild('routing_key', 'user.crm');
-        //$xmlMessage->addChild('user_id', $user->id);
+        $xmlMessage->addChild('user_id', $user->id);
         $xmlMessage->addChild('first_name', $userData['first_name']);
         $xmlMessage->addChild('last_name', $userData['last_name']);
         $xmlMessage->addChild('email', $userData['email']);
@@ -93,8 +98,6 @@ class testController extends Controller
         $address->addChild('street', $userData['street'] ?? '');
         $address->addChild('house_number', $userData['house_number'] ?? '');
 
-        $xmlMessage->addChild('calendar_link', 'www.example.com');
-
         // Convert XML to string
         $message = $xmlMessage->asXML();
         // Send message to RabbitMQ
@@ -102,11 +105,11 @@ class testController extends Controller
 
         $this->sendMessageToTopic($routingKey, $message);
 
-        //event(new Registered($user));
+        event(new Registered($user));
 
-       // Auth::login($user);
+       Auth::login($user);
 
-       return redirect()->back();
+       return view('user.home');
     }
 
     public function test(Request $request)

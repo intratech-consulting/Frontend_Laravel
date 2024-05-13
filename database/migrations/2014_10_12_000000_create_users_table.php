@@ -17,7 +17,6 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('routing_key');
             $table->string('crud_operation');
-            $table->bigInteger('external_id');
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email')->unique();
@@ -30,12 +29,12 @@ class CreateUsersTable extends Migration
             $table->string('zip');
             $table->string('street');
             $table->string('house_number');
-            $table->string('company_email');
-            $table->string('company_id');
+            $table->string('company_email')->nullable();
+            $table->string('company_id')->nullable();
             $table->string('source');
             $table->string('user_role');
             $table->string('invoice');
-            $table->string('calendar_link');
+            $table->string('calendar_link')->nullable();
             $table->timestamps();
         });
     }
