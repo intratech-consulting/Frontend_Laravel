@@ -146,25 +146,4 @@ class testController extends Controller
        return view('user.home');
     }
 
-    public function test(Request $request)
-    {
-        dd('test');
-        
-        $routingKey = 'user.frontend';
-
-                // Validate the message
-        $request->validate([
-            'message' => 'required|string',
-        ]);
-
-            // Extract the message from the request
-        $message = $request->input('message');
-    
-            // Call sendMessage method to send the message
-         $this->sendMessageToTopic($routingKey, $message);
-
-        return redirect()->back();
-
-
-    }
 }
