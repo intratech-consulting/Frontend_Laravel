@@ -60,7 +60,6 @@ class testController extends Controller
 
         ]);
 
-        dd($userData);
         
         $user = User::create([
             'first_name' => $userData['first_name'],
@@ -114,8 +113,6 @@ class testController extends Controller
             // Handle the exception
             echo $e->getMessage();
         }
-
-        dd($masterUuid);
         
         
         $xmlMessage = new \SimpleXMLElement('<user/>');
