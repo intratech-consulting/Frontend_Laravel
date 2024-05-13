@@ -59,6 +59,8 @@ class testController extends Controller
             'user_role' => ['required', 'string', Rule::in(['individual', 'employee', 'speaker'])],
 
         ]);
+
+        dd($userData);
         
         $user = User::create([
             'first_name' => $userData['first_name'],
@@ -112,6 +114,8 @@ class testController extends Controller
             // Handle the exception
             echo $e->getMessage();
         }
+
+        dd($masterUuid);
         
         
         $xmlMessage = new \SimpleXMLElement('<user/>');
@@ -132,12 +136,12 @@ class testController extends Controller
         $address->addChild('street', $userData['street']);
         $address->addChild('house_number', $userData['house_number']);
 
-        $address->addChild('company_email', $userData['company_email']);
-        $address->addChild('company_id', $userData['company_id']);
-        $address->addChild('source', 'frontend');
-        $address->addChild('user_role', $userData['user_role']);
-        $address->addChild('invoice', $userData['invoice']);
-        $address->addChild('calendar_link', '');
+        $xmlMessage->addChild('company_email', $userData['company_email']);
+        $xmlMessage->addChild('company_id', $userData['company_id']);
+        $xmlMessage->addChild('source', 'frontend');
+        $xmlMessage->addChild('user_role', $userData['user_role']);
+        $xmlMessage->addChild('invoice', $userData['invoice']);
+        $xmlMessage->addChild('calendar_link', '');
 
 
         // Convert XML to string
