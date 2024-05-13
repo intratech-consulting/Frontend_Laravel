@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Registraties</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -88,21 +88,16 @@
                 <a href="{{ route('register') }}">
                     <img src="https://images.unsplash.com/photo-1572021335469-31706a17aaef?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Employee">
                 </a>
-                <a href="{{ route('register') }}" class="navigation-link">Employee</a>
+                <a href="{{ route('register') }}" class="navigation-link">Werknemer</a>
             </div>
             <div class="navigation-item">
-                <a href="{{url('register_speaker')}}">
-                    <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2832&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Speaker">
-                </a>
-                <a href="{{url('register_speaker')}}" class="navigation-link">Speaker</a>
-            </div>
-        </div>
-        <div class="long-image">
             <a href="{{url('register_company')}}">
                 <img src="https://images.unsplash.com/photo-1531973576160-7125cd663d86?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Company">
-            </a>
-            <a href="{{url('register_company')}}" class="navigation-link">Company</a>
+                </a>
+            <a href="{{url('register_company')}}" class="navigation-link">Bedrijf</a>
+            </div>
         </div>
+    
     </div>
 
 @include('user.components.footer')
