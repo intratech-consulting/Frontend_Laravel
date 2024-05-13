@@ -34,8 +34,11 @@ RUN composer self-update --2 && \
     composer update --no-interaction --prefer-dist && \
     composer install --no-progress --no-interaction
 
-# Install Laravel Websockets if needed
-RUN composer require beyondcode/laravel-websockets -w
+# Copy .env.example to .env
+RUN cp .env.example .env
+
+# Generate application key
+RUN php artisan key:generate
 
 # Set environment variables if needed
 ENV PORT=8000

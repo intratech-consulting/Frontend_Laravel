@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\RabbitMQSendToExhangeService;
+use App\Models\Company;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Auth;
+
 
 class CompanyController extends Controller
 {
@@ -33,7 +38,6 @@ class CompanyController extends Controller
     {
        
         $companyData = $request->validate([
-
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'telephone' => ['required', 'string', 'max:20'],
@@ -46,82 +50,59 @@ class CompanyController extends Controller
             'house_number' => ['required', 'string', 'max:20'],
             'type' => ['required', 'string', 'max:255'],
             'invoice' => ['required', 'string', 'max:255'],
-
-/*
-        'date' => ['required', 'date'],
-        'start_time' => ['required', 'date_format:H:i:s'],
-        'end_time' => ['required', 'date_format:H:i:s', Rule::after('start_time')],
-        'location' => ['required', 'string', 'max:255'],
-        'max_registrations' => ['required', 'integer', 'min:0'],
-        'available_seats' => ['required', 'integer', 'min:0'],
-        'description' => ['required', 'string'],
-        'speaker_user_id' => ['required', 'exists:users,id'],
-        'speaker_company_id' => ['required', 'exists:companies,id'],
-*/
         ]);
-        /*
-        // Create the company
-      
 
+        $company = Company::create([
+            'user_role' => 'company',
+            'name' => $companyData['name'],
+            'email' => $companyData['email'],
+            'telephone' => $companyData['telephone'],
+            'logo' => $companyData['logo'],
+            'country' => $companyData['country'],
+            'state' => $companyData['state'],
+            'city' => $companyData['city'],
+            'zip' => $companyData['zip'],
+            'street' => $companyData['street'],
+            'house_number' => $companyData['house_number'],
+            'type' => $companyData['type'],
+            'invoice' => $companyData['invoice'],
+        ]);
 
-
-*/
+        $companyId = $company->id;
         
-  $xmlCompany = new \SimpleXMLElement('<company/>');
-
-
-    $xmlCompany->addChild('routing_key', 'user.crm');
+        $xmlCompany = new \SimpleXMLElement('<company/>');
+        $xmlCompany->addChild('routing_key', 'company.frontend');
         $xmlCompany->addChild('crud_operation', 'create');
-        $xmlCompany->addChild('id', mt_rand(10000, 99999)); // Generate a random ID
-        $xmlCompany->addChild('name', $request->input('name'));
-        $xmlCompany->addChild('email', $request->input('email'));
-        $xmlCompany->addChild('telephone', $request->input('telephone'));
-        $xmlCompany->addChild('logo', $request->input('logo', ''));
+
+        $xmlCompany->addChild('id', $companyId); // Generate a random ID
+        $xmlCompany->addChild('name', $companyData['name']);
+        $xmlCompany->addChild('email', $companyData['email']);
+        $xmlCompany->addChild('telephone', $companyData['telephone']);
+        $xmlCompany->addChild('logo', $companyData['logo']);
         
         $address = $xmlCompany->addChild('address');
-        $address->addChild('country', $request->input('country'));
-        $address->addChild('state', $request->input('state'));
-        $address->addChild('city', $request->input('city'));
-        $address->addChild('zip', $request->input('zip'));
-        $address->addChild('street', $request->input('street'));
-        $address->addChild('house_number', $request->input('house_number'));
+        $address->addChild('country', $companyData['country']);
+        $address->addChild('state', $companyData['state']);
+        $address->addChild('city', $companyData['city']);
+        $address->addChild('zip', $companyData['zip']);
+        $address->addChild('street', $companyData['street']);
+        $address->addChild('house_number', $companyData['house_number']);
         
-        $xmlCompany->addChild('type', $request->input('type'));
-        $xmlCompany->addChild('invoice', $request->input('invoice'));
+        $xmlCompany->addChild('type', $companyData['type']);
+        $xmlCompany->addChild('invoice', $companyData['invoice']);
+
 
         // Convert XML to string
         $message = $xmlCompany->asXML();
         // Send message to RabbitMQ
-        $routingKey = 'user.frontend';
+        $routingKey = 'company.frontend';
 
         $this->sendMessageToTopic($routingKey, $message);
 
-        //event(new Registered($user));
+        event(new Registered($company));
 
-       // Auth::login($user);
+        Auth::login($company);
 
-       return redirect()->back();
-    }
-
-    public function test(Request $request)
-    {
-        dd('test');
-        
-        $routingKey = 'user.frontend';
-
-                // Validate the message
-        $request->validate([
-            'message' => 'required|string',
-        ]);
-
-            // Extract the message from the request
-        $message = $request->input('message');
-    
-            // Call sendMessage method to send the message
-         $this->sendMessageToTopic($routingKey, $message);
-
-        return redirect()->back();
-
-
+        return view('user.home');
     }
 }

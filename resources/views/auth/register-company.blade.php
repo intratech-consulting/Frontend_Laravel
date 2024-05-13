@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register Company</title>
+    <title>Bedrijf registreren</title>
 
     <style>
         .registration-card {
@@ -78,13 +78,13 @@
     @include('user.components.header')
 
 <div class="registration-card">
-    <h2>Register Company</h2>
+    <h2>Bedrijf registreren</h2>
 
     <form method="POST" action="{{ route('create_company') }}">
         @csrf
 
         <div class="form-group">
-            <label for="name">Name</label>
+            <label for="name">Naam</label>
             <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
         </div>
 
@@ -94,7 +94,7 @@
         </div>
 
         <div class="form-group">
-            <label for="telephone">Telephone</label>
+            <label for="telephone">Telefoon</label>
             <input id="telephone" type="text" name="telephone" value="{{ old('telephone') }}" required>
         </div>
 
@@ -105,52 +105,52 @@
         </div>
 
         <div class="form-group">
-            <label for="country">Country</label>
+            <label for="country">Land</label>
             <input id="country" type="text" name="country" value="{{ old('country') }}" required>
         </div>
 
         <div class="form-group">
-            <label for="state">State</label>
+            <label for="state">Staat</label>
             <input id="state" type="text" name="state" value="{{ old('state') }}" required>
         </div>
 
         <div class="form-group">
-            <label for="city">City</label>
+            <label for="city">Stad</label>
             <input id="city" type="text" name="city" value="{{ old('city') }}" required>
         </div>
 
         <div class="form-group">
-            <label for="zip">ZIP Code</label>
+            <label for="zip">Postcode</label>
             <input id="zip" type="text" name="zip" value="{{ old('zip') }}" required>
         </div>
 
         <div class="form-group">
-            <label for="street">Street</label>
+            <label for="street">Straat</label>
             <input id="street" type="text" name="street" value="{{ old('street') }}" required>
         </div>
 
         <div class="form-group">
-            <label for="house_number">House Number</label>
+            <label for="house_number">Huisnummer</label>
             <input id="house_number" type="text" name="house_number" value="{{ old('house_number') }}" required>
         </div>
 
         <div class="form-group">
             <label for="type">Type</label>
             <select id="type" name="type" required>
-                <option value="customer">Customer</option>
+                <option value="customer">Klant</option>
                 <option value="sponsor">Sponsor</option>
-                <option value="speaker">Speaker</option>
-                <option value="">Other</option>
+                <option value="speaker">Spreker</option>
+                <option value="">Andere</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="invoice">Invoice</label>
+            <label for="invoice">Iban</label>
             <input id="invoice" type="text" name="invoice" value="{{ old('invoice') }}" required>
         </div>
 
         <div class="button-container">
-            <button type="submit">Register</button>
+            <button type="submit">Registreer</button>
         </div>
     </form>
 </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Event</title>
+    <title>Evenementen maken</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -75,52 +75,52 @@
             @csrf
 
             <div class="form-group">
-                <label for="location">Location:</label>
+                <label for="location">Locatie:</label>
                 <input type="text" id="location" name="location" required>
             </div>
 
             <div class="form-group">
-                <label for="description">Description:</label>
+                <label for="description">Beschrijving:</label>
                 <textarea id="description" name="description" rows="4" required></textarea>
             </div>
 
             <div class="form-group">
-                <label for="max_registrations">Max Registrations:</label>
+                <label for="max_registrations">Max Registraties:</label>
                 <input type="number" id="max_registrations" name="max_registrations" required>
             </div>
 
             <div class="form-group">
-                <label for="available_seats">Available Seats:</label>
+                <label for="available_seats">Beschikbare Plaatsen:</label>
                 <input type="number" id="available_seats" name="available_seats" required>
             </div>
 
             <div class="form-group">
-                <label for="speaker_name">Speaker Name:</label>
+                <label for="speaker_name">Sprekersnaam:</label>
                 <input type="text" id="speaker_name" name="speaker_name" required>
             </div>
 
             <div class="form-group">
-                <label for="speaker_company">Speaker Company:</label>
+                <label for="speaker_company">Sprekersbedrijf:</label>
                 <input type="text" id="speaker_company" name="speaker_company" required>
             </div>
 
             <div class="form-group">
-                <label for="date">Date:</label>
+                <label for="date">Datum:</label>
                 <input type="date" id="date" name="date" required>
             </div>
 
             <div class="form-group">
-                <label for="start_time">Start Time:</label>
+                <label for="start_time">Starttijd:</label>
                 <input type="time" id="start_time" name="start_time" required>
             </div>
 
             <div class="form-group">
-                <label for="end_time">End Time:</label>
+                <label for="end_time">Eindtijd:</label>
                 <input type="time" id="end_time" name="end_time" required>
             </div>
 
             <div class="form-group">
-                <button type="submit">Create Event</button>
+                <button type="submit">Evenement aanmaken</button>
             </div>
         </form>
     </div>

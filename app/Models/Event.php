@@ -7,5 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    use HasFactory;
+   use HasFactory;
+
+/**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'date',
+        'start_time',
+        'end_time',
+        'location',
+        'max_registrations',
+        'available_seats',
+        'description',
+        'speaker_user_id',
+        'speaker_company_id',
+        // Add any other attributes here that are fillable
+    ];
 }

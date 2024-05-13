@@ -5,6 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\RecievePlanningController;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+
+
+use Illuminate\Http\Request;
+use App\Services\RabbitMQSendToExhangeService;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\RedirectResponse;
+
 
 
 

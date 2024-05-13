@@ -52,9 +52,9 @@ Route::middleware('web')->group(function () {
 
 
     // Event creation
-    Route::get('/register_company', [headerController::class, 'register_company']);
-    Route::post('/send-message-to-topicss', [EventController::class, 'sendMessageToTopic'])->name('sendMessageToTopic');
-    Route::match(['get', 'post'], '/create_event', [EventController::class, 'test'])->name('test');
+    Route::get('/show_events', [headerController::class, 'show_events']);
+    Route::post('/send-message-to-events', [EventController::class, 'sendMessageToTopic'])->name('sendMessageToTopic_event');
+    Route::match(['get', 'post'], '/create_event', [EventController::class, 'test'])->name('test_event');
     Route::post('/create_event', [EventController::class, 'create_event'])->name('create_event');
 
 
@@ -62,9 +62,9 @@ Route::middleware('web')->group(function () {
 
     // Company creation
     Route::get('/make_company', [headerController::class, 'show_company']);
-    Route::post('/create_company', [EventController::class, 'create_company'])->name('create_company');
-    Route::match(['get', 'post'], '/create_company', [EventController::class, 'test'])->name('test');
-    Route::post('/send-message-to-topicsss', [EventController::class, 'sendMessageToTopic'])->name('sendMessageToTopic');
+    Route::post('/create_company', [CompanyController::class, 'create_company'])->name('create_company');
+    Route::match(['get', 'post'], '/create_company', [CompanyController::class, 'test'])->name('test_company');
+    Route::post('/send-message-to-topics_company', [CompanyController::class, 'sendMessageToTopic'])->name('sendMessageToTopic_company');
 
 
 

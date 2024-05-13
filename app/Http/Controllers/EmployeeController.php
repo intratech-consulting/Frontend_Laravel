@@ -1,20 +1,11 @@
 <?php
-namespace App\Http\Controllers\Auth;
-
-use Illuminate\Http\Request;
-use App\Services\RabbitMQSendToExhangeService;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
-use Illuminate\Routing\Controller;
+namespace App\Http\Controllers;
 
 
 
 
-class RegisteredUserController extends Controller
+
+class EmployeeController extends Controller
 {
     protected $rabbitMQService;
 
@@ -35,16 +26,11 @@ class RegisteredUserController extends Controller
         }
     }
 
-    public function create()
-{
-    return view('auth.register');
-}
-
-
     public function register(Request $request)
     {
        
         $userData = $request->validate([
+
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
@@ -58,12 +44,12 @@ class RegisteredUserController extends Controller
             'house_number' => ['required', 'string', 'max:20'],
             'invoice' => ['required'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
 
-        /*
-        // Create the user
+        ]);
+        
         $user = User::create([
-            'name' => $userData['first_name'] . ' ' . $userData['last_name'],
+            'first_name' => $userData['first_name'],
+            'last_name' => $userData['last_name'],
             'email' => $userData['email'],
             'password' => Hash::make($userData['password']),
             'telephone' => $userData['telephone'],
@@ -76,28 +62,62 @@ class RegisteredUserController extends Controller
             'house_number' => $userData['house_number'],
             'source' => 'frontend',
             'invoice' => $userData['invoice'],
+            'user_role' => 'individual',
+            'routing_key' => 'user.frontend',
+            'crud_operation' => 'create',
+
         ]);
 
-        dd($user);
-        */
+
+        $userId = $user->id;
+
+        // Create a new Guzzle HTTP client
+        $client = new \GuzzleHttp\Client();
+
+        // Define the data for the request
+        $data = [
+            'Service' => 'frontend',
+            'ServiceId' => $userId, // Assuming $userId is the ID of the newly created user
+        ];
+
+        try {
+            // Make the POST request
+            $response = $client->request('POST', 'http://10.2.160.51:6000/createMasterUuid', [
+                'json' => $data
+            ]);
+
+            // Get the response body
+            $body = $response->getBody();
+
+            // Decode the JSON response
+            $json = json_decode($body, true);
+
+            // Get the MASTERUUID from the response
+            $masterUuid = $json['MASTERUUID'];
+
+            // Now you can use $masterUuid for whatever you need
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            // Handle the exception
+            echo $e->getMessage();
+        }
+        
+        
         $xmlMessage = new \SimpleXMLElement('<user/>');
         $xmlMessage->addChild('routing_key', 'user.crm');
-        //$xmlMessage->addChild('user_id', $user->id);
+        $xmlMessage->addChild('user_id', $masterUuid);
         $xmlMessage->addChild('first_name', $userData['first_name']);
         $xmlMessage->addChild('last_name', $userData['last_name']);
         $xmlMessage->addChild('email', $userData['email']);
-        $xmlMessage->addChild('telephone', $userData['telephone'] ?? '');
-        $xmlMessage->addChild('birthday', $userData['birthday'] ?? '');
+        $xmlMessage->addChild('telephone', $userData['telephone']);
+        $xmlMessage->addChild('birthday', $userData['birthday']);
         
         $address = $xmlMessage->addChild('address');
-        $address->addChild('country', $userData['country'] ?? '');
-        $address->addChild('state', $userData['state'] ?? '');
-        $address->addChild('city', $userData['city'] ?? '');
-        $address->addChild('zip', $userData['zip'] ?? '');
-        $address->addChild('street', $userData['street'] ?? '');
-        $address->addChild('house_number', $userData['house_number'] ?? '');
-
-        $xmlMessage->addChild('calendar_link', 'www.example.com');
+        $address->addChild('country', $userData['country']);
+        $address->addChild('state', $userData['state']);
+        $address->addChild('city', $userData['city']);
+        $address->addChild('zip', $userData['zip']);
+        $address->addChild('street', $userData['street']);
+        $address->addChild('house_number', $userData['house_number']);
 
         // Convert XML to string
         $message = $xmlMessage->asXML();
@@ -106,11 +126,32 @@ class RegisteredUserController extends Controller
 
         $this->sendMessageToTopic($routingKey, $message);
 
-        //event(new Registered($user));
+        event(new Registered($user));
 
-       // Auth::login($user);
+       Auth::login($user);
 
-       return redirect()->back();
+       return view('user.home');
+    }
+
+    public function test(Request $request)
+    {
+        dd('test');
+        
+        $routingKey = 'user.frontend';
+
+                // Validate the message
+        $request->validate([
+            'message' => 'required|string',
+        ]);
+
+            // Extract the message from the request
+        $message = $request->input('message');
+    
+            // Call sendMessage method to send the message
+         $this->sendMessageToTopic($routingKey, $message);
+
+        return redirect()->back();
+
+
     }
 }
-

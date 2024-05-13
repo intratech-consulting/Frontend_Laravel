@@ -33,12 +33,14 @@ class RecievePlanningController extends Controller
             foreach ($events as $eventData) {
                 $event = new Event();
                 $event->date = Carbon::createFromFormat('Y-m-d', (string) $eventData->date)->toDateString();
+                $event->routing_key = (string) $eventData->routing_key;
+                $event->external_id = (string) $eventData->external_id;
+                $event->routing_key = (int) $eventData->speaker->routing_key;
                 $event->start_time = (string) $eventData->start_time;
                 $event->end_time = (string) $eventData->end_time;
                 $event->location = (string) $eventData->location;
-                $event->speaker_name = (string) $eventData->speaker->name;
-                $event->speaker_email = (string) $eventData->speaker->email;
-                $event->speaker_company = (string) $eventData->speaker->company;
+                $event->speaker_user_id = (int) $eventData->speaker->speaker_user_id;
+                $event->speaker_company_id = (int) $eventData->speaker->speaker_company_id;
                 $event->max_registrations = (int) $eventData->max_registrations;
                 $event->available_seats = (int) $eventData->available_seats;
                 $event->description = (string) $eventData->description;
