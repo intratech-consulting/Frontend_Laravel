@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home</title>
-  <link rel="stylesheet" href="{{ asset('user/home.css') }}">
+  <link rel="stylesheet" href="{{ asset('/user/home.css') }}">
   <style>
     .hackathon-container {
       display: flex;
@@ -313,7 +313,7 @@
             <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/9ff9861741df2b7b331c157420c56522fa59c63a59ee4dd09b1fb2ef6ffc238c?apiKey=faa644a41149444c9c3e35e1f35c0dc5&" alt="" class="cta-benefit-icon" />
             <span class="cta-benefit-text">Develop skills and network</span>
           </div>
-          <a href="{{url('contact')}}" class="cta-button">Contact us</a>
+          <a href="{{url('registration')}}" class="cta-button">Register</a>
         </div>
       </div>
     </section>

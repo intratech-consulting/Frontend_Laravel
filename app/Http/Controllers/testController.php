@@ -37,6 +37,7 @@ class testController extends Controller
     {
        
         $userData = $request->validate([
+
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
@@ -50,9 +51,11 @@ class testController extends Controller
             'house_number' => ['required', 'string', 'max:20'],
             'invoice' => ['required'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+
         ]);
         /*
         // Create the user
+// In the place of "$user =" change it to return
         $user = User::create([
             'name' => $userData['first_name'] . ' ' . $userData['last_name'],
             'email' => $userData['email'],
@@ -69,8 +72,10 @@ class testController extends Controller
             'invoice' => $userData['invoice'],
         ]);
 
+
         dd($user);
-        */
+*/
+        
         $xmlMessage = new \SimpleXMLElement('<user/>');
         $xmlMessage->addChild('routing_key', 'user.crm');
         //$xmlMessage->addChild('user_id', $user->id);
@@ -106,10 +111,7 @@ class testController extends Controller
 
     public function test(Request $request)
     {
-        if ($request->isMethod('get'))
-        {
-            return view('test');
-        }
+        dd('test');
         
         $routingKey = 'user.frontend';
 

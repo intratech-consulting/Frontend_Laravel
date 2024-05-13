@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register Employee</title>
+    <title>Register Speaker</title>
 
     <style>
 
@@ -79,7 +79,7 @@
 @include('user.components.header')
 
 <div class="registration-card">
-    <h2>Register Page Geust</h2>
+    <h2>Register Page Speaker</h2>
 
     <form method="POST" action="{{ route('register_test') }}">
         @csrf

@@ -10,14 +10,13 @@ services:
       MYSQL_ROOT_PASSWORD: password
     restart: always # Check need
     ports: # Check need + port (if changed => also change in .env file)
-      - 3306:3306
+      - 3307:3306
     volumes:
       - frontend-db-data:/var/lib/mysql
     networks:
       - laravel_backend
-    
 
- # Apache Service
+  # Apache Service
   webserver:
     image: nginx:latest
     restart: always
@@ -28,7 +27,7 @@ services:
       - ./public:/usr/share/nginx/html
     networks:
       - laravel_backend
-    
+
   # phpmyadmin
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -42,7 +41,7 @@ services:
       - database
     networks:
       - laravel_backend
-  
+
   #PHP Service
   php:
     build:
@@ -52,11 +51,17 @@ services:
         - APP_ENV=${APP_ENV}
     environment:
       - APP_ENV=${APP_ENV}
-      - APP_KEY=${APP_KEY}
+      - APP_KEY=base64:gNiYlzaan1JfJKdnwWqYb6VbLPPWSMkBb82cE9u7cwM=
       - CONTAINER_ROLE=app
     working_dir: /var/www
     restart: always
-    command: php-fpm -F -R
+    command: >
+      bash -c "chown -R www-data:www-data /var/www/storage &&
+               chown -R www-data:www-data /var/www/bootstrap/cache &&
+               chown -R www-data:www-data /var/www/public &&
+               chmod -R 775 /var/www/storage &&
+               chmod -R 775 /var/www/public &&
+               php-fpm -F"
     volumes:
       - ./:/var/www
     ports:
@@ -68,16 +73,15 @@ services:
     networks:
       - laravel_backend
 
-  # Heartbeat Service 
+  # Heartbeat Service
   heartbeat:
     build:
       context: .
       dockerfile: Dockerfile
     restart: always
 
-
 volumes:
-  frontend-db-data: 
+  frontend-db-data:
 
 networks:
   laravel_backend:
