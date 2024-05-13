@@ -59,6 +59,8 @@ class testController extends Controller
             'user_role' => ['required', 'string', Rule::in(['individual', 'employee', 'speaker'])],
 
         ]);
+
+        dd($userData);
         
         $user = User::create([
             'first_name' => $userData['first_name'],
