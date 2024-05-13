@@ -37,6 +37,11 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 # Copy .env.example to .env
 RUN cp .env.example .env
 
+RUN php artisan config:clear && \
+    php artisan cache:clear && \
+    php artisan view:clear && \
+    php artisan route:clear
+
 # Set environment variables if needed
 ENV PORT=8000
 

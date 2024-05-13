@@ -56,10 +56,7 @@ services:
     working_dir: /var/www
     restart: always
     command: >
-      bash -c "
-               php artisan cache:clear &&
-               php artisan config:clear &&
-               composer clear-cache &&
+      bash -c "composer clear-cache &&
                composer self-update &&
                composer install --no-progress --no-interaction &&
                chown -R www-data:www-data /var/www/storage &&
