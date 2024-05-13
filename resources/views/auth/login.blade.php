@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Inloggen</title>
     <style>
 
         .registration-card {
@@ -105,7 +105,7 @@
             </div>
 
             <div class="form-group">
-                <label for="password">Password</label>
+                <label for="password">Wachtwoord</label>
                 <input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password">
                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
             </div>
@@ -113,21 +113,21 @@
             <div class="block mt-4">
                 <label for="remember_me" class="inline-flex items-center">
                     <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                    <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
+                    <span class="ms-2 text-sm text-gray-600">{{ __('Onthoud mij') }}</span>
                 </label>
             </div>
 
             <div class="div-forgot">
                 @if (Route::has('password.request'))
                     <a class="forgot" href="{{ route('password.request') }}">
-                        {{ __('Forgot your password?') }}
+                        {{ __('Ben je je wachtwoord vergeten?') }}
                     </a>
                 @endif
 
                
             </div>
  <button type="submit" class="ms-3 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                    {{ __('Log in') }}
+                    {{ __('Inloggen') }}
                 </button>
         </form>
     </div>

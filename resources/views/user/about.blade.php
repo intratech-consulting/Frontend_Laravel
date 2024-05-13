@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About us</title>
+  <title>Over ons</title>
   <link rel="stylesheet" href="/user/about.css">
   <style>
     .about-us-section {
@@ -240,13 +240,11 @@
       </div>
       <div class="about-us-text-column">
         <div class="about-us-text-container">
-          <h2 class="about-us-title">ABOUT US</h2>
+          <h2 class="about-us-title">Over ons</h2>
           <p class="about-us-description">
-At Hackathon Desiderius, we're dedicated to fostering a thriving community of innovators, problem solvers, and technology enthusiasts. Our platform serves as a hub where individuals and companies come together to explore, collaborate, and create groundbreaking solutions through hackathons.
+Bij Hackathon Desiderius zijn we toegewijd aan het bevorderen van een bloeiende gemeenschap van vernieuwers, probleemoplossers en technologieliefhebbers. Ons platform dient als een centrale plek waar individuen en bedrijven samenkomen om te verkennen, samen te werken en baanbrekende oplossingen te creëren via hackathons.            <br />
             <br />
-            <br />
-           With a passion for technology and a commitment to excellence, we strive to provide an inclusive and supportive environment where everyone can unleash their creativity and make a meaningful impact.
-          </p>
+Met een passie voor technologie en een toewijding aan excellentie, streven we ernaar om een inclusieve en ondersteunende omgeving te bieden waar iedereen zijn creativiteit kan ontketenen en een betekenisvolle impact kan hebben.          </p>
         </div>
       </div>
     </div>
@@ -256,12 +254,11 @@ At Hackathon Desiderius, we're dedicated to fostering a thriving community of in
     <div class="mission-vision-content">
       <div class="mission-vision-text-column">
         <div class="mission-vision-text-container">
-          <h2 class="mission-vision-title">Mission and Vision</h2>
+          <h2 class="mission-vision-title">Missie en Visie</h2>
           <p class="mission-vision-description">
-Our mission is to democratize innovation by providing a platform where anyone, regardless of background or expertise, can participate, learn, and contribute to the advancement of technology.            <br />
+Onze missie is om innovatie te democratiseren door een platform te bieden waar iedereen, ongeacht achtergrond of expertise, kan deelnemen, leren en bijdragen aan de vooruitgang van technologie.  <br />
             <br />
-We envision a world where hackathons serve as catalysts for positive change, driving innovation, fostering collaboration, and empowering individuals and organizations to solve complex challenges and shape the future of technology.
-          </p>
+We zien een wereld voor ons waar hackathons dienen als katalysatoren voor positieve verandering, waarbij innovatie wordt gestimuleerd, samenwerking wordt bevorderd en individuen en organisaties worden in staat gesteld om complexe uitdagingen op te lossen en de toekomst van technologie vorm te geven.          </p>
         </div>
       </div>
       <div class="mission-vision-image-column">

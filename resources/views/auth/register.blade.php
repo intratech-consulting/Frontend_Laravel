@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register Employee</title>
+    <title>Gast Registreren</title>
 
     <style>
 
@@ -79,18 +79,18 @@
 @include('user.components.header')
 
 <div class="registration-card">
-    <h2>Register Page Geust</h2>
+    <h2>Gast Registreren</h2>
 
     <form method="POST" action="{{ route('register_test') }}">
         @csrf
 
         <div class="form-group">
-            <label for="first_name">First Name</label>
+            <label for="first_name">Voornaam</label>
             <input id="first_name" type="text" name="first_name" value="{{ old('first_name') }}" required autofocus>
         </div>
 
         <div class="form-group">
-            <label for="last_name">Last Name</label>
+            <label for="last_name">Achternaam</label>
             <input id="last_name" type="text" name="last_name" value="{{ old('last_name') }}" required>
         </div>
 
@@ -100,66 +100,67 @@
         </div>
 
         <div class="form-group">
-            <label for="telephone">Telephone</label>
+            <label for="telephone">Telefoon</label>
             <input id="telephone" type="text" name="telephone" value="{{ old('telephone') }}">
         </div>
 
         <div class="form-group">
-            <label for="birthday">Birthday</label>
+            <label for="birthday">Verjaardag</label>
             <input id="birthday" type="date" name="birthday" value="{{ old('birthday') }}">
         </div>
 
         <div class="form-group">
-            <label for="country">Country</label>
+            <label for="country">Land</label>
             <input id="country" type="text" name="country" value="{{ old('country') }}">
         </div>
 
         <div class="form-group">
-            <label for="state">State</label>
+            <label for="state">Staat</label>
             <input id="state" type="text" name="state" value="{{ old('state') }}">
         </div>
 
         <div class="form-group">
-            <label for="city">City</label>
+            <label for="city">Stad</label>
             <input id="city" type="text" name="city" value="{{ old('city') }}">
         </div>
 
         <div class="form-group">
-            <label for="zip">ZIP Code</label>
+            <label for="zip">Postcode</label>
             <input id="zip" type="text" name="zip" value="{{ old('zip') }}">
         </div>
 
         <div class="form-group">
-            <label for="street">Street</label>
+            <label for="street">Straat</label>
             <input id="street" type="text" name="street" value="{{ old('street') }}">
         </div>
 
         <div class="form-group">
-            <label for="house_number">House Number</label>
+            <label for="house_number">Huisnummer</label>
             <input id="house_number" type="text" name="house_number" value="{{ old('house_number') }}">
         </div>
 
         <div class="form-group">
-            <label for="invoice">Invoice</label>
+            <label for="invoice">Iban</label>
             <select id="invoice" name="invoice">
-                <option value="Yes">Yes</option>
+                <option value="No">Nee</option>
+                <option value="Yes">Ja</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password">Wachtwoord</label>
             <input id="password" type="password" name="password" required autocomplete="new-password">
         </div>
 
         <div class="form-group">
-            <label for="password_confirmation">Confirm Password</label>
+            <label for="password_confirmation">Wachtwoord bevestigen</label>
             <input id="password_confirmation" type="password" name="password_confirmation" required>
         </div>
 
         <input type="hidden" name="user_role" value="individual">
 
         <div class="button-container">
-            <button type="submit">Register</button>
+            <button type="submit">Registreer</button>
         </div>
     </form>
 </div>

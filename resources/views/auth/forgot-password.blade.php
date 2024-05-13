@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forgot Password</title>
+    <title>Wachtwoord vergeten</title>
     <style>
         .forgot-password-card {
             width: 500px;
@@ -80,9 +80,9 @@
 
 
     <div class="forgot-password-card">
-        <h2>Forgot Password?</h2>
+        <h2>Wachtwoord vergeten?</h2>
         <div class="message">
-            {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+            {{ __('Geen probleem. Laat ons gewoon je e-mailadres weten en we sturen je een e-mail met een link om je wachtwoord opnieuw in te stellen, zodat je een nieuwe kunt kiezen.') }}
         </div>
 
         <!-- Session Status -->
@@ -99,7 +99,7 @@
             </div>
 
             <div class="button-container">
-                <button type="submit">Email Password Reset Link</button>
+                <button type="submit">Email wachtwoordresetlink</button>
             </div>
         </form>
     </div>

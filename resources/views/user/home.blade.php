@@ -255,11 +255,11 @@
   <main class="hackathon-container">
     <section class="hero-section">
       <div class="hero-content">
-        <h1 class="hero-title">Test your knowledge with our hackathons</h1>
+        <h1 class="hero-title">Probeer je kennis uit met onze hackathons.</h1>
         <p class="hero-description">
-          It's important to take the time to know your skills and improve them with projects and learning how to work in a team.
+Het is belangrijk om de tijd te nemen om je vaardigheden te leren kennen en ze te verbeteren met projecten en door te leren hoe je in een team kunt werken.
         </p>
-        <a href="{{url('about')}}" class="hero-cta">About us</a>
+        <a href="{{url('about')}}" class="hero-cta">Over ons</a>
       </div>
       <div class="hero-image-container">
         <img src="https://images.unsplash.com/photo-1582192730841-2a682d7375f9?q=80&w=2748&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="hero-background" />
@@ -268,30 +268,30 @@
     
     <section class="features-section">
       <div class="features-container">
-        <h2 class="features-title">80+ Hackathon Horizons: Explore, Innovate, Disrupt!</h2>
+        <h2 class="features-title">80+ Hackathon Horizons: Verken, Innoveer, Verstoor!</h2>
         <div class="features-list">
           <div class="feature-item">
             <div class="feature-divider"></div>
             <div class="feature-content">
               <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/8eb0a50c093d6da24be5fc6b9aa04f8232d8f64f6055b4637ec0c8a840d22705?apiKey=faa644a41149444c9c3e35e1f35c0dc5&" alt="" class="feature-icon" />
-              <h3 class="feature-name">Explore</h3>
-              <p class="feature-description">Venture into new tech realms.</p>
+              <h3 class="feature-name">Verkennen</h3>
+              <p class="feature-description">Waag je in nieuwe technologische gebieden.</p>
             </div>
           </div>
           <div class="feature-item">
             <div class="feature-divider"></div>
             <div class="feature-content">
               <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/7e863eca1c6abb33c8a0fd00da5f97d4db6b4e0d7e581edae9e87bb4cae589b3?apiKey=faa644a41149444c9c3e35e1f35c0dc5&" alt="" class="feature-icon" />
-              <h3 class="feature-name">Innovate</h3>
-              <p class="feature-description">Pioneer game-changing solutions.</p>
+              <h3 class="feature-name">Innoveren</h3>
+              <p class="feature-description">Baanbrekende oplossingen pionieren.</p>
             </div>
           </div>
           <div class="feature-item">
             <div class="feature-divider"></div>
             <div class="feature-content">
               <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/316b7e3118b8bd7d4b27af7881b2066f8e50908c608de5ba2f2f8e85e3c691ad?apiKey=faa644a41149444c9c3e35e1f35c0dc5&" alt="" class="feature-icon" />
-              <h3 class="feature-name">Disrupt</h3>
-              <p class="feature-description">Challenge norms with bold ideas.</p>
+              <h3 class="feature-name">Verstoren</h3>
+              <p class="feature-description">Normen uitdagen met gedurfde ideeën.</p>
             </div>
           </div>
         </div>
@@ -301,19 +301,19 @@
     <section class="cta-section">
       <div class="cta-container">
         <div class="cta-content">
-          <h2 class="cta-title">Join the Hackathon Community Today!</h2>
+          <h2 class="cta-title">Doe vandaag nog mee met de hackathon-community!</h2>
           <p class="cta-description">
-            Unlock endless possibilities by becoming a member of our vibrant hackathon community. Whether you're an individual coder eager to participate or a company ready to host an innovative event, we provide the platform to connect, collaborate, and create. Join us now and be part of something extraordinary!
+Ontgrendel eindeloze mogelijkheden door lid te worden van onze levendige hackathon-community. Of je nu een individuele programmeur bent die graag wil deelnemen of een bedrijf dat klaar staat om een innovatief evenement te organiseren, wij bieden het platform om te verbinden, samen te werken en te creëren. Sluit je nu aan en maak deel uit van iets buitengewoons!
           </p>
           <div class="cta-benefit">
             <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/9ff9861741df2b7b331c157420c56522fa59c63a59ee4dd09b1fb2ef6ffc238c?apiKey=faa644a41149444c9c3e35e1f35c0dc5&" alt="" class="cta-benefit-icon" />
-            <span class="cta-benefit-text">Connect with tech enthusiasts</span>
+            <span class="cta-benefit-text">Verbind met technologieliefhebbers.</span>
           </div>
           <div class="cta-benefit">
             <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/9ff9861741df2b7b331c157420c56522fa59c63a59ee4dd09b1fb2ef6ffc238c?apiKey=faa644a41149444c9c3e35e1f35c0dc5&" alt="" class="cta-benefit-icon" />
-            <span class="cta-benefit-text">Develop skills and network</span>
+            <span class="cta-benefit-text">Ontwikkel vaardigheden en bouw een netwerk op.</span>
           </div>
-          <a href="{{url('registration')}}" class="cta-button">Register</a>
+          <a href="{{url('registration')}}" class="cta-button">Registreren</a>
         </div>
       </div>
     </section>
