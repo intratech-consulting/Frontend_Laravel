@@ -31,11 +31,9 @@ class User extends Authenticatable
         'house_number',
         'company_email',
         'company_id',
-        'source',
         'user_role',
         'invoice',
-        'routing_key',
-        'crud_operation',
+        'calendar_link',
         'password',
     ];
 

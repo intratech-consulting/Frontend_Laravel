@@ -156,6 +156,8 @@
             <input id="password_confirmation" type="password" name="password_confirmation" required>
         </div>
 
+        <input type="hidden" name="user_role" value="individual">
+
         <div class="button-container">
             <button type="submit">Register</button>
         </div>

@@ -1,21 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Services\RabbitMQSendToExhangeService;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Validation\Rule;
 
 
 
 
-class testController extends Controller
+class EmployeeController extends Controller
 {
     protected $rabbitMQService;
 
@@ -54,9 +44,6 @@ class testController extends Controller
             'house_number' => ['required', 'string', 'max:20'],
             'invoice' => ['required'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'company_email' => ['nullable', 'string', 'email', 'max:255'],
-            'company_id' => ['nullable', 'integer'],
-            'user_role' => ['required', 'string', Rule::in(['individual', 'employee', 'speaker'])],
 
         ]);
         
@@ -73,10 +60,11 @@ class testController extends Controller
             'zip' => $userData['zip'],
             'street' => $userData['street'],
             'house_number' => $userData['house_number'],
+            'source' => 'frontend',
             'invoice' => $userData['invoice'],
-            'user_role' => $userData['user_role'],
-            'company_email' => $userData['company_email'],
-            'company_id' => $userData['company_id'],
+            'user_role' => 'individual',
+            'routing_key' => 'user.frontend',
+            'crud_operation' => 'create',
 
         ]);
 
@@ -115,9 +103,8 @@ class testController extends Controller
         
         
         $xmlMessage = new \SimpleXMLElement('<user/>');
-        $xmlMessage->addChild('routing_key', 'user.frontend');
-        $xmlMessage->addChild('crud_operation', 'create');
-        $xmlMessage->addChild('id', $masterUuid);
+        $xmlMessage->addChild('routing_key', 'user.crm');
+        $xmlMessage->addChild('user_id', $masterUuid);
         $xmlMessage->addChild('first_name', $userData['first_name']);
         $xmlMessage->addChild('last_name', $userData['last_name']);
         $xmlMessage->addChild('email', $userData['email']);
@@ -131,14 +118,6 @@ class testController extends Controller
         $address->addChild('zip', $userData['zip']);
         $address->addChild('street', $userData['street']);
         $address->addChild('house_number', $userData['house_number']);
-
-        $address->addChild('company_email', $userData['company_email']);
-        $address->addChild('company_id', $userData['company_id']);
-        $address->addChild('source', 'frontend');
-        $address->addChild('user_role', $userData['user_role']);
-        $address->addChild('invoice', $userData['invoice']);
-        $address->addChild('calendar_link', '');
-
 
         // Convert XML to string
         $message = $xmlMessage->asXML();
