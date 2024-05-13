@@ -8,6 +8,7 @@ use App\Http\Controllers\footerController;
 use App\Http\Controllers\AMQPReceiveTesterController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\RoleRegisterController;
+use App\Http\Controllers\EventController;
 
 
 
@@ -48,6 +49,25 @@ Route::middleware('web')->group(function () {
     Route::get('/planning', [headerController::class, 'planning']);
     Route::get('/contact', [headerController::class, 'contact']);
     Route::get('/registration', [headerController::class, 'registration']);
+
+
+    // Event creation
+    Route::get('/register_company', [headerController::class, 'register_company']);
+    Route::post('/send-message-to-topicss', [EventController::class, 'sendMessageToTopic'])->name('sendMessageToTopic');
+    Route::match(['get', 'post'], '/create_event', [EventController::class, 'test'])->name('test');
+    Route::post('/create_event', [EventController::class, 'create_event'])->name('create_event');
+
+
+
+
+    // Company creation
+    Route::get('/make_company', [headerController::class, 'show_company']);
+    Route::post('/create_company', [EventController::class, 'create_company'])->name('create_company');
+    Route::match(['get', 'post'], '/create_company', [EventController::class, 'test'])->name('test');
+    Route::post('/send-message-to-topicsss', [EventController::class, 'sendMessageToTopic'])->name('sendMessageToTopic');
+
+
+
 
 
 

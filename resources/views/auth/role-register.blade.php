@@ -94,14 +94,14 @@
                 <a href="{{url('register_speaker')}}">
                     <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2832&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Speaker">
                 </a>
-                <a href="speaker.html" class="navigation-link">Speaker</a>
+                <a href="{{url('register_speaker')}}" class="navigation-link">Speaker</a>
             </div>
         </div>
         <div class="long-image">
             <a href="{{url('register_company')}}">
                 <img src="https://images.unsplash.com/photo-1531973576160-7125cd663d86?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Company">
             </a>
-            <a href="company.html" class="navigation-link">Company</a>
+            <a href="{{url('register_company')}}" class="navigation-link">Company</a>
         </div>
     </div>
 

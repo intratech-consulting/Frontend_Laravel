@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\RecievePlanningController;
+use Illuminate\Routing\Controller;
+
 
 
  class headerController extends Controller
@@ -67,5 +69,10 @@ public function events()
 public function registration()
     {
    return view('auth.role-register');
+    }
+
+public function show_events()
+    {
+   return view('user.event-create');
     }
 }
