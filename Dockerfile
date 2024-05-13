@@ -36,6 +36,12 @@ USER app
 COPY composer.json composer.lock ./
 RUN composer install --no-progress --no-interaction
 
+# Copy .env.example to .env
+RUN cp .env.example .env
+
+# Generate application key
+RUN php artisan key:generate
+
 # Set environment variables if needed
 ENV PORT=8000
 
