@@ -53,7 +53,7 @@ VOLUME /var/www/node_modules
 # Heartbeat
 FROM python:3
 
-WORKDIR /TestServer/frontend/Laravel/hackathon_frontend
+WORKDIR /TestServer/frontend/Laravel/Frontend_Laravel
 COPY . .
 
 RUN pip install --no-cache-dir -r requirements.txt
