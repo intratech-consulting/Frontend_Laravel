@@ -25,7 +25,7 @@ class Kernel extends ConsoleKernel
         $this->load(__DIR__.'/Commands');
 
         $this->commands([
-            ProcessUserMessages::class, // Add this line
+            \App\Console\ProcessUserMessages::class,
         ]);
 
         require base_path('routes/console.php');
