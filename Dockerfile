@@ -37,9 +37,6 @@ RUN composer self-update --2 && \
 # Copy .env.example to .env
 RUN cp .env.example .env
 
-# Generate application key
-RUN php artisan key:generate
-
 # Set environment variables if needed
 ENV PORT=8000
 
