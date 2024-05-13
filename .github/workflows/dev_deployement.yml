@@ -32,15 +32,18 @@ jobs:
 
       - name: Deploy new version
         run: |
-          printf "${{env.SSH_USER}}@${{env.SSH_HOST}}\n${{env.SSH_PRIVATE_KEY}}"
           sudo apt-get install sshpass
           sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/deployment.key <<'ENDSSH'
           eval $(ssh-agent)
           ssh-add ~/.ssh/github_intratechconsulting
-          cd ~/TestServer/frontend/Laravel
+          cd ~/TestServer/frontend/Frontend_Laravel
           ls -l
           docker compose down
           git checkout development
           git pull
           docker compose up --build -d
+          docker exec frontend_laravel-php-1 chown -R www-data:www-data /var/www/public
+          docker exec frontend_laravel-php-1 chown -R www-data:www-data /var/www/storage
+          docker exec frontend_laravel-php-1 chmod -R 775 /var/www/public
+          docker exec frontend_laravel-php-1 chmod -R 775 /var/www/storage
           ENDSSH
