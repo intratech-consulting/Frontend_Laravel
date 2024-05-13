@@ -37,7 +37,7 @@ jobs:
           sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/deployment.key <<'ENDSSH'
           eval $(ssh-agent)
           ssh-add ~/.ssh/github_intratechconsulting
-          cd ~/TestServer/frontend
+          cd ~/TestServer/frontend/Laravel
           ls -l
           docker compose down
           git checkout development
