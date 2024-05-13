@@ -29,10 +29,10 @@ COPY --from=composer:2.7.4 /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 # Install Composer dependencies
-COPY composer.json composer.lock ./
+# Update Composer dependencies and install
 RUN composer self-update --2 && \
     composer update --no-interaction --prefer-dist && \
-    composer install --no-progress --no-interaction
+    composer install --no-progress --no-interaction || (cat /var/www/storage/logs/*.log && exit 1)
 
 # Copy .env.example to .env
 RUN cp .env.example .env
