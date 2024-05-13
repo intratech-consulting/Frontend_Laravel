@@ -97,8 +97,16 @@ border-radius: 3px
       <li><a href="{{url('planning')}}">Planning</a></li>
       <li><a href="{{url('about')}}">About</a></li>
       <li><a href="{{url('contact')}}">Contact</a></li>
+
+      @if(Route::has('login'))
+      @auth
+      <x-app-layout>
+      </x-app-layout>
+      @else
       <li class="connect"><a href="{{ route('login') }}">Login</a></li>
       <li class="connect"><a href="{{url('registration')}}">Register</a></li>
+      @endauth
+      @endif		
     </ul>
   </nav>
 </header>
