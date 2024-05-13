@@ -1,4 +1,4 @@
-name: Deploy to Development
+name: Deploy to staging
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy frontend to dev
+    name: Deploy frontend to staging
     runs-on: [self-hosted]
     environment: staging
     env:
