@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev  \
     libonig-dev \
     libzip-dev \
-    libsocket6-perl 
+    libsocket6-perl
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo pdo_mysql bcmath sockets mbstring
@@ -36,6 +36,8 @@ RUN composer require beyondcode/laravel-websockets -w
 # Set environment variables if needed
 ENV PORT=8000
 ENTRYPOINT [ "docker/entrypoint.sh" ]
+
+CMD ["php-fpm"]
 
 
 ##############################################################################
