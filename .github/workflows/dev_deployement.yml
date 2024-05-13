@@ -17,19 +17,30 @@ jobs:
       SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       SSH_PORT: ${{ secrets.SSH_PORT }}
-    
+
     steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deployment.key
+          chmod 600 ~/.ssh/deployment.key
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          sudo apt-get install sshpass
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Deploy new version
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.SSH_HOST }}
-          username: ${{ env.SSH_USER }}
-          password: ${{ env.SSH_PASSWORD }}
-          key: ${{ env.SSH_PRIVATE_KEY }}
-          port: ${{ env.SSH_PORT }}
-          script: |
-            cd ~/TestServer/frontend/Laravel
-            docker compose down
-            git checkout development
-            git pull
-            docker compose up -d
+        run: |
+          sshpass -p ${{ env.SSH_PASSWORD }} ssh -v -o StrictHostKeyChecking=no ${{ env.SSH_USER }}@${{ env.SSH_HOST }} <<'ENDSSH'
+          eval $(ssh-agent)
+          ssh-add ~/.ssh/github_intratechconsulting
+          cd ~/TestServer/frontend
+          ls -l
+          docker compose down
+          git checkout dev
+          git pull
+          echo -e "HOST='${{ secrets.SSH_HOST }}'\nKEY_FILE='${{ secrets.SALESFORCE_KEY_FILE }}'\nISSUER='${{ secrets.SALESFORCE_CONSUMER_KEY }}'\nSUBJECT='${{ secrets.SALESFORCE_SUBJECT }}'\nDOMAIN_NAME='${{ secrets.SALESFORCE_DOMAIN_NAME }}'\nACCESS_TOKEN=''" > ./config/secrets.py
+          echo "${{ secrets.SALESFORCE_PRIVATE_KEY }}" > ./config/salesforce.key
+          docker compose up --build -d
+          ENDSSH
