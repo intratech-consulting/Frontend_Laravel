@@ -61,6 +61,7 @@ services:
                chown -R www-data:www-data /var/www/public &&
                chmod -R 775 /var/www/storage &&
                chmod -R 775 /var/www/public &&
+               chmod -R 775 /var/www/bootstrap/cache
                php-fpm -F"
     volumes:
       - ./:/var/www
