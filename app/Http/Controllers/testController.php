@@ -79,11 +79,41 @@ class testController extends Controller
 
 
         $userId = $user->id;
+
+        // Create a new Guzzle HTTP client
+        $client = new \GuzzleHttp\Client();
+
+        // Define the data for the request
+        $data = [
+            'Service' => 'frontend',
+            'ServiceId' => $userId, // Assuming $userId is the ID of the newly created user
+        ];
+
+        try {
+            // Make the POST request
+            $response = $client->request('POST', 'http://10.2.160.51:6000/createMasterUuid', [
+                'json' => $data
+            ]);
+
+            // Get the response body
+            $body = $response->getBody();
+
+            // Decode the JSON response
+            $json = json_decode($body, true);
+
+            // Get the MASTERUUID from the response
+            $masterUuid = $json['MASTERUUID'];
+
+            // Now you can use $masterUuid for whatever you need
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            // Handle the exception
+            echo $e->getMessage();
+        }
         
         
         $xmlMessage = new \SimpleXMLElement('<user/>');
         $xmlMessage->addChild('routing_key', 'user.crm');
-        $xmlMessage->addChild('user_id', $user->id);
+        $xmlMessage->addChild('user_id', $masterUuid);
         $xmlMessage->addChild('first_name', $userData['first_name']);
         $xmlMessage->addChild('last_name', $userData['last_name']);
         $xmlMessage->addChild('email', $userData['email']);
