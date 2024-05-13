@@ -25,9 +25,6 @@ COPY . .
 
 # Install Composer
 COPY --from=composer:2.7.4 /usr/bin/composer /usr/bin/composer
-
-ENV COMPOSER_ALLOW_SUPERUSER=1
-
 ## Install Composer dependencies
 ## Update Composer dependencies and install
 #RUN composer self-update --2 && \
@@ -37,15 +34,8 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 # Copy .env.example to .env
 RUN cp .env.example .env
 
-RUN php artisan config:clear && \
-    php artisan cache:clear && \
-    php artisan view:clear && \
-    php artisan route:clear
-
 # Set environment variables if needed
 ENV PORT=8000
-
-CMD ["php-fpm"]
 
 ##############################################################################
 # Node
