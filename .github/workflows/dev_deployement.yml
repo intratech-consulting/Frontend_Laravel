@@ -42,8 +42,5 @@ jobs:
           git checkout development
           git pull
           docker compose up --build -d
-          docker exec frontend_laravel-php-1 chown -R www-data:www-data /var/www/public
-          docker exec frontend_laravel-php-1 chown -R www-data:www-data /var/www/storage
-          docker exec frontend_laravel-php-1 chmod -R 775 /var/www/public
-          docker exec frontend_laravel-php-1 chmod -R 775 /var/www/storage
+          docker exec frontend_laravel-php-1 php-fpm -D
           ENDSSH

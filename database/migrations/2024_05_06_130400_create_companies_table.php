@@ -15,9 +15,7 @@ class CreateCompaniesTable extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
-            $table->string('routing_key');
-            $table->string('crud_operation');
-            $table->bigInteger('external_id');
+            $table->string('user_role');
             $table->string('name');
             $table->string('email')->unique();
             $table->string('telephone');
@@ -30,6 +28,7 @@ class CreateCompaniesTable extends Migration
             $table->string('house_number');
             $table->string('type');
             $table->string('invoice');
+            $table->string('password');
             $table->timestamps();
         });
     }

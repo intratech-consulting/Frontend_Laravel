@@ -25,18 +25,17 @@ COPY . .
 
 # Install Composer
 COPY --from=composer:2.7.4 /usr/bin/composer /usr/bin/composer
+## Install Composer dependencies
+## Update Composer dependencies and install
+#RUN composer self-update --2 && \
+#    composer update --no-interaction --prefer-dist && \
+#    composer install --no-progress --no-interaction || (cat /var/www/storage/logs/*.log && exit 1)
 
-# Install Composer dependencies
-COPY composer.json composer.lock ./
-RUN composer install --no-progress --no-interaction
-
-# Install Laravel Websockets if needed
-RUN composer require beyondcode/laravel-websockets -w
+# Copy .env.example to .env
+RUN cp .env.example .env
 
 # Set environment variables if needed
 ENV PORT=8000
-
-CMD ["php-fpm"]
 
 ##############################################################################
 # Node

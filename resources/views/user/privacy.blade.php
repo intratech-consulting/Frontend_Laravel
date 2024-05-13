@@ -60,45 +60,40 @@
     <h2 class="privacy-title">Privacy Policy</h2>
 
     <div class="privacy-content">
-      <h2>Information We Collect:</h2>
+      <h2>Informatie die we verzamelen:</h2>
 
-      We collect personal information such as your name, email address, and any other details you provide when registering as a member or organizing a hackathon. Additionally, we may collect non-personal information such as browser type, operating system, and IP address for analytical purposes.
-
+      We verzamelen persoonlijke informatie zoals je naam, e-mailadres en andere gegevens die je verstrekt bij het registreren als lid of het organiseren van een hackathon. Daarnaast kunnen we niet-persoonlijke informatie verzamelen zoals browsertype, besturingssysteem en IP-adres voor analytische doeleinden.
       <br><br>
 
-      <h2>How We Use Your Information:</h2>
+      <h2>Hoe we jouw informatie gebruiken:</h2>
 
-      We use the information you provide to facilitate your participation in hackathons, communicate with you about upcoming events, and improve our services. Your personal information may also be used for administrative purposes, such as account management and troubleshooting.
-
+      We gebruiken de informatie die je verstrekt om je deelname aan hackathons te vergemakkelijken, om met je te communiceren over aankomende evenementen en om onze diensten te verbeteren. Jouw persoonlijke informatie kan ook worden gebruikt voor administratieve doeleinden, zoals accountbeheer en probleemoplossing.
       <br><br>
 
-      <h2>Disclosure of Information:</h2>
+      <h2>Openbaarmaking van informatie:</h2>
 
-      We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except as required by law or to fulfill the purposes outlined in this Privacy Policy. However, non-personal information may be shared with trusted third-party service providers for analytics and marketing purposes.
-
+      We verkopen, verhandelen of anderszins overdragen jouw persoonlijke informatie niet aan derden zonder jouw toestemming, behalve zoals vereist door de wet of om de doeleinden uiteengezet in dit privacybeleid te vervullen. Niet-persoonlijke informatie kan echter worden gedeeld met vertrouwde derde dienstverleners voor analytische en marketingdoeleinden.
       <br><br>
 
-      <h2>Security Measures:</h2>
+      <h2>Beveiligingsmaatregelen:</h2>
 
-      We implement a variety of security measures to safeguard your personal information and prevent unauthorized access, disclosure, or alteration. These measures include encryption, firewalls, and regular security audits.
-
+      We implementeren verschillende beveiligingsmaatregelen om jouw persoonlijke informatie te beschermen en ongeautoriseerde toegang, openbaarmaking of wijziging te voorkomen. Deze maatregelen omvatten encryptie, firewalls en regelmatige beveiligingsaudits.
       <br><br>
 
-      <h2>Your Rights:</h2>
+      <h2>Jouw Rechten:</h2>
 
-      You have the right to access, correct, or delete your personal information at any time. You may also unsubscribe from our communications or request that we restrict the processing of your data. Please contact us if you have any questions or concerns regarding your privacy rights.
-
+      Je hebt het recht om op elk moment toegang te krijgen tot, correcties aan te brengen of je persoonlijke informatie te verwijderen. Je kunt je ook afmelden voor onze communicatie of verzoeken dat we de verwerking van je gegevens beperken. Neem contact met ons op als je vragen of zorgen hebt over je privacyrechten.
       <br><br>
 
       <h2>Erasmushogeschool Brussel:</h2>
 
-      Hackathon Desiderius was created by students of Erasmushogeschool Brussel as part of a project to promote innovation and collaboration in the tech community. We are proud to have the support and expertise of our academic institution in developing and maintaining this platform.
-
+      Hackathon Desiderius is gecreëerd door studenten van de Erasmushogeschool Brussel als onderdeel van een project om innovatie en samenwerking in de techgemeenschap te bevorderen. We zijn trots op de steun en expertise van onze academische instelling bij het ontwikkelen en onderhouden van dit platform.
       <br><br>
 
-      <h2>Contact Us:</h2>
+      <h2>Neem contact met ons op:</h2>
 
-      If you have any questions or concerns about our Privacy Policy or the handling of your personal information, please contact us at <a href="mailto:lenno.lemmens@student.ehb.be">lenno.lemmens@student.ehb.be</a> .
+      
+      Als je vragen of zorgen hebt over ons privacybeleid of de behandeling van jouw persoonlijke informatie, neem dan contact met ons op via <a href="mailto:lenno.lemmens@student.ehb.be">lenno.lemmens@student.ehb.be</a> .
     </div>
   </section>
 
