@@ -37,8 +37,6 @@ RUN composer require beyondcode/laravel-websockets -w
 ENV PORT=8000
 ENTRYPOINT [ "docker/entrypoint.sh" ]
 
-CMD ["php-fpm"]
-
 
 ##############################################################################
 # Node
