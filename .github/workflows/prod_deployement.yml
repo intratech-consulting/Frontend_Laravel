@@ -41,4 +41,5 @@ jobs:
           git checkout staging
           git pull
           docker compose up --build -d
+          docker exec frontend_laravel-php-1 php-fpm -D
           ENDSSH
