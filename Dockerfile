@@ -33,10 +33,11 @@ RUN composer install --no-progress --no-interaction
 # Install Laravel Websockets if needed
 RUN composer require beyondcode/laravel-websockets -w
 
+RUN php-fpm -D -F
+
 # Set environment variables if needed
 ENV PORT=8000
-
-CMD ["php-fpm"]
+ENTRYPOINT [ "docker/entrypoint.sh" ]
 
 ##############################################################################
 # Node
