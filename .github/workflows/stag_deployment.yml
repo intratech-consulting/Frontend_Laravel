@@ -3,14 +3,14 @@ name: Deploy to Development
 on:
   push:
     branches:
-      - main
+      - staging
   workflow_dispatch:
 
 jobs:
   deploy:
     name: Deploy frontend to dev
     runs-on: [self-hosted]
-    environment: production
+    environment: staging
     env:
       SSH_HOST: ${{ secrets.SSH_HOST }}
       SSH_USER: ${{ secrets.SSH_USER }}
@@ -36,7 +36,7 @@ jobs:
           sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/deployment.key <<'ENDSSH'
           eval $(ssh-agent)
           ssh-add ~/.ssh/github_intratechconsulting
-          cd ~/production/frontend/Laravel
+          cd ~/staging/frontend/Laravel
           docker compose down
           git checkout staging
           git pull

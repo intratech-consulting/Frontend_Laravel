@@ -10,25 +10,25 @@ services:
       MYSQL_ROOT_PASSWORD: password
     restart: always # Check need
     ports: # Check need + port (if changed => also change in .env file)
-      - 3306:3306
+      - 3307:3306
     volumes:
-      - mysql-data:/var/lib/mysql
+      - frontend-db-data:/var/lib/mysql
     networks:
-      - backend
+      - laravel_backend
     
-  # Apache Service
+
+ # Apache Service
   webserver:
     image: nginx:latest
     restart: always
     ports:
-      - 9000:80
+      - 9999:80
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf 
-    depends_on:
-      - php
+      - ./nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf #works
+      - ./public:/usr/share/nginx/html
     networks:
-      - backend
-
+      - laravel_backend
+    
   # phpmyadmin
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -40,6 +40,8 @@ services:
       MYSQL_ROOT_PASSWORD: password
     depends_on:
       - database
+    networks:
+      - laravel_backend
   
   #PHP Service
   php:
@@ -50,51 +52,21 @@ services:
         - APP_ENV=${APP_ENV}
     environment:
       - APP_ENV=${APP_ENV}
+      - APP_KEY=${APP_KEY}
       - CONTAINER_ROLE=app
     working_dir: /var/www
     restart: always
+    command: php-fpm -F -R
     volumes:
       - ./:/var/www
     ports:
-      - 8000:8000
+      - 8000:9000
     expose:
       - 9000
     depends_on:
       - database
     networks:
-      - backend
-
-  
- #Websocket Service
-  websocket:
-    build:
-      context: .
-      target: php
-      args:
-        - APP_ENV=${APP_ENV}
-    environment:
-      - APP_ENV=${APP_ENV}
-      - CONTAINER_ROLE=websocket
-    working_dir: /var/www
-    restart: always
-    volumes:
-      - ./:/var/www
-    ports:
-      - 6001:6001
-    depends_on:
-      - database
-    networks:
-      - backend
-
-  # Node Service
-  node:
-    build:
-      context: .
-      target: node
-    volumes:
-      - ./:/usr/src
-      - ./node_modules:/usr/src/node_modules
-    tty: true
+      - laravel_backend
 
   # Heartbeat Service 
   heartbeat:
@@ -105,7 +77,8 @@ services:
 
 
 volumes:
-  mysql-data: 
+  frontend-db-data: 
 
 networks:
-  backend:
+  laravel_backend:
+    driver: bridge

@@ -2,13 +2,15 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Controller;
-use Symfony\Component\Routing\RouteCollection;
 use App\Http\Controllers\testController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\headerController;
 use App\Http\Controllers\footerController;
+use App\Http\Controllers\AMQPReceiveTesterController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\RoleRegisterController;
+use App\Http\Controllers\EventController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,47 +23,72 @@ use App\Http\Controllers\footerController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::middleware('web')->group(function () {
+    Route::get('/', function () {
+        return view('user.home');
+    });
+
+    Route::post('/send-message-to-topic', [testController::class, 'sendMessageToTopic'])->name('send_message_to_topic');
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->middleware(['auth', 'verified'])->name('dashboard');
+
+    Route::middleware(['web', 'auth'])->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
+
+    Route::match(['get', 'post'], '/test', [testController::class, 'test'])->name('test');
+
+    // Header Routes
+    Route::get('/home', [headerController::class, 'home']);
+    Route::get('/about', [headerController::class, 'about']);
+    Route::get('/events', [headerController::class, 'events']);
+    Route::get('/planning', [headerController::class, 'planning']);
+    Route::get('/contact', [headerController::class, 'contact']);
+    Route::get('/registration', [headerController::class, 'registration']);
+
+
+    // Event creation
+    Route::get('/register_company', [headerController::class, 'register_company']);
+    Route::post('/send-message-to-topicss', [EventController::class, 'sendMessageToTopic'])->name('sendMessageToTopic');
+    Route::match(['get', 'post'], '/create_event', [EventController::class, 'test'])->name('test');
+    Route::post('/create_event', [EventController::class, 'create_event'])->name('create_event');
+
+
+
+
+    // Company creation
+    Route::get('/make_company', [headerController::class, 'show_company']);
+    Route::post('/create_company', [EventController::class, 'create_company'])->name('create_company');
+    Route::match(['get', 'post'], '/create_company', [EventController::class, 'test'])->name('test');
+    Route::post('/send-message-to-topicsss', [EventController::class, 'sendMessageToTopic'])->name('sendMessageToTopic');
+
+
+
+
+
+
+    //role register
+    Route::get('/register_speaker', [RoleRegisterController::class, 'register_speaker']);
+    Route::get('/register_company', [RoleRegisterController::class, 'register_company']);
+
+
+    // Footer Routes
+    Route::get('/privacy', [footerController::class, 'privacy']);
+
+    // Test display rabbit
+    Route::get('/display', [AMQPReceiveTesterController::class, 'displayMessage'])->name('display.message');
+
+    Route::fallback(function () {
+        abort(404, 'Page not found');
+    });
+
+    Route::post('/test', [testController::class, 'register'])->name('register_test');
+
+
+
+    require __DIR__.'/auth.php';
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-Route::middleware('guest')->group(function () {
-    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login']);
-});
-
-Route::middleware('guest')->group(function () {
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('/register', [RegisterController::class, 'register']);
-});
-
-
-Route::post('/send-message', [testController::class, 'sendMessage'])->name('send.message');
-Route::match(['get', 'post'], '/test', [testController::class, 'test'])->name('test');
-
-
-
-//header
-
-Route::get('/home', [headerController::class, 'home']);
-Route::get('/about', [headerController::class, 'about']);
-Route::get('/events', [headerController::class, 'events']);
-Route::get('/planning', [headerController::class, 'planning']);
-Route::get('/contact', [headerController::class, 'contact']);
-
-
-//footer
-Route::get('/privacy', [footerController::class, 'privacy']);
-
-
-require __DIR__.'/auth.php';

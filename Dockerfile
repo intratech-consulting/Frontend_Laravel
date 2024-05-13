@@ -1,8 +1,10 @@
-FROM php:8.3 as php
+# Use PHP 8.3 FPM image as the base
+FROM php:8.3-fpm as php
 
-# Install PHP-FPM package for PHP 8.3
-RUN apt-get update && apt-get install -y php8.3-fpm
+# Install Git
+RUN apt-get update && apt-get install -y git
 
+# Install additional dependencies
 RUN apt-get update && apt-get install -y \
     unzip \
     libpq-dev \
@@ -12,21 +14,29 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libsocket6-perl 
 
+# Install PHP extensions
 RUN docker-php-ext-install pdo pdo_mysql bcmath sockets mbstring
 
-
+# Set working directory
 WORKDIR /var/www
+
+# Copy application files
 COPY . .
 
+# Install Composer
 COPY --from=composer:2.7.4 /usr/bin/composer /usr/bin/composer
 
+# Install Composer dependencies
 COPY composer.json composer.lock ./
 RUN composer install --no-progress --no-interaction
 
-RUN composer require beyondcode/laravel-websockets
+# Install Laravel Websockets if needed
+RUN composer require beyondcode/laravel-websockets -w
 
+# Set environment variables if needed
 ENV PORT=8000
 ENTRYPOINT [ "docker/entrypoint.sh" ]
+
 
 ##############################################################################
 # Node
@@ -49,3 +59,6 @@ COPY . .
 RUN pip install --no-cache-dir -r requirements.txt
 
 CMD [ "python", "heartbeat.py" ]
+
+
+
