@@ -37,7 +37,7 @@ class testController extends Controller
     }
 
     public function register(Request $request)
-    {       
+    {
         $userData = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -56,7 +56,7 @@ class testController extends Controller
             'company_id' => ['nullable', 'integer'],
             'user_role' => ['required', 'string', Rule::in(['individual', 'employee', 'speaker'])],
         ]);
-        
+
         $user = User::create([
             'first_name' => $userData['first_name'],
             'last_name' => $userData['last_name'],
@@ -108,8 +108,8 @@ class testController extends Controller
             // Handle the exception
             echo $e->getMessage();
         }
-        
-        
+
+
         $xmlMessage = new \SimpleXMLElement('<user/>');
         $xmlMessage->addChild('routing_key', 'user.frontend');
         $xmlMessage->addChild('crud_operation', 'create');
@@ -119,7 +119,7 @@ class testController extends Controller
         $xmlMessage->addChild('email', $userData['email']);
         $xmlMessage->addChild('telephone', $userData['telephone']);
         $xmlMessage->addChild('birthday', $userData['birthday']);
-        
+
         $address = $xmlMessage->addChild('address');
         $address->addChild('country', $userData['country']);
         $address->addChild('state', $userData['state']);
