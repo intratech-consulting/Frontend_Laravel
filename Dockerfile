@@ -26,9 +26,13 @@ COPY . .
 # Install Composer
 COPY --from=composer:2.7.4 /usr/bin/composer /usr/bin/composer
 
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # Install Composer dependencies
 COPY composer.json composer.lock ./
-RUN composer install --no-progress --no-interaction
+RUN composer self-update --2 && \
+    composer update --no-interaction --prefer-dist && \
+    composer install --no-progress --no-interaction
 
 # Install Laravel Websockets if needed
 RUN composer require beyondcode/laravel-websockets -w
