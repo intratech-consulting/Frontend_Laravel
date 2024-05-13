@@ -56,7 +56,8 @@ services:
     working_dir: /var/www
     restart: always
     command: >
-      bash -c "chown -R www-data:www-data /var/www/storage &&
+      bash -c "composer install --no-progress --no-interaction &&
+               chown -R www-data:www-data /var/www/storage &&
                chown -R www-data:www-data /var/www/bootstrap/cache &&
                chown -R www-data:www-data /var/www/public &&
                chmod -R 775 /var/www/storage &&
