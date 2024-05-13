@@ -1,4 +1,4 @@
-name: Deploy to Production
+name: Deploy to Development
 
 on:
   push:
@@ -17,19 +17,28 @@ jobs:
       SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       SSH_PORT: ${{ secrets.SSH_PORT }}
-    
+
     steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deployment.key
+          chmod 600 ~/.ssh/deployment.key
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          sudo apt-get install sshpass
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Deploy new version
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.SSH_HOST }}
-          username: ${{ env.SSH_USER }}
-          password: ${{ env.SSH_PASSWORD }}
-          key: ${{ env.SSH_PRIVATE_KEY }}
-          port: ${{ env.SSH_PORT }}
-          script: |
-            cd ~/TestServer/frontend/Laravel
-            docker compose down
-            git checkout main
-            git pull
-            docker compose up -d
+        run: |
+          sudo apt-get install sshpass
+          sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/deployment.key <<'ENDSSH'
+          eval $(ssh-agent)
+          ssh-add ~/.ssh/github_intratechconsulting
+          cd ~/production/frontend/Laravel
+          docker compose down
+          git checkout staging
+          git pull
+          docker compose up --build -d
+          ENDSSH

@@ -1,4 +1,4 @@
-name: Deploy to Staging
+name: Deploy to Development
 
 on:
   push:
@@ -11,17 +11,34 @@ jobs:
     name: Deploy frontend to dev
     runs-on: [self-hosted]
     environment: staging
-  
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+
     steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deployment.key
+          chmod 600 ~/.ssh/deployment.key
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          sudo apt-get install sshpass
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Deploy new version
         run: |
-          sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<'ENDSSH'
+          sudo apt-get install sshpass
+          sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/deployment.key <<'ENDSSH'
           eval $(ssh-agent)
           ssh-add ~/.ssh/github_intratechconsulting
-          cd ~/staging/frontend
+          cd ~/staging/frontend/Laravel
           docker compose down
-          docker rmi crm/api-publisher-consumer:latest
           git checkout staging
           git pull
-          docker compose up -d
+          docker compose up --build -d
           ENDSSH
