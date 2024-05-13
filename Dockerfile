@@ -26,12 +26,15 @@ COPY . .
 # Install Composer
 COPY --from=composer:2.7.4 /usr/bin/composer /usr/bin/composer
 
+# Create a new user
+RUN adduser --disabled-password --gecos '' app
+
+# Switch to the new user
+USER app
+
 # Install Composer dependencies
 COPY composer.json composer.lock ./
 RUN composer install --no-progress --no-interaction
-
-# Install Laravel Websockets if needed
-RUN composer require beyondcode/laravel-websockets -w
 
 # Set environment variables if needed
 ENV PORT=8000
