@@ -56,7 +56,9 @@ services:
     working_dir: /var/www
     restart: always
     command: >
-      bash -c "composer install --no-progress --no-interaction &&
+      bash -c "composer clear-cache &&
+               composer self-update &&
+               composer install --no-progress --no-interaction &&
                chown -R www-data:www-data /var/www/storage &&
                chown -R www-data:www-data /var/www/bootstrap/cache &&
                chown -R www-data:www-data /var/www/public &&
