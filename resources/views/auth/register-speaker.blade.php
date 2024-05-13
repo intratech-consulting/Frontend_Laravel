@@ -84,6 +84,14 @@
     <form method="POST" action="{{ route('register_test') }}">
         @csrf
 
+<div class="form-group">
+            <label for="user_role">Rol</label>
+            <select id="user_role" name="user_role">
+                <option value="Employee">Werknemer</option>
+                <option value="Speaker">Spreker</option>
+            </select>
+        </div>
+
         <div class="form-group">
             <label for="first_name">Voornaam</label>
             <input id="first_name" type="text" name="first_name" value="{{ old('first_name') }}" required autofocus>
