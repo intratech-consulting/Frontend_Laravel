@@ -32,6 +32,7 @@ jobs:
 
       - name: Deploy new version
         run: |
+          sudo apt-get install sshpass
           sshpass -p ${{ env.SSH_PASSWORD }} ssh -v -o StrictHostKeyChecking=no ${{ env.SSH_USER }}@${{ env.SSH_HOST }} <<'ENDSSH'
           eval $(ssh-agent)
           ssh-add ~/.ssh/github_intratechconsulting
