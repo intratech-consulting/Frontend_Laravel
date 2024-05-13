@@ -37,10 +37,8 @@ class testController extends Controller
     }
 
     public function register(Request $request)
-    {
-       
+    {       
         $userData = $request->validate([
-
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
@@ -57,9 +55,7 @@ class testController extends Controller
             'company_email' => ['nullable', 'string', 'email', 'max:255'],
             'company_id' => ['nullable', 'integer'],
             'user_role' => ['required', 'string', Rule::in(['individual', 'employee', 'speaker'])],
-
         ]);
-
         
         $user = User::create([
             'first_name' => $userData['first_name'],
@@ -76,9 +72,8 @@ class testController extends Controller
             'house_number' => $userData['house_number'],
             'invoice' => $userData['invoice'],
             'user_role' => $userData['user_role'],
-            'company_email' => $userData['company_email'],
-            'company_id' => $userData['company_id'],
-
+            'company_email' => isset($userData['company_email']) ? $userData['company_email'] : null,
+            'company_id' => isset($userData['company_id']) ? $userData['company_id'] : null,
         ]);
 
 
@@ -106,7 +101,7 @@ class testController extends Controller
             $json = json_decode($body, true);
 
             // Get the MASTERUUID from the response
-            $masterUuid = $json['MASTERUUID'];
+            $masterUuid = $json['MasterUuid'];
 
             // Now you can use $masterUuid for whatever you need
         } catch (\GuzzleHttp\Exception\RequestException $e) {
@@ -133,24 +128,20 @@ class testController extends Controller
         $address->addChild('street', $userData['street']);
         $address->addChild('house_number', $userData['house_number']);
 
-        $xmlMessage->addChild('company_email', $userData['company_email']);
-        $xmlMessage->addChild('company_id', $userData['company_id']);
+        $xmlMessage->addChild('company_email', isset($userData['company_email']) ? $userData['company_email'] : '');
+        $xmlMessage->addChild('company_id', isset($userData['company_id']) ? $userData['company_id'] : '');
         $xmlMessage->addChild('source', 'frontend');
         $xmlMessage->addChild('user_role', $userData['user_role']);
         $xmlMessage->addChild('invoice', $userData['invoice']);
         $xmlMessage->addChild('calendar_link', '');
 
-
         // Convert XML to string
         $message = $xmlMessage->asXML();
+
         // Send message to RabbitMQ
         $routingKey = 'user.frontend';
 
         $this->sendMessageToTopic($routingKey, $message);
-
-        event(new Registered($user));
-
-       Auth::login($user);
 
        return view('user.home');
     }
