@@ -6,9 +6,11 @@ use Illuminate\Console\Command;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class ProcessUserMessages extends Command
 {
+
     protected $signature = 'user:process';
     protected $description = 'Process user messages from RabbitMQ';
 
@@ -17,12 +19,50 @@ class ProcessUserMessages extends Command
         $connection = new AMQPStreamConnection('10.2.160.51', 5672, 'user', 'password');
         $channel = $connection->channel();
 
-        $channel->queue_declare('user_queue', false, true, false, false);
+        $channel->queue_declare('frontend_test', false, true, false, false);
 
         $this->info(' [*] Waiting for messages. To exit press CTRL+C');
 
         $callback = function ($msg) {
             $userData = simplexml_load_string($msg->body);
+
+            // Perform validation
+            $validator = Validator::make([
+                'first_name' => (string) $userData->first_name,
+                'last_name' => (string) $userData->last_name,
+                'email' => (string) $userData->email,
+                'telephone' => (string) $userData->telephone,
+                'birthday' => (string) $userData->birthday,
+                'country' => (string) $userData->address->country,
+                'state' => (string) $userData->address->state,
+                'city' => (string) $userData->address->city,
+                'zip' => (string) $userData->address->zip,
+                'street' => (string) $userData->address->street,
+                'house_number' => (string) $userData->address->house_number,
+                'invoice' => (string) $userData->invoice,
+                'password' => '', // No password in the message
+            ], [
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255'],
+                'telephone' => ['required', 'string', 'max:20'],
+                'birthday' => ['required', 'date'],
+                'country' => ['required', 'string', 'max:255'],
+                'state' => ['required', 'string', 'max:255'],
+                'city' => ['required', 'string', 'max:255'],
+                'zip' => ['required', 'string', 'max:20'],
+                'street' => ['required', 'string', 'max:255'],
+                'house_number' => ['required', 'string', 'max:20'],
+                'invoice' => ['required'],
+                'password' => ['required', 'string', 'min:8', 'confirmed'],
+            ]);
+
+            // Check if validation fails
+            if ($validator->fails()) {
+                $this->error('Validation failed: ' . $validator->errors()->first());
+                $msg->ack(); // Acknowledge message
+                return;
+            }
 
             // Check if the message is for user object
             if ((string)$userData->routing_key !== 'user.crm') {
