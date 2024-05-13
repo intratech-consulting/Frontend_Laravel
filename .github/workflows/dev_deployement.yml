@@ -32,8 +32,7 @@ jobs:
 
       - name: Deploy new version
         run: |
-          sudo apt-get install sshpass
-          ssh ${{ env.SSH_USER }}@${{ env.SSH_HOST }} -i ~/.ssh/deployment.key <<'ENDSSH'
+          sshpass -p ${{ env.SSH_PASSWORD }} ssh -v -o StrictHostKeyChecking=no ${{ env.SSH_USER }}@${{ env.SSH_HOST }} -i ~/.ssh/deployment.key <<'ENDSSH'
           eval $(ssh-agent)
           ssh-add ~/.ssh/github_intratechconsulting
           cd ~/TestServer/frontend
