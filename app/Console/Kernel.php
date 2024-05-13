@@ -4,7 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Console\Commands\ProcessUserMessages;
+use App\Console\ProcessUserMessages;
 
 class Kernel extends ConsoleKernel
 {
