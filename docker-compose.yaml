@@ -16,7 +16,7 @@ services:
     networks:
       - laravel_backend
 
-  # Apache Service
+  # Nginx Service
   webserver:
     image: nginx:latest
     restart: always
