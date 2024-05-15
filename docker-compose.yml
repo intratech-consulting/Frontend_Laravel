@@ -15,8 +15,6 @@ services:
             - "${NGINX_HOST_HTTPS_PORT}:443"
             - "9999:80"
         restart: always
-        networks:
-            - sail
 
     php-fpm:
         build:
@@ -24,8 +22,6 @@ services:
         volumes:
             - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         restart: always
-        networks:
-            - sail
         expose:
             - "9000"
 
@@ -73,9 +69,6 @@ services:
         restart: always
 
 
-networks:
-    sail:
-        driver: bridge
 volumes:
     sail-mysql:
         driver: local
