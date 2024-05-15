@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gast Registreren</title>
+    <title>Spreker/Werknemer Registreren</title>
 
     <style>
 
@@ -79,10 +79,18 @@
 @include('user.components.header')
 
 <div class="registration-card">
-    <h2>Gast Registreren</h2>
+    <h2>Spreker/Werknemer Registreren</h2>
 
     <form method="POST" action="{{ route('register_test') }}">
         @csrf
+
+<div class="form-group">
+            <label for="user_role">Rol</label>
+            <select id="user_role" name="user_role">
+                <option value="Employee">Werknemer</option>
+                <option value="Speaker">Spreker</option>
+            </select>
+        </div>
 
         <div class="form-group">
             <label for="first_name">Voornaam</label>
@@ -156,8 +164,6 @@
             <label for="password_confirmation">Wachtwoord bevestigen</label>
             <input id="password_confirmation" type="password" name="password_confirmation" required>
         </div>
-
-        <input type="hidden" name="user_role" value="individual">
 
         <div class="button-container">
             <button type="submit">Registreer</button>
