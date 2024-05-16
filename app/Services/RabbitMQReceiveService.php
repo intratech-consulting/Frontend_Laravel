@@ -1,33 +1,57 @@
 <?php
 
-namespace App\Services;
-
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class RabbitMQReceiveService
 {
-    protected $connection;
-    protected $channel;
+    private $connection;
+    private $channel;
 
-    public function __construct(AMQPStreamConnection $connection)
+    public function __construct()
     {
-        $this->connection = $connection;
+        $this->connection = new AMQPStreamConnection('10.2.160.51', 5672, 'user', 'password');
         $this->channel = $this->connection->channel();
     }
 
-    public function receiveMessagesFromQueue($queueName)
+    public function receiveMessagesFromTopic($routingKey)
     {
         try {
             echo " [*] Waiting for messages. To exit press CTRL+C\n";
 
-            $this->channel->queue_declare($queueName, false, false, false, false);
+            list($queueName, ,) = $this->channel->queue_declare("", false, false, true, false);
+
+            $this->channel->queue_bind($queueName, 'amq.topic', $routingKey);
 
             $callback = function ($msg) {
                 echo 'Received message: ', $msg->body, "\n";
 
-                // Process the message (e.g., save to database)
-                // Example: $this->processMessage($msg->body);
+                // Parse the XML message
+                $xml = new SimpleXMLElement($msg->body);
+
+                // Map the XML data to the user fields
+                $userData = [
+                    'user_role' => (string) $xml->user_role,
+                    'first_name' => (string) $xml->first_name,
+                    'last_name' => (string) $xml->last_name,
+                    'email' => (string) $xml->email,
+                    'telephone' => (string) $xml->telephone,
+                    'birthday' => (string) $xml->birthday,
+                    'country' => (string) $xml->country,
+                    'state' => (string) $xml->state,
+                    'city' => (string) $xml->city,
+                    'zip' => (string) $xml->zip,
+                    'street' => (string) $xml->street,
+                    'house_number' => (string) $xml->house_number,
+                    'company_email' => (string) $xml->company_email,
+                    'company_id' => (string) $xml->company_id,
+                    'invoice' => (string) $xml->invoice,
+                    'calendar_link' => (string) $xml->calendar_link,
+                    'password' => (string) $xml->password,
+                ];
+
+                // Create a new User instance and save it to the database
+                User::create($userData);
 
                 $msg->delivery_info['channel']->basic_ack($msg->delivery_info['delivery_tag']);
             };
@@ -45,16 +69,9 @@ class RabbitMQReceiveService
         }
     }
 
-    public function closeConnection()
+    private function closeConnection()
     {
-        if ($this->channel) {
-            $this->channel->close();
-        }
-        if ($this->connection) {
-            $this->connection->close();
-        }
+        $this->channel->close();
+        $this->connection->close();
     }
-
-    // Optional: Add method to process received messages based on your application's logic
-    // private function processMessage($message) {}
 }
