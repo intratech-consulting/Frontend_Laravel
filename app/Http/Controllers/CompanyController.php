@@ -108,10 +108,10 @@ class CompanyController extends Controller
 
         $this->sendMessageToTopic($routingKey, $message);
 
-        //event(new Registered($company));
+        event(new Registered($company));
 
-        //Auth::login($company);
+        Auth::login($company);
 
-        return view('user.home');
+        return redirect(route('user.home', absolute: false));
     }
 }
