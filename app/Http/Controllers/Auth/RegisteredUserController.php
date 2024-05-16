@@ -35,12 +35,13 @@ class RegisteredUserController extends Controller
         try{
             // Send message to the amq.topic exchange using RabbitMQSendService
             $this->rabbitMQService->sendMessageToTopic($routingKey, $message);
-            $this->rabbitMQService->sendLogEntryToTopic('user_sent: ', 'User with ID: ' . $userId . ' and Name: ' .
-                $firstName . ' ' . $lastName . ' Sent Successfully', false);
+            $this->rabbitMQService->sendLogEntryToTopic('send_user_to_queue', 'User with UUIID: ' . $userId . ' and Name: ' .
+                $firstName . ' ' . $lastName . ' Sent Successfully to User_Queue', false);
 
             return response()->json(['message' => 'Message sent successfully'], 200);
         } catch (\Exception $e) {
-            $this->rabbitMQService->sendLogEntryToTopic('user_register', 'User not Sent : ' . $e->getMessage(), true);
+            $this->rabbitMQService->sendLogEntryToTopic('send_user_to_queue', 'User not Sent : ' . $e->getMessage(),
+                true);
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -101,15 +102,13 @@ class RegisteredUserController extends Controller
         ]);
 
 
-        $userId = $user->id;
-
         // Create a new Guzzle HTTP client
         $client = new \GuzzleHttp\Client();
 
         // Define the data for the request
         $data = [
             'Service' => 'frontend',
-            'ServiceId' => $userId, // Assuming $userId is the ID of the newly created user
+            'ServiceId' => $uuid, // Assuming $userId is the ID of the newly created user
         ];
 
         try {
@@ -129,6 +128,9 @@ class RegisteredUserController extends Controller
 
             // Now you can use $masterUuid for whatever you need
         } catch (\GuzzleHttp\Exception\RequestException $e) {
+            //Send logs to ControlRoom
+            $this->rabbitMQService->sendLogEntryToTopic('make_UUID', 'Error: ' . $e->getMessage(), true);
+
             // Handle the exception
             throw new \Exception('Failed to retrieve masterUuid: ' . $e->getMessage());
         }
