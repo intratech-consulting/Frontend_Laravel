@@ -12,4 +12,4 @@ COPY consumer.py .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Command to run the Python script
-CMD ["python", "consumer.py"]
+CMD ["python","-u", "consumer.py"]
