@@ -171,6 +171,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('user.home', absolute: false));
+        return view('user.home');
     }
 }
