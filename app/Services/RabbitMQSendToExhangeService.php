@@ -20,18 +20,33 @@ class RabbitMQSendToExhangeService
         }
     }
 
+    public function sendLogEntryToTopic($functionName, $logs, $error, $routingKey = 'logs')
+    {
+        $logXML = new \SimpleXMLElement('<LogEntry/>');
+
+        // Add elements to the XML
+        $logXML->addChild('SystemName', 'frontend');
+        $logXML->addChild('FunctionName', $functionName);
+        $logXML->addChild('Logs', $logs);
+        $logXML->addChild('Error', $error ? 'true' : 'false');
+        $logXML->addChild('Timestamp', (new DateTime())->format(DateTime::ATOM));
+
+        $this->sendMessageToTopic($routingKey, $logXML->asXML());
+    }
+
+
     public function sendMessageToTopic($routingKey, $message)
     {
         try {
             // Declare the amq.topic exchange
             $this->channel->exchange_declare('amq.topic', 'topic', false, true, false);
-    
+
             // Create a new message
             $msg = new AMQPMessage($message);
-    
+
             // Publish the message to the amq.topic exchange with the specified routing key
             $this->channel->basic_publish($msg, 'amq.topic', $routingKey);
-    
+
             return true; // Message sent successfully
         } catch (\Exception $e) {
             throw new \Exception("Failed to send message to amq.topic exchange: " . $e->getMessage());

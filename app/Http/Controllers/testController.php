@@ -29,10 +29,12 @@ class testController extends Controller
         try{
             // Send message to the amq.topic exchange using RabbitMQSendService
             $this->rabbitMQService->sendMessageToTopic($routingKey, $message);
-
+            $this->rabbitMQService->sendLogEntryToTopic('user_register', 'User registered successfully', false, 'logs');
             return response()->json(['message' => 'Message sent successfully'], 200);
         } catch (\Exception $e) {
+            $this->rabbitMQService->sendLogEntryToTopic('user_register', 'User not registered successfully', true, 'logs');
             return response()->json(['error' => $e->getMessage()], 500);
+
         }
     }
 
