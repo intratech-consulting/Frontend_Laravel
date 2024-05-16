@@ -113,10 +113,12 @@ class RegisteredUserController extends Controller
             // Get the MASTERUUID from the response
             $masterUuid = $json['MasterUuid'];
 
+            dd($masterUuid);
+
             // Now you can use $masterUuid for whatever you need
         } catch (\GuzzleHttp\Exception\RequestException $e) {
             // Handle the exception
-            echo $e->getMessage();
+            throw new \Exception('Failed to retrieve masterUuid: ' . $e->getMessage());
         }
 
 
