@@ -100,33 +100,13 @@
         </div>
 
         <div class="form-group">
-            <label for="telephone">Telefoon</label>
-            <input id="telephone" type="text" name="telephone" value="{{ old('telephone') }}">
-        </div>
-
-        <div class="form-group">
-            <label for="birthday">Verjaardag</label>
+            <label for="birthday">Geboortedatum</label>
             <input id="birthday" type="date" name="birthday" value="{{ old('birthday') }}">
         </div>
 
         <div class="form-group">
-            <label for="country">Land</label>
-            <input id="country" type="text" name="country" value="{{ old('country') }}">
-        </div>
-
-        <div class="form-group">
-            <label for="state">Staat</label>
-            <input id="state" type="text" name="state" value="{{ old('state') }}">
-        </div>
-
-        <div class="form-group">
-            <label for="city">Stad</label>
-            <input id="city" type="text" name="city" value="{{ old('city') }}">
-        </div>
-
-        <div class="form-group">
-            <label for="zip">Postcode</label>
-            <input id="zip" type="text" name="zip" value="{{ old('zip') }}">
+            <label for="telephone">Telefoon</label>
+            <input id="telephone" type="text" name="telephone" value="{{ old('telephone') }}">
         </div>
 
         <div class="form-group">
@@ -140,7 +120,30 @@
         </div>
 
         <div class="form-group">
-            <label for="invoice">Iban</label>
+            <label for="city">Stad</label>
+            <input id="city" type="text" name="city" value="{{ old('city') }}">
+        </div>
+
+        <div class="form-group">
+            <label for="zip">Postcode</label>
+            <input id="zip" type="text" name="zip" value="{{ old('zip') }}">
+        </div>
+
+        <div class="form-group">
+            <label for="state">Provincie</label>
+            <input id="state" type="text" name="state" value="{{ old('state') }}">
+        </div>
+
+
+        <div class="form-group">
+            <label for="country">Land</label>
+            <input id="country" type="text" name="country" value="{{ old('country') }}">
+        </div>
+
+
+
+        <div class="form-group">
+            <label for="invoice">Factuur</label>
             <select id="invoice" name="invoice">
                 <option value="No">Nee</option>
                 <option value="Yes">Ja</option>
