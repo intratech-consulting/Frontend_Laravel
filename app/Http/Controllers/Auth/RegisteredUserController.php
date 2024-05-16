@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Ramsey\Uuid\Uuid;
 
 class RegisteredUserController extends Controller
 {
@@ -67,7 +68,13 @@ class RegisteredUserController extends Controller
             'user_role' => ['required', 'string', Rule::in(['individual', 'employee', 'speaker'])],
         ]);
 
+        do {
+            // Generate a UUID and convert it to a string as long as its not unique
+            $uuid = Uuid::uuid4()->toString();
+        } while (User::find($uuid));
+
         $user = User::create([
+            'id' => $uuid,
             'first_name' => $userData['first_name'],
             'last_name' => $userData['last_name'],
             'email' => $userData['email'],
