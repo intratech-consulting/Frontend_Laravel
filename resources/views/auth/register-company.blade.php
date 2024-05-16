@@ -80,7 +80,7 @@
 <div class="registration-card">
     <h2>Bedrijf registreren</h2>
 
-    <form method="POST" action="{{ route('create_company') }}">
+    <form method="POST" action="{{ route('create_company') }}" enctype="multipart/form-data">>
         @csrf
 
         <div class="form-group">

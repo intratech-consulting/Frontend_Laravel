@@ -42,7 +42,7 @@ class CompanyController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'telephone' => ['required', 'string', 'max:20'],
-            'logo' => ['nullable', 'image', 'max:2048'], // Max file size in kilobytes (2MB)
+            'logo' => ['nullable', 'image', 'mimes:jpeg,png,bmp,gif,svg,webp', 'max:2048'],// Max file size in kilobytes (2MB)
             'country' => ['required', 'string', 'max:255'],
             'state' => ['required', 'string', 'max:255'],
             'city' => ['required', 'string', 'max:255'],
@@ -53,12 +53,17 @@ class CompanyController extends Controller
             'invoice' => ['required', 'string', 'max:255'],
         ]);
 
+        if ($request->hasFile('logo')) {
+            $logo = $request->file('logo');
+            $logoPath = $logo->store('logos', 'public'); // This line stores the file
+        }
+
         $company = Company::create([
             'user_role' => 'company',
             'name' => $companyData['name'],
             'email' => $companyData['email'],
             'telephone' => $companyData['telephone'],
-            'logo' => $companyData['logo'],
+            'logo' => $logoPath,
             'country' => $companyData['country'],
             'state' => $companyData['state'],
             'city' => $companyData['city'],
