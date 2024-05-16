@@ -7,6 +7,7 @@ use App\Services\RabbitMQSendToExhangeService;
 use App\Models\Company;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 
 
@@ -51,6 +52,7 @@ class CompanyController extends Controller
             'house_number' => ['required', 'string', 'max:20'],
             'type' => ['required', 'string', 'max:255'],
             'invoice' => ['required', 'string', 'max:255'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
         if ($request->hasFile('logo')) {
@@ -72,6 +74,7 @@ class CompanyController extends Controller
             'house_number' => $companyData['house_number'],
             'type' => $companyData['type'],
             'invoice' => $companyData['invoice'],
+            'password' => Hash::make($companyData['password']),
         ]);
 
         $companyId = $company->id;

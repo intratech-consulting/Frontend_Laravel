@@ -149,6 +149,16 @@
             <input id="invoice" type="text" name="invoice" value="{{ old('invoice') }}" required>
         </div>
 
+        <div class="form-group">
+            <label for="password">Wachtwoord</label>
+            <input id="password" type="password" name="password" required autocomplete="new-password">
+        </div>
+
+        <div class="form-group">
+            <label for="password_confirmation">Wachtwoord bevestigen</label>
+            <input id="password_confirmation" type="password" name="password_confirmation" required>
+        </div>
+
         <div class="button-container">
             <button type="submit">Registreer</button>
         </div>
