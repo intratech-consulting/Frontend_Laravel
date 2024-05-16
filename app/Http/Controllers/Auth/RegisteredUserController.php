@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Ramsey\Uuid\Uuid;
 
 class RegisteredUserController extends Controller
 {
@@ -25,14 +26,21 @@ class RegisteredUserController extends Controller
 
     public function sendMessageToTopic($routingKey, $message)
     {
+        $xml = new \SimpleXMLElement($message);
+        // Extract user ID and name from XML
+        $userId = $xml->id->__toString();
+        $firstName = $xml->first_name->__toString();
+        $lastName = $xml->last_name->__toString();
+
         try{
             // Send message to the amq.topic exchange using RabbitMQSendService
             $this->rabbitMQService->sendMessageToTopic($routingKey, $message);
-            $this->rabbitMQService->sendLogEntryToTopic('user_register', 'User registered successfully', false, 'logs');
+            $this->rabbitMQService->sendLogEntryToTopic('user_sent: ', 'User with ID: ' . $userId . ' and Name: ' .
+                $firstName . ' ' . $lastName . ' Sent Successfully', false);
 
             return response()->json(['message' => 'Message sent successfully'], 200);
         } catch (\Exception $e) {
-            $this->rabbitMQService->sendLogEntryToTopic('user_register', 'User not registered successfully', true, 'logs');
+            $this->rabbitMQService->sendLogEntryToTopic('user_register', 'User not Sent : ' . $e->getMessage(), true);
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -67,7 +75,13 @@ class RegisteredUserController extends Controller
             'user_role' => ['required', 'string', Rule::in(['individual', 'employee', 'speaker'])],
         ]);
 
+        do {
+            // Generate a UUID and convert it to a string as long as its not unique
+            $uuid = Uuid::uuid4()->toString();
+        } while (User::find($uuid));
+
         $user = User::create([
+            'id' => $uuid,
             'first_name' => $userData['first_name'],
             'last_name' => $userData['last_name'],
             'email' => $userData['email'],
@@ -157,6 +171,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('user.home', absolute: false));
+        return view('user.home');
     }
 }
