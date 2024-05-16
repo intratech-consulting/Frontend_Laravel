@@ -81,6 +81,10 @@ Route::middleware('web')->group(function () {
 
     Route::post('/test', [testController::class, 'register'])->name('register_test');
 
+    Route::get('/home', function () {
+        return view('user.home');
+    })->name('user.home');
+
 
     require __DIR__ . '/auth.php';
 });
