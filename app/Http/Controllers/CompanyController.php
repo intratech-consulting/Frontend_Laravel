@@ -112,6 +112,6 @@ class CompanyController extends Controller
 
         Auth::login($company);
 
-        return redirect(route('headerController.home'));
+        return view('user.home');
     }
 }
