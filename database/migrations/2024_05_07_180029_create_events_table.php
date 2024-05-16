@@ -23,14 +23,14 @@ class CreateEventsTable extends Migration
             $table->time('end_time');
             $table->string('location');
             $table->string('speaker_user_id');
-            $table->string('speaker_company_id');
+            $table->bigInteger('speaker_company_id');
             $table->integer('max_registrations');
             $table->integer('available_seats');
             $table->text('description');
             $table->timestamps();
 
             $table->foreign('speaker_user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('speaker_company_id')->references('company_id')->on('users')->onDelete('cascade');
+            $table->foreign('speaker_company_id')->references('id')->on('companies')->onDelete('cascade');
         });
     }
 
