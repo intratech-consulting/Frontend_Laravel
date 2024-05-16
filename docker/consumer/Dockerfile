@@ -10,5 +10,6 @@ COPY consumer.py .
 
 # Install any necessary dependencies
 RUN pip install pika requests
+RUN pip install mysql-connector-python
 # Command to run the Python script
 CMD ["python","-u", "consumer.py"]

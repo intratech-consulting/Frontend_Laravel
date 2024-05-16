@@ -59,7 +59,7 @@ def callback(ch, method, properties, body):
         ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
 
 # Establish connection to RabbitMQ server
-credentials = pika.PlainCredentials('user', 'password')  # Replace 'user' and 'password' with your actual credentials
+credentials = pika.PlainCredentials('user', 'password')  
 rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('10.2.160.51', 5672, '/', credentials))
 
 channel = rabbitmq_connection.channel()
