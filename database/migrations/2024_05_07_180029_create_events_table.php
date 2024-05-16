@@ -23,7 +23,7 @@ class CreateEventsTable extends Migration
             $table->time('end_time');
             $table->string('location');
             $table->string('speaker_user_id');
-            $table->string('speaker_company_id');
+            $table->bigInteger('speaker_company_id');
             $table->integer('max_registrations');
             $table->integer('available_seats');
             $table->text('description');
