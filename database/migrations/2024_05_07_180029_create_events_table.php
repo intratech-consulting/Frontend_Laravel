@@ -30,7 +30,7 @@ class CreateEventsTable extends Migration
             $table->timestamps();
 
             $table->foreign('speaker_user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('speaker_company_id')->references('company_id')->on('users')->onDelete('cascade');
+            $table->foreign('speaker_company_id')->references('id')->on('companies')->onDelete('cascade');
         });
     }
 
