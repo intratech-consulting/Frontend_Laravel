@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use DateTime;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -20,7 +21,7 @@ class RabbitMQSendToExhangeService
         }
     }
 
-    public function sendLogEntryToTopic($functionName, $logs, $error, $routingKey = 'logs')
+    public function sendLogEntryToTopic($functionName, $logs, $error)
     {
         $logXML = new \SimpleXMLElement('<LogEntry/>');
 
@@ -31,7 +32,7 @@ class RabbitMQSendToExhangeService
         $logXML->addChild('Error', $error ? 'true' : 'false');
         $logXML->addChild('Timestamp', (new DateTime())->format(DateTime::ATOM));
 
-        $this->sendMessageToTopic($routingKey, $logXML->asXML());
+        $this->sendMessageToTopic('logs', $logXML->asXML());
     }
 
 
