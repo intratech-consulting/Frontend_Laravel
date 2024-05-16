@@ -102,15 +102,13 @@ class RegisteredUserController extends Controller
         ]);
 
 
-        $userId = $user->id;
-
         // Create a new Guzzle HTTP client
         $client = new \GuzzleHttp\Client();
 
         // Define the data for the request
         $data = [
             'Service' => 'frontend',
-            'ServiceId' => $userId, // Assuming $userId is the ID of the newly created user
+            'ServiceId' => $uuid, // Assuming $userId is the ID of the newly created user
         ];
 
         try {

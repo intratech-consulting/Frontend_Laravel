@@ -1,5 +1,5 @@
 # Use an existing Python image as the base image
-FROM python:3.9-slim
+FROM python:3.8-slim
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -9,7 +9,7 @@ COPY requirements.txt .
 COPY consumer.py .
 
 # Install any necessary dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
+RUN pip install pika requests
+RUN pip install mysql-connector-python
 # Command to run the Python script
 CMD ["python","-u", "consumer.py"]
