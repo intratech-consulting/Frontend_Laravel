@@ -35,7 +35,7 @@ class RegisteredUserController extends Controller
         try{
             // Send message to the amq.topic exchange using RabbitMQSendService
             $this->rabbitMQService->sendMessageToTopic($routingKey, $message);
-            $this->rabbitMQService->sendLogEntryToTopic('send_user_to_queue: ', 'User with UUIID: ' . $userId . ' and Name: ' .
+            $this->rabbitMQService->sendLogEntryToTopic('send_user_to_queue', 'User with UUIID: ' . $userId . ' and Name: ' .
                 $firstName . ' ' . $lastName . ' Sent Successfully to User_Queue', false);
 
             return response()->json(['message' => 'Message sent successfully'], 200);
