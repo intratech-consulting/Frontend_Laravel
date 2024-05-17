@@ -1,10 +1,14 @@
 import pika
 import xml.etree.ElementTree as ET
 import mysql.connector
+from datetime import datetime
 
 def create_user(user_data):
     try:
-        sql = "INSERT INTO users (id, first_name, last_name, email, telephone, birthday, country, state, city, zip, street, house_number, company_email, company_id, user_role, invoice, calendar_link) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        default_password = "azerty123"
+
+        
+        sql = "INSERT INTO users (id, first_name, last_name, email, telephone, birthday, country, state, city, zip, street, house_number, company_email, company_id, user_role, invoice, calendar_link, password) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         user_values = (
             user_data['id'],
             user_data['first_name'],
@@ -22,15 +26,27 @@ def create_user(user_data):
             user_data['company_id'],
             user_data['user_role'],
             user_data['invoice'],
-            user_data['calendar_link']
+            user_data['calendar_link'],
+            default_password
         )
+        
+        # Debug print statement for date values
+        for key, value in user_data.items():
+            if value is None:
+                print(f"Value for key '{key}' is None.")
+            elif isinstance(value, str) and key in ['birthday', 'created_at', 'updated_at']:
+                try:
+                    datetime.strptime(value, '%Y-%m-%d')
+                except ValueError:
+                    print(f"Invalid date format for key '{key}': '{value}'")
+
         mysql_cursor.execute(sql, user_values)
         mysql_connection.commit()
         print("User inserted successfully!")
     except mysql.connector.Error as error:
         mysql_connection.rollback()
         print("Failed to insert user:", error)
-
+        
 def update_user(user_data):
     try:
         sql = "UPDATE users SET first_name = %s, last_name = %s, email = %s, telephone = %s, birthday = %s, country = %s, state = %s, city = %s, zip = %s, street = %s, house_number = %s, company_email = %s, company_id = %s, user_role = %s, invoice = %s, calendar_link = %s WHERE id = %s"
