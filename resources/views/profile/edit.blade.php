@@ -77,9 +77,17 @@
             background-color: #b5040a;
         }
 
-        /* profile css */
 
-        .profile-section {
+        .flex.items-center.gap-4 {
+            margin-top: 20px;
+        }
+
+
+
+        /* General Styles */
+        .profile-section,
+        .update-password-section,
+        .delete-account-section {
             max-width: 700px;
             margin: 5vh auto;
             padding: 20px;
@@ -88,30 +96,12 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
 
-        .profile-header {
+        .profile-header,
+        .update-password-header,
+        .delete-account-header {
             text-align: center;
             margin-bottom: 20px;
         }
-
-        .flex.items-center.gap-4 {
-            margin-top: 20px;
-        }
-
-    /* update passwoord */
-
-    .update-password-section {
-        max-width: 700px;
-        margin: 5vh auto;
-        padding: 20px;
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .update-password-header {
-        text-align: center;
-        margin-bottom: 20px;
-    }
 
 
 
