@@ -11,6 +11,7 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Services\RabbitMQSendToExhangeService;
 use App\Models\User;
+use App\Models\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -79,8 +80,9 @@ public function events()
     {
 
 // Activate the planning RabbitMQ consumer
-    $consumer = new RecievePlanningController();
+   /* $consumer = new RecievePlanningController();
     $consumer->consume();
+*/
 
      $event = event::all();
    return view('user.event', compact('events'));
