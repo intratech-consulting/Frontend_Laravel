@@ -93,8 +93,12 @@ def delete_user(user_id):
 
 def create_company(company_data):
     try:
-        sql = """INSERT INTO companies (id, name, email, telephone, logo, country, state, city, zip, street, house_number, type, invoice, user_role, created_at, updated_at) 
-                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        
+        default_password = "qwerty123"
+        hashed_password = hashlib.sha256(default_password.encode()).hexdigest()
+        
+        sql = """INSERT INTO companies (id, name, email, telephone, logo, country, state, city, zip, street, house_number, type, invoice, user_role, password, created_at, updated_at) 
+                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
         
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
@@ -113,6 +117,7 @@ def create_company(company_data):
             company_data['type'],
             company_data['invoice'],
             'company',
+            hashed_password,
             now,
             now
         )
