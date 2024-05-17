@@ -184,6 +184,8 @@ def callback(ch, method, properties, body):
             process_user(root)
         elif root.tag == "company":
             process_company(root)
+        elif root.tag == "event":
+            process_event(root)
         else:
             print("Unknown XML format:", xml_string)
 
@@ -266,6 +268,41 @@ def process_company(root):
 
     except Exception as e:
         print("Error processing company data:", e)
+
+
+def process_event(root):
+    try:
+        # Extract event data
+        event_data = {
+            'id': root.find('id').text,
+            'date': root.find('date').text,
+            'start_time': root.find('start_time').text,
+            'end_time': root.find('end_time').text,
+            'location': root.find('location').text,
+            'speaker': {
+                'user_id': root.find('speaker/user_id').text,
+                'company_id': root.find('speaker/company_id').text
+            },
+            'max_registrations': root.find('max_registrations').text,
+            'available_seats': root.find('available_seats').text,
+            'description': root.find('description').text
+        }
+
+        print("Extracting event data...")
+        print(f"Event Data: {event_data}")
+
+        # Perform CRUD operation
+        crud_operation = root.find('crud_operation').text
+        print(f"Performing {crud_operation} operation...")
+        if crud_operation == 'create':
+            create_event(event_data)
+        elif crud_operation == 'update':
+            update_event(event_data)
+        elif crud_operation == 'delete':
+            delete_event(event_data['id'])
+
+    except Exception as e:
+        print("Error processing event data:", e)
 
 mysql_connection = mysql.connector.connect(
     host='10.2.160.51',
