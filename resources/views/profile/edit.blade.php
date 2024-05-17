@@ -83,6 +83,26 @@
         /* profile css */
 
         .profile-section {
+            max-width: 700px;
+            margin: 5vh auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .flex.items-center.gap-4 {
+            margin-top: 20px;
+        }
+
+    /* update passwoord */
+
+    .update-password-section {
         max-width: 700px;
         margin: 5vh auto;
         padding: 20px;
@@ -91,50 +111,12 @@
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     }
 
-    .profile-header {
+    .update-password-header {
         text-align: center;
         margin-bottom: 20px;
     }
 
-    .form-group {
-        margin-bottom: 20px;
-    }
 
-    .form-group label {
-        display: block;
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="date"],
-    select {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        outline: none;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .flex.items-center.gap-4 {
-        margin-top: 20px;
-    }
-
-    button {
-        padding: 10px 20px;
-        background-color: #e30613;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-
-    button:hover {
-        background-color: #b5040a;
-    }
 
     </style>
 </head>
