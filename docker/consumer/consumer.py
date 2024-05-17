@@ -170,6 +170,73 @@ def delete_company(company_id):
     except mysql.connector.Error as error:
         mysql_connection.rollback()
         print("Failed to delete company:", error)
+        
+def create_event(event_data):
+    try:
+        sql = """INSERT INTO events (id, date, start_time, end_time, location, speaker_user_id, speaker_company_id, max_registrations, available_seats, description, created_at, updated_at) 
+                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        event_values = (
+            event_data['id'],
+            event_data['date'],
+            event_data['start_time'],
+            event_data['end_time'],
+            event_data['location'],
+            event_data['speaker']['user_id'],
+            event_data['speaker']['company_id'],
+            event_data['max_registrations'],
+            event_data['available_seats'],
+            event_data['description'],
+            now,
+            now
+        )
+        
+        mysql_cursor.execute(sql, event_values)
+        mysql_connection.commit()
+        print("Event inserted successfully!")
+    except mysql.connector.Error as error:
+        mysql_connection.rollback()
+        print("Failed to insert event:", error)
+
+def update_event(event_data):
+    try:
+        sql = """UPDATE events SET date = %s, start_time = %s, end_time = %s, location = %s, speaker_user_id = %s, speaker_company_id = %s, 
+                 max_registrations = %s, available_seats = %s, description = %s, updated_at = %s WHERE id = %s"""
+        
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        event_values = (
+            event_data['date'],
+            event_data['start_time'],
+            event_data['end_time'],
+            event_data['location'],
+            event_data['speaker']['user_id'],
+            event_data['speaker']['company_id'],
+            event_data['max_registrations'],
+            event_data['available_seats'],
+            event_data['description'],
+            now,
+            event_data['id']
+        )
+        
+        mysql_cursor.execute(sql, event_values)
+        mysql_connection.commit()
+        print("Event updated successfully!")
+    except mysql.connector.Error as error:
+        mysql_connection.rollback()
+        print("Failed to update event:", error)
+
+def delete_event(event_id):
+    try:
+        sql = "DELETE FROM events WHERE id = %s"
+        mysql_cursor.execute(sql, (event_id,))
+        mysql_connection.commit()
+        print("Event deleted successfully!")
+    except mysql.connector.Error as error:
+        mysql_connection.rollback()
+        print("Failed to delete event:", error)
 
 def callback(ch, method, properties, body):
     try:
