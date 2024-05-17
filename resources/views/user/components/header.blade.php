@@ -121,7 +121,6 @@
       @if(Route::has('login'))
         @auth
         <li class="user-menu">
-          <img src="{{ asset('path/to/user-avatar.png') }}" alt="User Avatar" class="user-avatar">
           <span class="user-name">{{ Auth::user()->name }}</span>
           <div class="user-actions">
             <a href="{{ url('/profile') }}">Profile</a>
