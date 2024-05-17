@@ -6,23 +6,28 @@
     <title>planning</title>
 
 <style>
-.main
-{
-  min-height: 100vh;
+
+.container {
+    margin: 0 auto;
+    min-height: 100vh;
+    padding: 20px;
 }
+
 </style>
 </head>
 <body>
 @include('user.components.header')
 
+<div class="container">
 <div class="main">
 <center>
-<iframe src="https://embed.styledcalendar.com/#RNRQ7GYT8sv7grrj2Wlv" title="Styled Calendar" class="styled-calendar-container" style="width: 100%; border: none;" data-cy="calendar-embed-iframe"></iframe>
+<iframe src="https://embed.styledcalendar.com/#RNRQ7GYT8sv7grrj2Wlv" title="Styled Calendar" class="styled-calendar-container" style="width: 80%; border: none;" data-cy="calendar-embed-iframe"></iframe>
 <script async type="module" src="https://embed.styledcalendar.com/assets/parent-window.js"></script>
     </center>
 
 
 @include('user.components.footer')
 
+</div>
 </body>
 </html>

@@ -6,6 +6,12 @@
     <title>Inloggen</title>
     <style>
 
+        .container
+        {
+        min-height: 100vh;
+
+        }
+
         .registration-card {
             width: 700px;
             padding: 50px;
@@ -89,7 +95,9 @@
 
 @include('user.components.header')
 
-    <!-- Session Status -->
+
+<div class="container">
+
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <div class="registration-card">
@@ -132,6 +140,7 @@
         </form>
     </div>
 
+</div>
 
 @include('user.components.footer')
 
