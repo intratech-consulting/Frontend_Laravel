@@ -45,5 +45,5 @@ jobs:
           docker compose up --build -d
           composer install
           npm install
-          npm run dev
+          nohup npm run dev > /dev/null 2>&1 &
           ENDSSH
