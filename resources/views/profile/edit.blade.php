@@ -9,9 +9,6 @@
             width: 700px;
             padding: 50px;
             margin: 5vh auto;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
 
         .registration-card h2 {
@@ -126,11 +123,6 @@
 
 <main class="hackathon-container">
     <section class="space-y-6">
-        <header>
-            <h2 class="text-lg font-medium text-gray-900">
-                {{ __('Edit Profile Information') }}
-            </h2>
-        </header>
 
         <div class="registration-card">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
