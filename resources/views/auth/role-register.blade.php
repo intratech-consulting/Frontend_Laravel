@@ -10,6 +10,12 @@
             background-color: #f2f2f2;
         }
 
+        .container
+        {
+        min-height: 100vh;
+
+        }
+
         .card {
             max-width: 800px;
             margin: 50px auto;
@@ -82,6 +88,7 @@
 <body>
 @include('user.components.header')
 
+<div class="container">
     <div class="card">
         <div class="navigation-grid">
             <div class="navigation-item">
@@ -100,6 +107,7 @@
     
     </div>
 
+</div>
 @include('user.components.footer')
 
 </body>

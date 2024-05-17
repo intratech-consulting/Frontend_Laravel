@@ -14,6 +14,12 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
 
+        .container
+        {
+        min-height: 100vh;
+
+        }
+
         .forgot-password-card h2 {
             text-align: center;
             margin-bottom: 20px;
@@ -78,6 +84,7 @@
 
 @include('user.components.header')
 
+<div class="container">
 
     <div class="forgot-password-card">
         <h2>Wachtwoord vergeten?</h2>
@@ -103,6 +110,8 @@
             </div>
         </form>
     </div>
+
+</div>
 
 @include('user.components.footer')
 

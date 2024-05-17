@@ -13,6 +13,12 @@
       padding: 10px 50px 10px 10px;
     }
 
+    .container {
+        margin: 0 auto;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
     @media (max-width: 991px) {
       .div {
         padding-right: 20px;
@@ -327,6 +333,7 @@
 
 @include('user.components.header')
 
+<div class="container">
 
 <div class="div">
   <div class="div-2">
@@ -378,5 +385,6 @@
 
 @include('user.components.footer')
 
+</div>
 </body>
 </html>
