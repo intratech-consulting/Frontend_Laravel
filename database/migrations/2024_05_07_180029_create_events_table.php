@@ -15,9 +15,6 @@ class CreateEventsTable extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->string('routing_key');
-            $table->string('crud_operation');
-            $table->bigInteger('external_id');
             $table->date('date');
             $table->time('start_time');
             $table->time('end_time');
