@@ -1,0 +1,49 @@
+name: Deploy to Development
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy frontend to dev
+    runs-on: [self-hosted]
+    environment: development
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+
+    steps:
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deployment.key
+          chmod 600 ~/.ssh/deployment.key
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          sudo apt-get install sshpass
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy new version
+        run: |
+          sudo apt-get install sshpass
+          sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/deployment.key <<'ENDSSH'
+          sed -i "s/NGINX-SERVER-NAME-PLACEHOLDER/$SSH_HOST/" /path/to/your/laravel.conf
+          eval $(ssh-agent)
+          ssh-add ~/.ssh/github_intratechconsulting
+          cd ~/TestServer/frontend/Frontend_Laravel
+          ls -l
+          docker compose down
+          git checkout dev
+          git pull
+          docker compose up --build -d
+          composer install
+          npm install
+          nohup npm run dev > /dev/null 2>&1 &
+          ENDSSH
