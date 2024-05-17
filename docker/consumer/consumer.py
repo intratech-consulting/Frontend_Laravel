@@ -1,10 +1,20 @@
 import pika
 import xml.etree.ElementTree as ET
 import mysql.connector
+from datetime import datetime
+import hashlib
 
 def create_user(user_data):
     try:
-        sql = "INSERT INTO users (id, first_name, last_name, email, telephone, birthday, country, state, city, zip, street, house_number, company_email, company_id, user_role, invoice, calendar_link) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        default_password = "azerty123"
+        hashed_password = hashlib.sha256(default_password.encode()).hexdigest()
+
+        sql = """INSERT INTO users (id, first_name, last_name, email, telephone, birthday, country, state, city, zip, street, house_number, 
+                 company_email, company_id, user_role, invoice, calendar_link, password, created_at, updated_at) 
+                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
         user_values = (
             user_data['id'],
             user_data['first_name'],
@@ -18,12 +28,16 @@ def create_user(user_data):
             user_data['zip'],
             user_data['street'],
             user_data['house_number'],
-            user_data['company_email'],
-            user_data['company_id'],
+            user_data.get('company_email', None),
+            user_data.get('company_id', None),
             user_data['user_role'],
             user_data['invoice'],
-            user_data['calendar_link']
+            user_data['calendar_link'],
+            hashed_password,
+            now,
+            now
         )
+        
         mysql_cursor.execute(sql, user_values)
         mysql_connection.commit()
         print("User inserted successfully!")
@@ -33,7 +47,12 @@ def create_user(user_data):
 
 def update_user(user_data):
     try:
-        sql = "UPDATE users SET first_name = %s, last_name = %s, email = %s, telephone = %s, birthday = %s, country = %s, state = %s, city = %s, zip = %s, street = %s, house_number = %s, company_email = %s, company_id = %s, user_role = %s, invoice = %s, calendar_link = %s WHERE id = %s"
+        sql = """UPDATE users SET first_name = %s, last_name = %s, email = %s, telephone = %s, birthday = %s, country = %s, state = %s, 
+                 city = %s, zip = %s, street = %s, house_number = %s, company_email = %s, company_id = %s, user_role = %s, invoice = %s, 
+                 calendar_link = %s, updated_at = %s WHERE id = %s"""
+        
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
         user_values = (
             user_data['first_name'],
             user_data['last_name'],
@@ -46,13 +65,15 @@ def update_user(user_data):
             user_data['zip'],
             user_data['street'],
             user_data['house_number'],
-            user_data['company_email'],
-            user_data['company_id'],
+            user_data.get('company_email', None),
+            user_data.get('company_id', None),
             user_data['user_role'],
             user_data['invoice'],
             user_data['calendar_link'],
+            now,
             user_data['id']
         )
+        
         mysql_cursor.execute(sql, user_values)
         mysql_connection.commit()
         print("User updated successfully!")
@@ -80,7 +101,6 @@ def callback(ch, method, properties, body):
         root = ET.fromstring(xml_string)
 
         # Extract user data
-        print("Extracting user data...")
         user_data = {
             'id': root.find('id').text,
             'first_name': root.find('first_name').text,
@@ -94,27 +114,24 @@ def callback(ch, method, properties, body):
             'zip': root.find('address/zip').text,
             'street': root.find('address/street').text,
             'house_number': root.find('address/house_number').text,
-            'company_email': root.find('company_email').text,
-            'company_id': root.find('company_id').text,
+            'company_email': root.find('company_email').text if root.find('company_email') is not None else None,
+            'company_id': root.find('company_id').text if root.find('company_id') is not None else None,
             'user_role': root.find('user_role').text,
             'invoice': root.find('invoice').text,
             'calendar_link': root.find('calendar_link').text
         }
-        print("User data extracted successfully.")
 
-        # Print out user data for debugging
-        print("User Data:", user_data)
+        print("Extracting user data...")
+        print(f"User Data: {user_data}")
 
         # Perform CRUD operation
         crud_operation = root.find('crud_operation').text
+        print(f"Performing {crud_operation} operation...")
         if crud_operation == 'create':
-            print("Performing create operation...")
             create_user(user_data)
         elif crud_operation == 'update':
-            print("Performing update operation...")
             update_user(user_data)
         elif crud_operation == 'delete':
-            print("Performing delete operation...")
             delete_user(user_data['id'])
 
         ch.basic_ack(delivery_tag=method.delivery_tag)
@@ -146,7 +163,7 @@ channel.queue_declare(queue=queue_name, durable=True)
 channel.queue_bind(exchange=exchange_name, queue=queue_name, routing_key="user.crm")
 
 # Set up the consumer
-channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
+channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=False)
 
 print(' [*] Waiting for messages. To exit, press CTRL+C')
 channel.start_consuming()
