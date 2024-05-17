@@ -91,6 +91,79 @@ def delete_user(user_id):
         mysql_connection.rollback()
         print("Failed to delete user:", error)
 
+def create_company(company_data):
+    try:
+        sql = """INSERT INTO companies (id, name, email, telephone, logo, country, state, city, zip, street, house_number, type, invoice, created_at, updated_at) 
+                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        company_values = (
+            company_data['id'],
+            company_data['name'],
+            company_data['email'],
+            company_data['telephone'],
+            company_data['logo'],
+            company_data['country'],
+            company_data['state'],
+            company_data['city'],
+            company_data['zip'],
+            company_data['street'],
+            company_data['house_number'],
+            company_data['type'],
+            company_data['invoice'],
+            now,
+            now
+        )
+        
+        mysql_cursor.execute(sql, company_values)
+        mysql_connection.commit()
+        print("Company inserted successfully!")
+    except mysql.connector.Error as error:
+        mysql_connection.rollback()
+        print("Failed to insert company:", error)
+
+def update_company(company_data):
+    try:
+        sql = """UPDATE companies SET name = %s, email = %s, telephone = %s, logo = %s, country = %s, state = %s, city = %s, zip = %s, 
+                 street = %s, house_number = %s, type = %s, invoice = %s, updated_at = %s WHERE id = %s"""
+        
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        company_values = (
+            company_data['name'],
+            company_data['email'],
+            company_data['telephone'],
+            company_data['logo'],
+            company_data['country'],
+            company_data['state'],
+            company_data['city'],
+            company_data['zip'],
+            company_data['street'],
+            company_data['house_number'],
+            company_data['type'],
+            company_data['invoice'],
+            now,
+            company_data['id']
+        )
+        
+        mysql_cursor.execute(sql, company_values)
+        mysql_connection.commit()
+        print("Company updated successfully!")
+    except mysql.connector.Error as error:
+        mysql_connection.rollback()
+        print("Failed to update company:", error)
+
+def delete_company(company_id):
+    try:
+        sql = "DELETE FROM companies WHERE id = %s"
+        mysql_cursor.execute(sql, (company_id,))
+        mysql_connection.commit()
+        print("Company deleted successfully!")
+    except mysql.connector.Error as error:
+        mysql_connection.rollback()
+        print("Failed to delete company:", error)
+
 def callback(ch, method, properties, body):
     try:
         print("Received message:")
@@ -100,7 +173,21 @@ def callback(ch, method, properties, body):
         # Parse XML message
         root = ET.fromstring(xml_string)
 
-        # Extract user data
+        if root.tag == "user":
+            process_user(root)
+        elif root.tag == "company":
+            process_company(root)
+        else:
+            print("Unknown XML format:", xml_string)
+
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+    except Exception as e:
+        print("Error processing message:", e)
+        ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
+
+
+def process_user(root):
+    try:
         user_data = {
             'id': root.find('id').text,
             'first_name': root.find('first_name').text,
@@ -134,10 +221,44 @@ def callback(ch, method, properties, body):
         elif crud_operation == 'delete':
             delete_user(user_data['id'])
 
-        ch.basic_ack(delivery_tag=method.delivery_tag)
     except Exception as e:
-        print("Error processing message:", e)
-        ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
+        print("Error processing user data:", e)
+
+# Process company data
+def process_company(root):
+    try:
+        # Extract company data
+        company_data = {
+            'id': root.find('id').text,
+            'name': root.find('name').text,
+            'email': root.find('email').text,
+            'telephone': root.find('telephone').text,
+            'logo': root.find('logo').text,
+            'country': root.find('address/country').text,
+            'state': root.find('address/state').text,
+            'city': root.find('address/city').text,
+            'zip': root.find('address/zip').text,
+            'street': root.find('address/street').text,
+            'house_number': root.find('address/house_number').text,
+            'type': root.find('type').text,
+            'invoice': root.find('invoice').text,
+        }
+
+        print("Extracting company data...")
+        print(f"Company Data: {company_data}")
+
+        # Perform CRUD operation
+        crud_operation = root.find('crud_operation').text
+        print(f"Performing {crud_operation} operation...")
+        if crud_operation == 'create':
+            create_company(company_data)
+        elif crud_operation == 'update':
+            update_company(company_data)
+        elif crud_operation == 'delete':
+            delete_company(company_data['id'])
+
+    except Exception as e:
+        print("Error processing company data:", e)
 
 mysql_connection = mysql.connector.connect(
     host='10.2.160.51',
@@ -148,7 +269,7 @@ mysql_connection = mysql.connector.connect(
 )
 mysql_cursor = mysql_connection.cursor()
 
-credentials = pika.PlainCredentials('user', 'password') 
+credentials = pika.PlainCredentials('user', 'password')
 rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('10.2.160.51', 5672, '/', credentials))
 
 channel = rabbitmq_connection.channel()
@@ -160,7 +281,7 @@ channel.exchange_declare(exchange=exchange_name, exchange_type="topic", durable=
 # Declare and bind a queue
 queue_name = "frontend"
 channel.queue_declare(queue=queue_name, durable=True)
-channel.queue_bind(exchange=exchange_name, queue=queue_name, routing_key="user.crm")
+channel.queue_bind(exchange=exchange_name, queue=queue_name, routing_key="company.crm")
 
 # Set up the consumer
 channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=False)
