@@ -4,7 +4,7 @@ import mysql.connector
 
 def create_user(user_data):
     try:
-        sql = "INSERT INTO users (id, first_name, last_name, email, telephone, birthday, country, state, city, zip, street, house_number, company_email, company_id, source, user_role, invoice, calendar_link) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        sql = "INSERT INTO users (id, first_name, last_name, email, telephone, birthday, country, state, city, zip, street, house_number, company_email, company_id, user_role, invoice, calendar_link) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         user_values = (
             user_data['id'],
             user_data['first_name'],
@@ -20,7 +20,6 @@ def create_user(user_data):
             user_data['house_number'],
             user_data['company_email'],
             user_data['company_id'],
-            user_data['source'],
             user_data['user_role'],
             user_data['invoice'],
             user_data['calendar_link']
@@ -34,7 +33,7 @@ def create_user(user_data):
 
 def update_user(user_data):
     try:
-        sql = "UPDATE users SET first_name = %s, last_name = %s, email = %s, telephone = %s, birthday = %s, country = %s, state = %s, city = %s, zip = %s, street = %s, house_number = %s, company_email = %s, company_id = %s, source = %s, user_role = %s, invoice = %s, calendar_link = %s WHERE id = %s"
+        sql = "UPDATE users SET first_name = %s, last_name = %s, email = %s, telephone = %s, birthday = %s, country = %s, state = %s, city = %s, zip = %s, street = %s, house_number = %s, company_email = %s, company_id = %s, user_role = %s, invoice = %s, calendar_link = %s WHERE id = %s"
         user_values = (
             user_data['first_name'],
             user_data['last_name'],
@@ -49,7 +48,6 @@ def update_user(user_data):
             user_data['house_number'],
             user_data['company_email'],
             user_data['company_id'],
-            user_data['source'],
             user_data['user_role'],
             user_data['invoice'],
             user_data['calendar_link'],
@@ -97,7 +95,6 @@ def callback(ch, method, properties, body):
             'house_number': root.find('address/house_number').text,
             'company_email': root.find('company_email').text,
             'company_id': root.find('company_id').text,
-            'source': root.find('source').text,
             'user_role': root.find('user_role').text,
             'invoice': root.find('invoice').text,
             'calendar_link': root.find('calendar_link').text
