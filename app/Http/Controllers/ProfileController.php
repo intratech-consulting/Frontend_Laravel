@@ -47,15 +47,27 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        try {
+            // Retrieve the authenticated user
+            $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+            // Fill the user model with validated data from the request
+            $user->fill($request->validated());
+
+            // If the email is being updated, reset email verification
+            if ($user->isDirty('email')) {
+                $user->email_verified_at = null;
+            }
+
+            // Save the updated user
+            $user->save();
+
+            // Redirect back to the profile edit page with a success message
+            return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        } catch (\Exception $e) {
+            // Handle any exceptions and redirect back with an error message
+            return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);
         }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**
@@ -114,6 +126,6 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect(route('user.home'));
+        return view ('user.home');
     }
 }
