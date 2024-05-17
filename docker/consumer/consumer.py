@@ -80,6 +80,7 @@ def callback(ch, method, properties, body):
         root = ET.fromstring(xml_string)
 
         # Extract user data
+        print("Extracting user data...")
         user_data = {
             'id': root.find('id').text,
             'first_name': root.find('first_name').text,
@@ -99,14 +100,21 @@ def callback(ch, method, properties, body):
             'invoice': root.find('invoice').text,
             'calendar_link': root.find('calendar_link').text
         }
+        print("User data extracted successfully.")
+
+        # Print out user data for debugging
+        print("User Data:", user_data)
 
         # Perform CRUD operation
         crud_operation = root.find('crud_operation').text
         if crud_operation == 'create':
+            print("Performing create operation...")
             create_user(user_data)
         elif crud_operation == 'update':
+            print("Performing update operation...")
             update_user(user_data)
         elif crud_operation == 'delete':
+            print("Performing delete operation...")
             delete_user(user_data['id'])
 
         ch.basic_ack(delivery_tag=method.delivery_tag)
