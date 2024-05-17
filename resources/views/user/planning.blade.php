@@ -26,8 +26,9 @@
     </center>
 
 
+</div>
+
 @include('user.components.footer')
 
-</div>
 </body>
 </html>
