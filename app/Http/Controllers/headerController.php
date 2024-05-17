@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\RecievePlanningController;
+//use App\Http\Controllers\RecievePlanningController;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -85,7 +85,7 @@ public function events()
 */
 
      $event = event::all();
-   return view('user.event', compact('events'));
+   return view('user.event', compact('event'));
     }
 
 
