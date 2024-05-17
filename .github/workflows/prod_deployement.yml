@@ -37,7 +37,7 @@ jobs:
           sed -i "s/NGINX-SERVER-NAME-PLACEHOLDER/$SSH_HOST/" /path/to/your/laravel.conf
           eval $(ssh-agent)
           ssh-add ~/.ssh/github_intratechconsulting
-          cd ~/TestServer/frontend/Frontend_Laravel
+          cd ~/production/frontend/Frontend_Laravel
           ls -l
           docker compose down
           git checkout dev
