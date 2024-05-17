@@ -1,3 +1,5 @@
+<!-- user/components/header.blade.php -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,6 +78,19 @@
       padding: 8px 12px;
     }
 
+    .logout-button {
+      background-color: #e30613;
+      color: #fff;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .logout-button:hover {
+      background-color: #b5040a;
+    }
+
     .user-menu {
       display: flex;
       align-items: center;
@@ -119,22 +134,22 @@
       <li><a href="{{ url('about') }}">Over ons</a></li>
       <li><a href="{{ url('contact') }}">Contact</a></li>
       @if(Route::has('login'))
-    @auth
-    <li class="user-menu">
-        <span class="user-name">{{ Auth::user()->name }}</span>
-        <div class="user-actions">
+        @auth
+        <li class="user-menu">
+          <span class="user-name">{{ Auth::user()->name }}</span>
+          <div class="user-actions">
             <a href="{{ url('/profile') }}">Profile</a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit">Logout</button>
+                <button type="submit" class="logout-button">Logout</button>
             </form>
-        </div>
-    </li>
-    @else
-    <li class="connect"><a href="{{ route('login') }}">Inloggen</a></li>
-    <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
-    @endauth
-@endif
+          </div>
+        </li>
+        @else
+        <li class="connect"><a href="{{ route('login') }}">Inloggen</a></li>
+        <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
+        @endauth
+      @endif
     </ul>
   </nav>
 </header>
