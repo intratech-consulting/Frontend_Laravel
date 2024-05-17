@@ -59,17 +59,34 @@
       font-size: 18px;
     }
 
-    .hero-image-container {
-      flex: 1;
+    .hero-section {
       display: flex;
-      justify-content: flex-end;
+      max-width: 100%;
     }
 
-    .hero-background {
+    .hero-content {
+      align-self: start;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-right: 40px;
+      flex-grow: 1;
+      flex-basis: 0;
+    }
+
+    .hero-image-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 671px;
+      align-items: flex-end; /* Adjusted alignment */
+      padding: 16px 60px 33px;
+    }
+
+    .hero-image {
       width: 100%;
-      height: auto;
-      max-width: 600px;
-      border-radius: 10px;
+      max-width: 600px; /* Adjust the max-width as needed */
+      margin-top: 79px;
     }
 
     .features-section {
@@ -192,18 +209,16 @@
 @include('user.components.header')
 
 <main class="hackathon-container">
-  <section class="hero-section">
-    <div class="hero-content">
-      <h1 class="hero-title">Probeer je kennis uit met onze hackathons.</h1>
-      <p class="hero-description">
-        Het is belangrijk om de tijd te nemen om je vaardigheden te leren kennen en ze te verbeteren met projecten en door te leren hoe je in een team kunt werken.
-      </p>
-      <a href="{{ url('about') }}" class="hero-cta">Over ons</a>
-    </div>
-    <div class="hero-image-container">
-      <img src="https://images.unsplash.com/photo-1582192730841-2a682d7375f9?q=80&w=2748&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="hero-background" />
-    </div>
-  </section>
+<section class="hero-section">
+  <div class="hero-content">
+    <h1 class="hero-title">Probeer je kennis uit met onze hackathons.</h1>
+    <p class="hero-description">Het is belangrijk om de tijd te nemen om je vaardigheden te leren kennen en ze te verbeteren met projecten en door te leren hoe je in een team kunt werken.</p>
+    <a href="{{url('about')}}" class="hero-cta">Over ons</a>
+  </div>
+  <div class="hero-image-container">
+    <img src="https://images.unsplash.com/photo-1582192730841-2a682d7375f9?q=80&w=2748&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="hero-image" />
+  </div>
+</section>
 
   <section class="features-section">
     <div class="features-container">
