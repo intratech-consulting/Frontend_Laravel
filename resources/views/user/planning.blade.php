@@ -17,7 +17,8 @@
 
 <div class="main">
 <center>
-<iframe src="{{ $calendar_link }}" style="border: 0" width="80%" height="600" frameborder="0" scrolling="no"></iframe>
+<iframe src="https://embed.styledcalendar.com/#RNRQ7GYT8sv7grrj2Wlv" title="Styled Calendar" class="styled-calendar-container" style="width: 100%; border: none;" data-cy="calendar-embed-iframe"></iframe>
+<script async type="module" src="https://embed.styledcalendar.com/assets/parent-window.js"></script>
     </center>
 
 
