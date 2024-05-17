@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>planning</title>
+
+<style>
+body
+{
+  min-height: 100vh;
+}
+</style>
 </head>
 <body>
 @include('user.components.header')
