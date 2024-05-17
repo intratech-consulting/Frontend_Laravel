@@ -6,7 +6,7 @@
     <title>planning</title>
 
 <style>
-body
+.main
 {
   min-height: 100vh;
 }
@@ -15,7 +15,7 @@ body
 <body>
 @include('user.components.header')
 
-<div>
+<div class="main">
 <center>
 <iframe src="{{ $calendar_link }}" style="border: 0" width="80%" height="600" frameborder="0" scrolling="no"></iframe>
     </center>
