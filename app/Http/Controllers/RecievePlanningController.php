@@ -14,6 +14,7 @@ class RecievePlanningController extends Controller
     
     public function consume()
     {
+/*
         // Establish connection to RabbitMQ
         $connection = new AMQPStreamConnection('10.2.160.51', 5672, 'user', 'password');
         $channel = $connection->channel();
@@ -62,5 +63,6 @@ class RecievePlanningController extends Controller
         // Close channel and connection
         $channel->close();
         $connection->close();
+*/
     }
 }
