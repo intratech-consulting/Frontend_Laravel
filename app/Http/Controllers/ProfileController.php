@@ -69,6 +69,9 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
+        // Assuming $userId is the ID of the user
+        $userId = $user->id;
+
         // Create a new Guzzle HTTP client
         $client = new \GuzzleHttp\Client();
 
@@ -99,8 +102,7 @@ class ProfileController extends Controller
             echo $e->getMessage();
         }
 
-        $message =
-
+        $message = 'Your account has been deleted successfully.';
         $routingKey = 'user.frontend';
 
         $this->sendMessageToTopic($routingKey, $message);
@@ -112,6 +114,6 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect(route('user.home', absolute: false));
+        return redirect(route('user.home'));
     }
 }
