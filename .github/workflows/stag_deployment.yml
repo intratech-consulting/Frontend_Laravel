@@ -42,8 +42,8 @@ jobs:
           git checkout dev
           git pull
           docker compose up --build -d
-          docker exec -it frontend_laravel-php-fpm-1 chown -R www-data:www-data /laravel/current
-          docker exec -it frontend_laravel-php-fpm-1 chmod -R 775 /laravel/current
+          docker exec -it frontend_laravel-php-fpm-1 chown -R www-data:www-data /
+          docker exec -it frontend_laravel-php-fpm-1 chmod -R 775 /
           composer install
           npm install
           nohup npm run dev > /dev/null 2>&1 &
