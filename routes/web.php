@@ -48,7 +48,6 @@ Route::middleware('web')->group(function () {
     Route::get('/planning', [headerController::class, 'planning']);
     Route::get('/contact', [headerController::class, 'contact']);
     Route::get('/registration', [headerController::class, 'registration']);
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
     // Event creation
