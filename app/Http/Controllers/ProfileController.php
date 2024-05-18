@@ -50,8 +50,6 @@ class ProfileController extends Controller
         try {
             // Retrieve the authenticated user
             $user = $request->user();
-
-            die($user);
             
 
             // Fill the user model with validated data from the request
