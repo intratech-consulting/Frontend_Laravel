@@ -86,13 +86,6 @@
       gap: 15px;
     }
 
-    .user-avatar {
-      height: 40px;
-      width: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-
     .user-name {
       font-weight: 500;
     }
@@ -106,7 +99,6 @@
     .user-actions a,
     .user-actions form button {
       color: #fff;
-      text-decoration: none;
       font-weight: 500;
       padding: 8px 12px;
       background-color: #e30613;
@@ -114,7 +106,6 @@
       border: none;
       cursor: pointer;
       display: inline-block;
-      font-family: 'Manrope', Arial, sans-serif;
     }
 
     .user-actions a:hover,
