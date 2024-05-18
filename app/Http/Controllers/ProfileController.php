@@ -165,7 +165,7 @@ class ProfileController extends Controller
 
             $user->delete();
 
-            /*try {
+            try {
                 $data_delete = [
                     "MASTERUUID" => $masterUuid,
                     "NewServiceId" => "NULL",
@@ -183,13 +183,12 @@ class ProfileController extends Controller
             // Handle the case where $masterUuid is not defined
             echo 'Failed to obtain UUID, cannot proceed with user deletion.';
             return redirect()->back()->withErrors('Failed to obtain UUID, cannot proceed with user deletion.');
-        }*/
+        }
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return view('user.home');
-    }
     }
 
 }
