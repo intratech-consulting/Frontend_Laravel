@@ -96,6 +96,8 @@ class ProfileController extends Controller
             'Service' => 'frontend',
         ];
 
+        $masterUuid = null;
+
         try {
             // Make the POST request
             $response = $client->request('POST', 'http://10.2.160.51:6000/getMasterUuid', [
@@ -108,70 +110,79 @@ class ProfileController extends Controller
             // Decode the JSON response
             $json = json_decode($body, true);
 
-            // Get the MASTERUUID from the response
-            $masterUuid = $json['UUID'];
-
-            // Now you can use $masterUuid for whatever you need
+            // Check if UUID exists in the response
+            if (isset($json['UUID'])) {
+                $masterUuid = $json['UUID'];
+            } else {
+                // Handle the case where UUID is not present in the response
+                throw new \Exception('UUID not found in response');
+            }
         } catch (\GuzzleHttp\Exception\RequestException $e) {
-            // Handle the exception
+            // Handle the Guzzle exception
+            echo $e->getMessage();
+        } catch (\Exception $e) {
+            // Handle other exceptions
             echo $e->getMessage();
         }
-        
-        // Create XML message for user deletion
-        $xmlMessage = new \SimpleXMLElement('<user/>');
-        $xmlMessage->addChild('routing_key', 'user.frontend');
-        $xmlMessage->addChild('crud_operation', 'delete');
-        $xmlMessage->addChild('id', $masterUuid);
-        $xmlMessage->addChild('first_name', $user->first_name);
-        $xmlMessage->addChild('last_name', $user->last_name);
-        $xmlMessage->addChild('email', $user->email);
-        $xmlMessage->addChild('telephone', $user->telephone);
-        $xmlMessage->addChild('birthday', $user->birthday);
 
-        $address = $xmlMessage->addChild('address');
-        $address->addChild('country', $user->country);
-        $address->addChild('state', $user->state);
-        $address->addChild('city', $user->city);
-        $address->addChild('zip', $user->zip);
-        $address->addChild('street', $user->street);
-        $address->addChild('house_number', $user->house_number);
+        if ($masterUuid !== null) {
+            // Create XML message for user deletion
+            $xmlMessage = new \SimpleXMLElement('<user/>');
+            $xmlMessage->addChild('routing_key', 'user.frontend');
+            $xmlMessage->addChild('crud_operation', 'delete');
+            $xmlMessage->addChild('id', $masterUuid);
+            $xmlMessage->addChild('first_name', $user->first_name);
+            $xmlMessage->addChild('last_name', $user->last_name);
+            $xmlMessage->addChild('email', $user->email);
+            $xmlMessage->addChild('telephone', $user->telephone);
+            $xmlMessage->addChild('birthday', $user->birthday);
 
-        $xmlMessage->addChild('company_email', $user->company_email ?? '');
-        $xmlMessage->addChild('company_id', $user->company_id ?? '');
-        $xmlMessage->addChild('source', 'frontend');
-        $xmlMessage->addChild('user_role', $user->user_role);
-        $xmlMessage->addChild('invoice', $user->invoice);
-        $xmlMessage->addChild('calendar_link', '');
+            $address = $xmlMessage->addChild('address');
+            $address->addChild('country', $user->country);
+            $address->addChild('state', $user->state);
+            $address->addChild('city', $user->city);
+            $address->addChild('zip', $user->zip);
+            $address->addChild('street', $user->street);
+            $address->addChild('house_number', $user->house_number);
 
-        // Convert XML to string
-        $message = $xmlMessage->asXML();
+            $xmlMessage->addChild('company_email', $user->company_email ?? '');
+            $xmlMessage->addChild('company_id', $user->company_id ?? '');
+            $xmlMessage->addChild('source', 'frontend');
+            $xmlMessage->addChild('user_role', $user->user_role);
+            $xmlMessage->addChild('invoice', $user->invoice);
+            $xmlMessage->addChild('calendar_link', '');
 
-        // Send message to RabbitMQ
-        $routingKey = 'user.frontend';
+            // Convert XML to string
+            $message = $xmlMessage->asXML();
 
-        $this->sendMessageToTopic($routingKey, $message);
+            // Send message to RabbitMQ
+            $routingKey = 'user.frontend';
 
-        // Logout and delete user
-        Auth::logout();
+            $this->sendMessageToTopic($routingKey, $message);
 
-        $user->delete();
+            // Logout and delete user
+            Auth::logout();
 
-        /*try {
-            $data_delete = [
-                "MASTERUUID" => $masterUuid,
-                "NewServiceId" => "NULL",
-                "Service" => "frontend",
-            ];
+            $user->delete();
 
-            $response = $client->request('POST', 'http://10.2.160.51:6000/updateServiceId', [
-                'json' => $data_delete
-            ]);
-        }
+            /*try {
+                $data_delete = [
+                    "MASTERUUID" => $masterUuid,
+                    "NewServiceId" => "NULL",
+                    "Service" => "frontend",
+                ];
 
-        catch (\GuzzleHttp\Exception\RequestException $e){
-            // Handle the exception
-            echo $e->getMessage();
-        
+                $response = $client->request('POST', 'http://10.2.160.51:6000/updateServiceId', [
+                    'json' => $data_delete
+                ]);
+            } catch (\GuzzleHttp\Exception\RequestException $e) {
+                // Handle the exception
+                echo $e->getMessage();
+            }
+        } else {
+            // Handle the case where $masterUuid is not defined
+            echo 'Failed to obtain UUID, cannot proceed with user deletion.';
+            return redirect()->back()->withErrors('Failed to obtain UUID, cannot proceed with user deletion.');
         }*/
 
         $request->session()->invalidate();
@@ -179,4 +190,6 @@ class ProfileController extends Controller
 
         return view('user.home');
     }
+    }
+
 }
