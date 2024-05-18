@@ -91,8 +91,8 @@ class ProfileController extends Controller
 
         // Define the data for the request
         $data = [
+            'ServiceId' => $userId, // Assuming $userId is the ID of the user you want to delete
             'Service' => 'frontend',
-            'ServiceId' => $userId, // Assuming $userId is the ID of the newly created user
         ];
 
         try {
@@ -120,7 +120,7 @@ class ProfileController extends Controller
         $xmlMessage = new \SimpleXMLElement('<user/>');
         $xmlMessage->addChild('routing_key', 'user.frontend');
         $xmlMessage->addChild('crud_operation', 'delete');
-        $xmlMessage->addChild('id', $userId);
+        $xmlMessage->addChild('id', $masterUuid);
         $xmlMessage->addChild('first_name', $user->first_name);
         $xmlMessage->addChild('last_name', $user->last_name);
         $xmlMessage->addChild('email', $user->email);
