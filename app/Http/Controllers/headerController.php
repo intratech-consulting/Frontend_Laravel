@@ -60,7 +60,6 @@ public function planning()
 
  if (Auth::check()) {
         $user = Auth::user(); 
-        console.log($user);
         $calendar_link = $user->calendar_link;
     } else {
         // default calendar link
