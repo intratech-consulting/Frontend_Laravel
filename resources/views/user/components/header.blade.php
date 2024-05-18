@@ -76,16 +76,7 @@
       padding: 8px 12px;
     }
 
-    .logout-button {
-      background-color: #e30613;
-      color: #fff;
-      font-weight: 500;
-      padding: 8px 12px;
-      border-radius: 3px;
-      cursor: pointer;
-    }
-
-    .logout-button:hover {
+    .connect a:hover {
       background-color: #b5040a;
     }
 
@@ -108,13 +99,26 @@
 
     .user-actions {
       display: flex;
+      align-items: center;
       gap: 10px;
     }
 
-    .user-actions a {
+    .user-actions a,
+    .user-actions form button {
       color: #fff;
       text-decoration: none;
       font-weight: 500;
+      padding: 8px 12px;
+      background-color: #e30613;
+      border-radius: 3px;
+      border: none;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .user-actions a:hover,
+    .user-actions form button:hover {
+      background-color: #b5040a;
     }
   </style>
 </head>
@@ -139,7 +143,7 @@
             <a href="{{ url('/profile') }}">Profile</a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="logout-button">Logout</button>
+                <button type="submit">Logout</button>
             </form>
           </div>
         </li>
