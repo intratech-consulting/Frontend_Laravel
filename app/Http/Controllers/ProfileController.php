@@ -107,7 +107,7 @@ class ProfileController extends Controller
             $json = json_decode($body, true);
 
             // Get the MASTERUUID from the response
-            $masterUuid = $json['MasterUuid'];
+            $masterUuid = $json['UUID'];
 
             // Now you can use $masterUuid for whatever you need
         } catch (\GuzzleHttp\Exception\RequestException $e) {
