@@ -110,7 +110,8 @@
                     <p class="amount-text">Datum: {{$events->date}}, Tijd: {{$events->start_time}} - {{$events->end_time}}</p>
                     <div class="buttons-container">
                         <a href="#" class="btn btn-ghost">Meer weergeven</a>
-                        <a href="#" class="btn btn-fill">Registreren</a>
+                        <a href="#" class="btn btn-fill" id="registerButton" data-user-id="1" data-event-id="2">Registreren</a>
+
                     </div>
                 </div>
             </div>
