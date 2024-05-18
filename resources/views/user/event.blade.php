@@ -108,8 +108,8 @@
                     </div>
                     <p class="amount-text">Gehost door {{$events->users->first_name}} van {{$events->companies->name}}</p> 
                     <p class="amount-text">
-                        Datum: {{ \Carbon\Carbon::parse($event->date ?? '')->format('d/m/y') }},
-                        Tijd: {{ \Carbon\Carbon::parse($event->start_time ?? '')->format('H:i') }} - {{ \Carbon\Carbon::parse($event->end_time ?? '')->format('H:i') }}
+                        Datum: {{ date('d/m/y', strtotime($event->date)) }}, 
+                        Tijd: {{ date('H:i', strtotime($event->start_time)) }} - {{ date('H:i', strtotime($event->end_time)) }} 
                     </p>
                 
                 
