@@ -60,6 +60,8 @@ class ProfileController extends Controller
                 $user->email_verified_at = null;
             }
 
+            die('oke');
+
             // Save the updated user
             $user->save();
 
