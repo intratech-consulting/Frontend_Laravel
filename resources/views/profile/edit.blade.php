@@ -131,22 +131,6 @@
 
 @include('user.components.footer')
 
-@section('scripts')
-    @parent
-    @if(session('user'))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                console.log('User:', @json(session('user')));
-            });
-        </script>
-    @else
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                console.log('geen gebruiker');
-            });
-        </script>
-    @endif
-@endsection
 
 </body>
 </html>
