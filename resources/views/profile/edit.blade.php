@@ -131,5 +131,6 @@
 
 @include('user.components.footer')
 
+
 </body>
 </html>
