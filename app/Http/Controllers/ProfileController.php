@@ -100,8 +100,6 @@ class ProfileController extends Controller
                 'json' => $data
             ]);
 
-            
-
             // Get the response body
             $body = $response->getBody();
 
@@ -110,16 +108,6 @@ class ProfileController extends Controller
 
             // Get the MASTERUUID from the response
             $masterUuid = $json['UUID'];
-
-            $data_delete = [
-                "MASTERUUID" => $masterUuid,
-                "NewServiceId" => "NULL",
-                "Service" => "frontend",
-            ];
-
-            $response = $client->request('POST', 'http://10.2.160.51:6000/updateServiceId', [
-                'json' => $data_delete
-            ]);
 
             // Now you can use $masterUuid for whatever you need
         } catch (\GuzzleHttp\Exception\RequestException $e) {
@@ -160,6 +148,24 @@ class ProfileController extends Controller
         $routingKey = 'user.frontend';
 
         $this->sendMessageToTopic($routingKey, $message);
+
+        try {
+            $data_delete = [
+                "MASTERUUID" => $masterUuid,
+                "NewServiceId" => "NULL",
+                "Service" => "frontend",
+            ];
+
+            $response = $client->request('POST', 'http://10.2.160.51:6000/updateServiceId', [
+                'json' => $data_delete
+            ]);
+        }
+
+        catch (\GuzzleHttp\Exception\RequestException $e){
+            // Handle the exception
+            echo $e->getMessage();
+        
+        }
 
         // Logout and delete user
         Auth::logout();
