@@ -113,12 +113,42 @@ class ProfileController extends Controller
             // Handle the exception
             echo $e->getMessage();
         }
+        
+        // Create XML message for user deletion
+        $xmlMessage = new \SimpleXMLElement('<user/>');
+        $xmlMessage->addChild('routing_key', 'user.frontend');
+        $xmlMessage->addChild('crud_operation', 'delete');
+        $xmlMessage->addChild('id', $userId);
+        $xmlMessage->addChild('first_name', $user->first_name);
+        $xmlMessage->addChild('last_name', $user->last_name);
+        $xmlMessage->addChild('email', $user->email);
+        $xmlMessage->addChild('telephone', $user->telephone);
+        $xmlMessage->addChild('birthday', $user->birthday);
 
-        $message = 'Your account has been deleted successfully.';
+        $address = $xmlMessage->addChild('address');
+        $address->addChild('country', $user->country);
+        $address->addChild('state', $user->state);
+        $address->addChild('city', $user->city);
+        $address->addChild('zip', $user->zip);
+        $address->addChild('street', $user->street);
+        $address->addChild('house_number', $user->house_number);
+
+        $xmlMessage->addChild('company_email', $user->company_email ?? '');
+        $xmlMessage->addChild('company_id', $user->company_id ?? '');
+        $xmlMessage->addChild('source', 'frontend');
+        $xmlMessage->addChild('user_role', $user->user_role);
+        $xmlMessage->addChild('invoice', $user->invoice);
+        $xmlMessage->addChild('calendar_link', '');
+
+        // Convert XML to string
+        $message = $xmlMessage->asXML();
+
+        // Send message to RabbitMQ
         $routingKey = 'user.frontend';
 
         $this->sendMessageToTopic($routingKey, $message);
 
+        // Logout and delete user
         Auth::logout();
 
         $user->delete();
@@ -126,6 +156,6 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return view ('user.home');
+        return view('user.home');
     }
 }
