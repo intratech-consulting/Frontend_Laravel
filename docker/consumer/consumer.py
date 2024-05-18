@@ -2,12 +2,12 @@ import pika
 import xml.etree.ElementTree as ET
 import mysql.connector
 from datetime import datetime
-import hashlib
+import bcrypt
 
 def create_user(user_data):
     try:
         default_password = "azerty123"
-        hashed_password = hashlib.sha256(default_password.encode()).hexdigest()
+        hashed_password = bcrypt.hashpw(default_password.encode(), bcrypt.gensalt()).decode()
 
         sql = """INSERT INTO users (id, first_name, last_name, email, telephone, birthday, country, state, city, zip, street, house_number, 
                  company_email, company_id, user_role, invoice, calendar_link, password, created_at, updated_at) 
@@ -95,8 +95,9 @@ def create_company(company_data):
     try:
         
         default_password = "qwerty123"
-        hashed_password = hashlib.sha256(default_password.encode()).hexdigest()
+        hashed_password = bcrypt.hashpw(default_password.encode(), bcrypt.gensalt()).decode()
         
+
         sql = """INSERT INTO companies (id, name, email, telephone, logo, country, state, city, zip, street, house_number, type, invoice, user_role, password, created_at, updated_at) 
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
         
