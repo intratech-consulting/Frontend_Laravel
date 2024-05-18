@@ -114,11 +114,16 @@
       border: none;
       cursor: pointer;
       display: inline-block;
+      font-family: 'Manrope', Arial, sans-serif;
     }
 
     .user-actions a:hover,
     .user-actions form button:hover {
       background-color: #b5040a;
+    }
+
+    .user-actions form {
+      margin: 0;
     }
   </style>
 </head>
