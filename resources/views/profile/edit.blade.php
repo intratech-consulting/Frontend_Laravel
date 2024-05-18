@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inloggen</title>
+    <title>Profile</title>
     <style>
         .registration-card {
             width: 700px;
@@ -77,14 +77,10 @@
             background-color: #b5040a;
         }
 
-
         .flex.items-center.gap-4 {
             margin-top: 20px;
         }
 
-
-
-        /* General Styles */
         .profile-section,
         .update-password-section,
         .delete-account-section {
@@ -102,34 +98,30 @@
             text-align: center;
             margin-bottom: 20px;
         }
-
-
-
     </style>
 </head>
 <body>
 
-@include('user.components.header') <!-- Include the user header -->
+@include('user.components.header')
 
 <main class="hackathon-container">
     <section class="space-y-6">
-
         <div class="registration-card">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form') <!-- Include the update profile information form partial -->
+                    @include('profile.partials.update-profile-information-form')
                 </div>
             </div>
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
-                    @include('profile.partials.update-password-form') <!-- Include the update password form partial -->
+                    @include('profile.partials.update-password-form')
                 </div>
             </div>
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
-                    @include('profile.partials.delete-user-form') <!-- Include the delete user form partial -->
+                    @include('profile.partials.delete-user-form')
                 </div>
             </div>
         </div>

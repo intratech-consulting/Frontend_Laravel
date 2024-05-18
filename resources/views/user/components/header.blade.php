@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="user/components/header.css">
   <style>
-    body {
+
+body {
   margin: 0;
   font-family: 'Manrope', Arial, sans-serif;
 }
@@ -126,10 +127,10 @@ a:hover {
   margin: 0;
 }
 
+
   </style>
 </head>
 <body>
-
 <header class="header">
   <div class="logo-container">
     <a href="{{ url('/') }}"><img src="https://login.ehb.be/themes/ehb/images/logo-ehb-small.svg" alt="Logo" class="logo"></a>
@@ -149,7 +150,7 @@ a:hover {
             <a href="{{ url('/profile') }}">Profile</a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit" class="logout-button">Logout</button>
+                <button type="submit">Logout</button>
             </form>
           </div>
         </li>
@@ -161,6 +162,5 @@ a:hover {
     </ul>
   </nav>
 </header>
-
 </body>
 </html>
