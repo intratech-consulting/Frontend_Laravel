@@ -95,7 +95,7 @@ class ProfileController extends Controller
 
         try {
             // Make the POST request
-            $response = $client->request('POST', 'http://10.2.160.51:6000/createMasterUuid', [
+            $response = $client->request('POST', 'http://10.2.160.51:6000/getMasterUuid', [
                 'json' => $data
             ]);
 
