@@ -29,9 +29,9 @@ Route::middleware('web')->group(function () {
 
     Route::post('/send-message-to-topic', [testController::class, 'sendMessageToTopic'])->name('send_message_to_topic');
 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
+    Route::get('/home', function () {
+        return view('user.home');
+    })->middleware(['auth', 'verified'])->name('user.home');
 
     Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
