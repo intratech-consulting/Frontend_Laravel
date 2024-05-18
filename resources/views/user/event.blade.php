@@ -107,10 +107,7 @@
                         <p class="list-text">{{$events->available_seats}} Beschikbare plaatsen</p>
                     </div>
                     <p class="amount-text">Gehost door {{$events->users->first_name}} van {{$events->companies->name}}</p> 
-                    <p class="amount-text">
-                        Datum: {{ date('d/m/y', strtotime($event->date)) }}, 
-                        Tijd: {{ date('H:i', strtotime($event->start_time)) }} - {{ date('H:i', strtotime($event->end_time)) }} 
-                    </p>
+                    <p class="amount-text">Datum: {{$events->date}}, Tijd: {{$events->start_time}} - {{$events->end_time}}</p>
                 
                 
                     
