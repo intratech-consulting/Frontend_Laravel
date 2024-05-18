@@ -107,10 +107,11 @@
                         <p class="list-text">{{$events->available_seats}} Beschikbare plaatsen</p>
                     </div>
                     <p class="amount-text">Gehost door {{$events->users->first_name}} van {{$events->companies->name}}</p> 
-                    <p class="amount-text">
-                        Datum: {{ \Carbon\Carbon::parse($event->date)->format('d/m/y') }},
-                        Tijd: {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($event->end_time)->format('H:i') }}
-                    </p>
+                        <p class="amount-text">
+                            Datum: {{ \Carbon\Carbon::parse($event->date)->format('d/m/y') }},
+                            Tijd: {{ \Carbon\Carbon::parse($event->start_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($event->end_time)->format('H:i') }}
+                        </p>
+                    
                     
                     <div class="buttons-container">
                         <a href="#" class="btn btn-ghost">Meer weergeven</a>
