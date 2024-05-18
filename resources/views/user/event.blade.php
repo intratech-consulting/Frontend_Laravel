@@ -106,7 +106,7 @@
                         <img src="assets/img/check-square.svg" alt="tick" class="list-icon">
                         <p class="list-text">{{$events->available_seats}} Beschikbare plaatsen</p>
                     </div>
-                    <p class="amount-text">Gehost door {{$events->speaker_user_id}} van {{$events->speaker_company_id}}</p>
+                    <p class="amount-text">Gehost door {{$events->speaker_user_id->first_name}} van {{$events->speaker_company_id->name}}</p> 
                     <p class="amount-text">Datum: {{$events->date}}, Tijd: {{$events->start_time}} - {{$events->end_time}}</p>
                     <div class="buttons-container">
                         <a href="#" class="btn btn-ghost">Meer weergeven</a>

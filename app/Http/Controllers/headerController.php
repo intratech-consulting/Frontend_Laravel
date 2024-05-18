@@ -84,7 +84,9 @@ public function events()
     $consumer->consume();
 */
 
-     $event = event::all();
+     // $event =  event::all();
+     $event = Event::with(['users', 'companies'])->get();
+
    return view('user.event', compact('event'));
     }
 
