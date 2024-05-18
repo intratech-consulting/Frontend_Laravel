@@ -156,7 +156,7 @@ class ProfileController extends Controller
 
         $user->delete();
 
-        try {
+        /*try {
             $data_delete = [
                 "MASTERUUID" => $masterUuid,
                 "NewServiceId" => "NULL",
@@ -172,7 +172,7 @@ class ProfileController extends Controller
             // Handle the exception
             echo $e->getMessage();
         
-        }
+        }*/
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
