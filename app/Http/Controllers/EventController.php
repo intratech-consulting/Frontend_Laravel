@@ -72,10 +72,33 @@ class EventController extends Controller
         // Create the event
       
 
-
-
 */
+
+
         
+/* public function signInToEvent(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'event_id' => 'required|exists:events,id',
+        ]);
+
+        $userId = $request->input('user_id');
+        $eventId = $request->input('event_id');
+
+        $xml = new \SimpleXMLElement('<root/>');
+        $xml->addChild('action', 'sign_in');
+        $xml->addChild('user_id', $userId);
+        $xml->addChild('event_id', $eventId);
+
+        $message = $xml->asXML();
+
+        $this->sendMessageToTopic('company.crm', $message);
+
+        return response()->json(['message' => 'Sign-in request sent.'], 200);
+    } */
+
+
   $xmlEvent = new \SimpleXMLElement('<event/>');
 
   $xmlEvent->addChild('routing_key', 'user.crm');
