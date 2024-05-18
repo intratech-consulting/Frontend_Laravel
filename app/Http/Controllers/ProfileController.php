@@ -92,8 +92,8 @@ class ProfileController extends Controller
 
         // Define the data for the request
         $data = [
+            'ServiceId' => $userId, // Assuming $userId is the ID of the user you want to delete
             'Service' => 'frontend',
-            'ServiceId' => $userId, // Assuming $userId is the ID of the newly created user
         ];
 
         try {
@@ -109,7 +109,7 @@ class ProfileController extends Controller
             $json = json_decode($body, true);
 
             // Get the MASTERUUID from the response
-            $masterUuid = $json['MasterUuid'];
+            $masterUuid = $json['UUID'];
 
             // Now you can use $masterUuid for whatever you need
         } catch (\GuzzleHttp\Exception\RequestException $e) {
@@ -121,7 +121,7 @@ class ProfileController extends Controller
         $xmlMessage = new \SimpleXMLElement('<user/>');
         $xmlMessage->addChild('routing_key', 'user.frontend');
         $xmlMessage->addChild('crud_operation', 'delete');
-        $xmlMessage->addChild('id', $userId);
+        $xmlMessage->addChild('id', $masterUuid);
         $xmlMessage->addChild('first_name', $user->first_name);
         $xmlMessage->addChild('last_name', $user->last_name);
         $xmlMessage->addChild('email', $user->email);
@@ -150,6 +150,24 @@ class ProfileController extends Controller
         $routingKey = 'user.frontend';
 
         $this->sendMessageToTopic($routingKey, $message);
+
+        try {
+            $data_delete = [
+                "MASTERUUID" => $masterUuid,
+                "NewServiceId" => "NULL",
+                "Service" => "frontend",
+            ];
+
+            $response = $client->request('POST', 'http://10.2.160.51:6000/updateServiceId', [
+                'json' => $data_delete
+            ]);
+        }
+
+        catch (\GuzzleHttp\Exception\RequestException $e){
+            // Handle the exception
+            echo $e->getMessage();
+        
+        }
 
         // Logout and delete user
         Auth::logout();
