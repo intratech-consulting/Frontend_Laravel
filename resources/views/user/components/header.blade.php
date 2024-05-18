@@ -76,7 +76,16 @@
       padding: 8px 12px;
     }
 
-    .connect a:hover {
+    .logout-button {
+      background-color: #e30613;
+      color: #fff;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .logout-button:hover {
       background-color: #b5040a;
     }
 
@@ -86,35 +95,26 @@
       gap: 15px;
     }
 
+    .user-avatar {
+      height: 40px;
+      width: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
     .user-name {
       font-weight: 500;
     }
 
     .user-actions {
       display: flex;
-      align-items: center;
       gap: 10px;
     }
 
-    .user-actions a,
-    .user-actions form button {
+    .user-actions a {
       color: #fff;
+      text-decoration: none;
       font-weight: 500;
-      padding: 8px 12px;
-      background-color: #e30613;
-      border-radius: 3px;
-      border: none;
-      cursor: pointer;
-      display: inline-block;
-    }
-
-    .user-actions a:hover,
-    .user-actions form button:hover {
-      background-color: #b5040a;
-    }
-
-    .user-actions form {
-      margin: 0;
     }
   </style>
 </head>
@@ -139,7 +139,7 @@
             <a href="{{ url('/profile') }}">Profile</a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <button type="submit">Logout</button>
+                <button type="submit" class="logout-button">Logout</button>
             </form>
           </div>
         </li>
