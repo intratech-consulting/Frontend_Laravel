@@ -41,6 +41,34 @@ class EventController extends Controller
         }
     }
 
+    public function registerToEvent(Request $request)
+   {
+    if (!Auth::check()){
+        return redirect()->back();
+    }
+       $request->validate([
+           // 'user_id' => 'required|exists:users,id',
+           'event_id' => 'required|exists:events,id',
+       ]);
+
+       $userId = Auth::id(); // $request->input('user_id'); //id of logged in user
+       $eventId = $request->input('event_id');
+       
+       //TODO: add register when new db
+
+    //    $xml = new \SimpleXMLElement('<root/>');
+    //    $xml->addChild('action', 'sign_in');
+    //    $xml->addChild('user_id', $userId);
+    //    $xml->addChild('event_id', $eventId);
+
+    //    $message = $xml->asXML();
+
+    //    $this->sendMessageToTopic('registerToEvent', $message);
+
+    return redirect()->back();
+
+   } 
+
     public function create_event(Request $request)
     {
        
@@ -76,32 +104,12 @@ class EventController extends Controller
 
 
         
-/* public function signInToEvent(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'event_id' => 'required|exists:events,id',
-        ]);
-
-        $userId = $request->input('user_id');
-        $eventId = $request->input('event_id');
-
-        $xml = new \SimpleXMLElement('<root/>');
-        $xml->addChild('action', 'sign_in');
-        $xml->addChild('user_id', $userId);
-        $xml->addChild('event_id', $eventId);
-
-        $message = $xml->asXML();
-
-        $this->sendMessageToTopic('company.crm', $message);
-
-        return response()->json(['message' => 'Sign-in request sent.'], 200);
-    } */
 
 
-  $xmlEvent = new \SimpleXMLElement('<event/>');
 
-  $xmlEvent->addChild('routing_key', 'user.crm');
+$xmlEvent = new \SimpleXMLElement('<event/>');
+
+$xmlEvent->addChild('routing_key', 'user.crm');
     $xmlEvent->addChild('crud_operation', 'create');
     $xmlEvent->addChild('id', mt_rand(100000, 999999)); // Generate a random ID
     $xmlEvent->addChild('date', $eventData['date']);

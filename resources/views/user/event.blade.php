@@ -110,7 +110,11 @@
                     <p class="amount-text">Datum: {{$events->date}}, Tijd: {{$events->start_time}} - {{$events->end_time}}</p>
                     <div class="buttons-container">
                         <a href="#" class="btn btn-ghost">Meer weergeven</a>
-                        <a href="#" class="btn btn-fill" id="registerButton" data-user-id="1" data-event-id="2">Registreren</a>
+                        <form action="/events/register" method="POST">
+                            @csrf 
+                            <input type="hidden" name="event_id" value="{{$events->id}}"> 
+                            <button type="submit" class="btn btn-fill">Registreren</button>
+                        </form>
 
                     </div>
                 </div>

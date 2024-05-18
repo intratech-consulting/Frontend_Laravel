@@ -56,6 +56,10 @@ Route::middleware('web')->group(function () {
     Route::match(['get', 'post'], '/create_event', [EventController::class, 'test'])->name('test_event');
     Route::post('/create_event', [EventController::class, 'create_event'])->name('create_event');
 
+    // register to event
+    Route::post('/events/register', [EventController::class, 'registerToEvent']);
+
+
 
     // Company creation
     Route::get('/make_company', [headerController::class, 'show_company']);
