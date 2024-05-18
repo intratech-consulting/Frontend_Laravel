@@ -47,7 +47,6 @@ class ProfileController extends Controller
      */
     public function update(Request $request): RedirectResponse
     {
-        die('oke');
         try {
             // Retrieve the authenticated user
             $user = $request->user();
