@@ -135,15 +135,6 @@
       <li><a href="{{ url('contact') }}">Contact</a></li>
       @if(Route::has('login'))
         @auth
-          @if(Auth::user()->role == 'speaker')
-            <li><a href="#">speaker 1</a></li>
-            <li><a href="#">speaker 2</a></li>
-          @elseif(Auth::user()->role == 'employee')
-            <li><a href="#">employee 1</a></li>
-            <li><a href="#">employee 2</a></li>
-          @elseif(Auth::user()->role == 'individual')
-            <li><a href="#">individual 1</a></li>
-          @endif
           <li class="user-menu">
             <span class="user-name">{{ Auth::user()->name }}</span>
             <div class="user-actions">
