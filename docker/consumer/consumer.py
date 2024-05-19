@@ -366,8 +366,7 @@ def process_user(root):
         if crud_operation == 'create':
             create_user(user_data)
         elif crud_operation == 'update':
-            update_data = {key: value for key, value in user_data.items() if value is not None}
-            update_user(update_data)
+            update_user(user_data)
         elif crud_operation == 'delete':
             delete_user(user_data['id'])
 
