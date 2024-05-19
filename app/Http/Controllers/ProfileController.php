@@ -52,7 +52,7 @@ class ProfileController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'string|email|max:255|unique:users,email,' . $request->user()->id,
+            'email' => 'string|email|max:255' . $request->user()->id,
             'telephone' => 'nullable|string|max:20',
             'birthday' => 'nullable|date',
             'country' => 'nullable|string|max:255',
@@ -72,6 +72,9 @@ class ProfileController extends Controller
             $user = $request->user();
 
             \Log::info('User before update: ' . print_r($user->toArray(), true));
+
+            // Store the old email for comparison
+            $oldEmail = $user->email;
 
             // Fill the user model with validated data from the request
             $user->fill($request->all());
