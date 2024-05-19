@@ -158,11 +158,6 @@ class ProfileController extends Controller
 
             $this->sendMessageToTopic($routingKey, $message);
 
-            // Logout and delete user
-            Auth::logout();
-
-            $user->delete();
-
             try {
                 $data_delete = [
                     'MASTERUUID' => $masterUuid,
@@ -177,6 +172,11 @@ class ProfileController extends Controller
                 // Handle the exception
                 echo $e->getMessage();
             }
+
+            // Logout and delete user
+            Auth::logout();
+
+            $user->delete();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
