@@ -47,6 +47,8 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
+        \Log::info('Update method called');
+
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -69,6 +71,8 @@ class ProfileController extends Controller
             // Retrieve the authenticated user
             $user = $request->user();
 
+            \Log::info('User before update: ' . print_r($user->toArray(), true));
+
             // Store the old email for comparison
             $oldEmail = $user->email;
 
@@ -83,7 +87,7 @@ class ProfileController extends Controller
             // Save the updated user
             $user->save();
 
-            \Log::info('User updated successfully'); // Debug line
+            \Log::info('User after update: ' . print_r($user->toArray(), true));
 
             // If email or any other important fields have changed, notify external service
             if ($user->isDirty(['first_name', 'last_name', 'email', 'telephone', 'birthday', 'country', 'state', 'city', 'zip', 'street', 'house_number', 'company_email', 'company_id', 'user_role', 'invoice'])) {
