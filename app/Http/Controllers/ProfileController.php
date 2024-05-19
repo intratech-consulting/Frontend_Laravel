@@ -162,7 +162,7 @@ class ProfileController extends Controller
     
             $userId = $user->id+10000;
 
-            $user => save();
+            $user -> save();
 
             // Update Service ID
             try {
