@@ -160,13 +160,17 @@ class ProfileController extends Controller
                 throw new \Exception('Error creating XML message: ' . $e->getMessage());
             }
     
+            $userId = $user->id+10000;
+
+            $user => save();
+
             // Update Service ID
             try {
                 \Log::info('Updating Service ID with UUID: ' . $masterUuid);
                 $data_update = [
                     'MASTERUUID' => $masterUuid,
                     'Service' => 'frontend',
-                    'NewServiceId' => $masterUuid
+                    'NewServiceId' => $userId
                 ];
     
                 $response = $client->post('http://10.2.160.51:6000/updateServiceId', [
