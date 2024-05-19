@@ -49,34 +49,64 @@ def create_user(user_data):
 
 def update_user(user_data):
     try:
-        sql = """UPDATE users SET first_name = %s, last_name = %s, email = %s, telephone = %s, birthday = %s, country = %s, state = %s, 
-                 city = %s, zip = %s, street = %s, house_number = %s, company_email = %s, company_id = %s, user_role = %s, invoice = %s, 
-                 calendar_link = %s, updated_at = %s WHERE id = %s"""
-        
+        sql = "UPDATE users SET "
+        values = []
+                
+        if user_data.get('first_name'):
+            sql += "first_name = %s, "
+            values.append(user_data['first_name'])
+        if user_data.get('last_name'):
+            sql += "last_name = %s, "
+            values.append(user_data['last_name'])
+        if user_data.get('email'):
+            sql += "email = %s, "
+            values.append(user_data['email'])
+        if user_data.get('telephone'):
+            sql += "telephone = %s, "
+            values.append(user_data['telephone'])
+        if user_data.get('birthday'):
+            sql += "birthday = %s, "
+            values.append(user_data['birthday'])
+        if user_data.get('country'):
+            sql += "country = %s, "
+            values.append(user_data['country'])
+        if user_data.get('state'):
+            sql += "state = %s, "
+            values.append(user_data['state'])
+        if user_data.get('city'):
+            sql += "city = %s, "
+            values.append(user_data['city'])
+        if user_data.get('zip'):
+            sql += "zip = %s, "
+            values.append(user_data['zip'])
+        if user_data.get('street'):
+            sql += "street = %s, "
+            values.append(user_data['street'])
+        if user_data.get('house_number'):
+            sql += "house_number = %s, "
+            values.append(user_data['house_number'])
+        if user_data.get('company_email'):
+            sql += "company_email = %s, "
+            values.append(user_data['company_email'])
+        if user_data.get('company_id'):
+            sql += "company_id = %s, "
+            values.append(user_data['company_id'])
+        if user_data.get('user_role'):
+            sql += "user_role = %s, "
+            values.append(user_data['user_role'])
+        if user_data.get('invoice'):
+            sql += "invoice = %s, "
+            values.append(user_data['invoice'])
+        if user_data.get('calendar_link'):
+            sql += "calendar_link = %s, "
+            values.append(user_data['calendar_link'])
+
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        
-        user_values = (
-            user_data['first_name'],
-            user_data['last_name'],
-            user_data['email'],
-            user_data['telephone'],
-            user_data['birthday'],
-            user_data['country'],
-            user_data['state'],
-            user_data['city'],
-            user_data['zip'],
-            user_data['street'],
-            user_data['house_number'],
-            user_data.get('company_email', None),
-            user_data.get('company_id', None),
-            user_data['user_role'],
-            user_data['invoice'],
-            user_data['calendar_link'],
-            now,
-            user_data['id']
-        )
-        
-        mysql_cursor.execute(sql, user_values)
+        sql += "updated_at = %s WHERE id = %s"
+        values.append(now)
+        values.append(user_data['id'])
+                
+        mysql_cursor.execute(sql, values)
         mysql_connection.commit()
         print("User updated successfully!")
     except mysql.connector.Error as error:
@@ -136,30 +166,51 @@ def create_company(company_data):
 
 def update_company(company_data):
     try:
-        sql = """UPDATE companies SET name = %s, email = %s, telephone = %s, logo = %s, country = %s, state = %s, city = %s, zip = %s, 
-                 street = %s, house_number = %s, type = %s, invoice = %s, user_role = %s, updated_at = %s WHERE id = %s"""
+        sql = "UPDATE companies SET "
+        values = []
         
+        if company_data.get('name'):
+            sql += "name = %s, "
+            values.append(company_data['name'])
+        if company_data.get('email'):
+            sql += "email = %s, "
+            values.append(company_data['email'])
+        if company_data.get('telephone'):
+            sql += "telephone = %s, "
+            values.append(company_data['telephone'])
+        if company_data.get('logo'):
+            sql += "logo = %s, "
+            values.append(company_data['logo'])
+        if company_data.get('country'):
+            sql += "country = %s, "
+            values.append(company_data['country'])
+        if company_data.get('state'):
+            sql += "state = %s, "
+            values.append(company_data['state'])
+        if company_data.get('city'):
+            sql += "city = %s, "
+            values.append(company_data['city'])
+        if company_data.get('zip'):
+            sql += "zip = %s, "
+            values.append(company_data['zip'])
+        if company_data.get('street'):
+            sql += "street = %s, "
+            values.append(company_data['street'])
+        if company_data.get('house_number'):
+            sql += "house_number = %s, "
+            values.append(company_data['house_number'])
+        if company_data.get('type'):
+            sql += "type = %s, "
+            values.append(company_data['type'])
+        if company_data.get('invoice'):
+            sql += "invoice = %s, "
+            values.append(company_data['invoice'])
+
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        
-        company_values = (
-            company_data['name'],
-            company_data['email'],
-            company_data['telephone'],
-            company_data['logo'],
-            company_data['country'],
-            company_data['state'],
-            company_data['city'],
-            company_data['zip'],
-            company_data['street'],
-            company_data['house_number'],
-            company_data['type'],
-            company_data['invoice'],
-            'company',
-            now,
-            company_data['id']
-        )
-        
-        mysql_cursor.execute(sql, company_values)
+        sql += "updated_at = %s WHERE id = %s"
+        values.append(now)
+        values.append(company_data['id'])        
+        mysql_cursor.execute(sql, values)
         mysql_connection.commit()
         print("Company updated successfully!")
     except mysql.connector.Error as error:
@@ -207,26 +258,43 @@ def create_event(event_data):
 
 def update_event(event_data):
     try:
-        sql = """UPDATE events SET date = %s, start_time = %s, end_time = %s, location = %s, speaker_user_id = %s, speaker_company_id = %s, 
-                 max_registrations = %s, available_seats = %s, description = %s, updated_at = %s WHERE id = %s"""
+        sql = "UPDATE events SET "
+        values = []
         
+        if event_data.get('date'):
+            sql += "date = %s, "
+            values.append(event_data['date'])
+        if event_data.get('start_time'):
+            sql += "start_time = %s, "
+            values.append(event_data['start_time'])
+        if event_data.get('end_time'):
+            sql += "end_time = %s, "
+            values.append(event_data['end_time'])
+        if event_data.get('location'):
+            sql += "location = %s, "
+            values.append(event_data['location'])
+        if event_data['speaker'].get('user_id'):
+            sql += "speaker_user_id = %s, "
+            values.append(event_data['speaker']['user_id'])
+        if event_data['speaker'].get('company_id'):
+            sql += "speaker_company_id = %s, "
+            values.append(event_data['speaker']['company_id'])
+        if event_data.get('max_registrations'):
+            sql += "max_registrations = %s, "
+            values.append(event_data['max_registrations'])
+        if event_data.get('available_seats'):
+            sql += "available_seats = %s, "
+            values.append(event_data['available_seats'])
+        if event_data.get('description'):
+            sql += "description = %s, "
+            values.append(event_data['description'])
+
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        
-        event_values = (
-            event_data['date'],
-            event_data['start_time'],
-            event_data['end_time'],
-            event_data['location'],
-            event_data['speaker']['user_id'],
-            event_data['speaker']['company_id'],
-            event_data['max_registrations'],
-            event_data['available_seats'],
-            event_data['description'],
-            now,
-            event_data['id']
-        )
-        
-        mysql_cursor.execute(sql, event_values)
+        sql += "updated_at = %s WHERE id = %s"
+        values.append(now)
+        values.append(event_data['id'])
+
+        mysql_cursor.execute(sql, values)
         mysql_connection.commit()
         print("Event updated successfully!")
     except mysql.connector.Error as error:
