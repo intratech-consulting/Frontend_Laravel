@@ -100,11 +100,6 @@
             </div>
 
             <div class="form-group">
-                <label for="speaker_company">Sprekersbedrijf:</label>
-                <input type="text" id="speaker_company" name="speaker_company" required>
-            </div>
-
-            <div class="form-group">
                 <label for="date">Datum:</label>
                 <input type="date" id="date" name="date" required>
             </div>

@@ -9,7 +9,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\RoleRegisterController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\CompanyController;
-
+use App\Http\Controllers\CreateEventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,6 +88,9 @@ Route::middleware('web')->group(function () {
     });
 
     Route::post('/test', [testController::class, 'register'])->name('register_test');
+
+    Route::post('/events/create', [CreateEventController::class, 'createEvent'])->name('create_event');
+
 
     Route::get('/home', function () {
         return view('user.home');
