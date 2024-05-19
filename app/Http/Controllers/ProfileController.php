@@ -63,7 +63,7 @@ class ProfileController extends Controller
             'house_number' => 'nullable|string|max:10',
             'company_email' => 'nullable|string|email|max:255',
             'company_id' => 'nullable|string|max:255',
-            'user_role' => 'required|string|max:255',
+            'user_role' => 'string|max:255',
             'invoice' => 'nullable|string|max:255',
         ]);
 
