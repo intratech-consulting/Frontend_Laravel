@@ -9,6 +9,8 @@ def create_user(user_data):
         default_password = "azerty123"
         hashed_password = bcrypt.hashpw(default_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
         
+        hashed_password = hashed_password.replace('$2b$', '$2y$', 1)
+              
         sql = """INSERT INTO users (id, first_name, last_name, email, telephone, birthday, country, state, city, zip, street, house_number, 
                  company_email, company_id, user_role, invoice, calendar_link, password, created_at, updated_at) 
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
@@ -96,6 +98,8 @@ def create_company(company_data):
         
         default_password = "qwerty123"
         hashed_password = bcrypt.hashpw(default_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        
+        hashed_password = hashed_password.replace('$2b$', '$2y$', 1)
         
 
         sql = """INSERT INTO companies (id, name, email, telephone, logo, country, state, city, zip, street, house_number, type, invoice, user_role, password, created_at, updated_at) 
