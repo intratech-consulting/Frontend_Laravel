@@ -50,7 +50,6 @@ class ProfileController extends Controller
         try {
             // Retrieve the authenticated user
             $user = $request->user();
-            
 
             // Fill the user model with validated data from the request
             $user->fill($request->validated());
@@ -122,8 +121,7 @@ class ProfileController extends Controller
             // Handle other exceptions
             echo $e->getMessage();
         }
-
-        if ($masterUuid !== null) {
+        
             // Create XML message for user deletion
             $xmlMessage = new \SimpleXMLElement('<user/>');
             $xmlMessage->addChild('routing_key', 'user.frontend');
@@ -177,11 +175,6 @@ class ProfileController extends Controller
                 // Handle the exception
                 echo $e->getMessage();
             }
-        } else {
-            // Handle the case where $masterUuid is not defined
-            echo 'Failed to obtain UUID, cannot proceed with user deletion.';
-            return redirect()->back()->withErrors('Failed to obtain UUID, cannot proceed with user deletion.');
-        }
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
