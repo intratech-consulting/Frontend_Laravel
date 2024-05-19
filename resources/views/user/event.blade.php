@@ -115,7 +115,7 @@
                     
                     
                     <div class="buttons-container">
-                        <a href="{{ route('events.show', $events->id) }}" class="btn btn-ghost">Meer weergeven</a>
+                        <a href="{{ route('showDetails' , $events->id) }}" class="btn btn-ghost">Meer weergeven</a>
                         <form action="/events/register" method="POST">
                             @csrf 
                             <input type="hidden" name="event_id" value="{{$events->id}}"> 
