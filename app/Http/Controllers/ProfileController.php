@@ -83,6 +83,8 @@ class ProfileController extends Controller
             // Save the updated user
             $user->save();
 
+            \Log::info('User updated successfully'); // Debug line
+
             // If email or any other important fields have changed, notify external service
             if ($user->isDirty(['first_name', 'last_name', 'email', 'telephone', 'birthday', 'country', 'state', 'city', 'zip', 'street', 'house_number', 'company_email', 'company_id', 'user_role', 'invoice'])) {
 
@@ -177,6 +179,7 @@ class ProfileController extends Controller
             // Redirect back to the profile edit page with a success message
             return Redirect::route('profile.edit')->with('status', 'profile-updated');
         } catch (\Exception $e) {
+            \Log::error('Update failed: ' . $e->getMessage()); // Debug line
             // Handle any exceptions and redirect back with an error message
             return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);
         }
