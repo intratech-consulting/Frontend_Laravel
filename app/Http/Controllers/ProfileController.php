@@ -84,103 +84,99 @@ class ProfileController extends Controller
 
             \Log::info('User after update: ' . print_r($user->toArray(), true));
 
-            // If email or any other important fields have changed, notify external service
-            if ($user->isDirty(['first_name', 'last_name', 'email', 'telephone', 'birthday', 'country', 'state', 'city', 'zip', 'street', 'house_number', 'company_email', 'company_id', 'user_role', 'invoice'])) {
+            // Assuming $userId is the ID of the user
+            $userId = $user->id;
 
-                // Assuming $userId is the ID of the user
-                $userId = $user->id;
+            // Create a new Guzzle HTTP client
+            $client = new \GuzzleHttp\Client();
 
-                // Create a new Guzzle HTTP client
-                $client = new \GuzzleHttp\Client();
+            // Define the data for the request
+            $data = [
+                'Service' => 'frontend',
+                'ServiceId' => $userId
+            ];
 
-                // Define the data for the request
-                $data = [
+            $masterUuid = null;
+
+            try {
+                // Make the POST request to get Master UUID
+                $response = $client->request('POST', 'http://10.2.160.51:6000/getMasterUuid', [
+                    'json' => $data
+                ]);
+
+                // Get the response body
+                $body = $response->getBody();
+
+                // Decode the JSON response
+                $json = json_decode($body, true);
+
+                \Log::info('UUID Response: ' . print_r($json, true));
+
+                // Check if UUID exists in the response
+                if (isset($json['UUID'])) {
+                    $masterUuid = $json['UUID'];
+                } else {
+                    throw new \Exception('UUID not found in response');
+                }
+            } catch (\GuzzleHttp\Exception\RequestException $e) {
+                return Redirect::back()->withErrors(['error' => 'Error retrieving UUID: ' . $e->getMessage()]);
+            } catch (\Exception $e) {
+                return Redirect::back()->withErrors(['error' => 'Error retrieving UUID: ' . $e->getMessage()]);
+            }
+
+            // Create XML message for user update
+            $xmlMessage = new \SimpleXMLElement('<user/>');
+            $xmlMessage->addChild('routing_key', 'user.frontend');
+            $xmlMessage->addChild('crud_operation', 'update');
+            $xmlMessage->addChild('id', $masterUuid);
+            $xmlMessage->addChild('first_name', $user->first_name);
+            $xmlMessage->addChild('last_name', $user->last_name);
+            $xmlMessage->addChild('email', $user->email);
+            $xmlMessage->addChild('telephone', $user->telephone);
+            $xmlMessage->addChild('birthday', $user->birthday);
+
+            $address = $xmlMessage->addChild('address');
+            $address->addChild('country', $user->country);
+            $address->addChild('state', $user->state);
+            $address->addChild('city', $user->city);
+            $address->addChild('zip', $user->zip);
+            $address->addChild('street', $user->street);
+            $address->addChild('house_number', $user->house_number);
+
+            $xmlMessage->addChild('company_email', $user->company_email ?? '');
+            $xmlMessage->addChild('company_id', $user->company_id ?? '');
+            $xmlMessage->addChild('source', 'frontend');
+            $xmlMessage->addChild('user_role', $user->user_role);
+            $xmlMessage->addChild('invoice', $user->invoice);
+            $xmlMessage->addChild('calendar_link', '');
+
+            \Log::info('XML Message: ' . $xmlMessage->asXML());
+
+            try {
+                $data_update = [
+                    'MASTERUUID' => $masterUuid,
                     'Service' => 'frontend',
-                    'ServiceId' => $userId
+                    'NewServiceId' => $masterUuid
                 ];
 
-                $masterUuid = null;
-
-                try {
-                    // Make the POST request to get Master UUID
-                    $response = $client->request('POST', 'http://10.2.160.51:6000/getMasterUuid', [
-                        'json' => $data
-                    ]);
-
-                    // Get the response body
-                    $body = $response->getBody();
-
-                    // Decode the JSON response
-                    $json = json_decode($body, true);
-
-                    \Log::info('UUID Response: ' . print_r($json, true));
-
-                    // Check if UUID exists in the response
-                    if (isset($json['UUID'])) {
-                        $masterUuid = $json['UUID'];
-                    } else {
-                        throw new \Exception('UUID not found in response');
-                    }
-                } catch (\GuzzleHttp\Exception\RequestException $e) {
-                    return Redirect::back()->withErrors(['error' => 'Error retrieving UUID: ' . $e->getMessage()]);
-                } catch (\Exception $e) {
-                    return Redirect::back()->withErrors(['error' => 'Error retrieving UUID: ' . $e->getMessage()]);
-                }
-
-                // Create XML message for user update
-                $xmlMessage = new \SimpleXMLElement('<user/>');
-                $xmlMessage->addChild('routing_key', 'user.frontend');
-                $xmlMessage->addChild('crud_operation', 'update');
-                $xmlMessage->addChild('id', $masterUuid);
-                $xmlMessage->addChild('first_name', $user->first_name);
-                $xmlMessage->addChild('last_name', $user->last_name);
-                $xmlMessage->addChild('email', $user->email);
-                $xmlMessage->addChild('telephone', $user->telephone);
-                $xmlMessage->addChild('birthday', $user->birthday);
-
-                $address = $xmlMessage->addChild('address');
-                $address->addChild('country', $user->country);
-                $address->addChild('state', $user->state);
-                $address->addChild('city', $user->city);
-                $address->addChild('zip', $user->zip);
-                $address->addChild('street', $user->street);
-                $address->addChild('house_number', $user->house_number);
-
-                $xmlMessage->addChild('company_email', $user->company_email ?? '');
-                $xmlMessage->addChild('company_id', $user->company_id ?? '');
-                $xmlMessage->addChild('source', 'frontend');
-                $xmlMessage->addChild('user_role', $user->user_role);
-                $xmlMessage->addChild('invoice', $user->invoice);
-                $xmlMessage->addChild('calendar_link', '');
-
-                \Log::info('XML Message: ' . $xmlMessage->asXML());
-
-                try {
-                    $data_update = [
-                        'MASTERUUID' => $masterUuid,
-                        'Service' => 'frontend',
-                        'NewServiceId' => $masterUuid
-                    ];
-    
-                    $response = $client->request('POST', 'http://10.2.160.51:6000/updateServiceId', [
-                        'json' => $data_update
-                    ]);
-                    \Log::info('Service ID Update Response: ' . $response->getBody());
-                } catch (\GuzzleHttp\Exception\RequestException $e) {
-                    // Handle the exception
-                    echo $e->getMessage();
-                }
-
-                // Convert XML to string
-                $message = $xmlMessage->asXML();
-
-                // Send message to RabbitMQ
-                $routingKey = 'user.frontend';
-
-                \Log::info('Sending message to RabbitMQ');
-
-                $this->sendMessageToTopic($routingKey, $message);
+                $response = $client->request('POST', 'http://10.2.160.51:6000/updateServiceId', [
+                    'json' => $data_update
+                ]);
+                \Log::info('Service ID Update Response: ' . $response->getBody());
+            } catch (\GuzzleHttp\Exception\RequestException $e) {
+                // Handle the exception
+                echo $e->getMessage();
             }
+
+            // Convert XML to string
+            $message = $xmlMessage->asXML();
+
+            // Send message to RabbitMQ
+            $routingKey = 'user.frontend';
+
+            \Log::info('Sending message to RabbitMQ');
+
+            $this->sendMessageToTopic($routingKey, $message);
 
             // Redirect back to the profile edit page with a success message
             return Redirect::route('profile.edit')->with('status', 'profile-updated');
