@@ -113,6 +113,8 @@ class ProfileController extends Controller
                     // Decode the JSON response
                     $json = json_decode($body, true);
 
+                    \Log::info('UUID Response: ' . print_r($json, true));
+
                     // Check if UUID exists in the response
                     if (isset($json['UUID'])) {
                         $masterUuid = $json['UUID'];
@@ -151,6 +153,8 @@ class ProfileController extends Controller
                 $xmlMessage->addChild('invoice', $user->invoice);
                 $xmlMessage->addChild('calendar_link', '');
 
+                \Log::info('XML Message: ' . $xmlMessage->asXML());
+
                 try {
                     $data_update = [
                         'MASTERUUID' => $masterUuid,
@@ -159,6 +163,7 @@ class ProfileController extends Controller
                     ];
     
                     $response = $client->request('POST', 'http://10.2.160.51:6000/updateServiceId', [
+                        \Log::info('Service ID Update Response: ' . $response->getBody());
                         'json' => $data_update
                     ]);
                 } catch (\GuzzleHttp\Exception\RequestException $e) {
@@ -171,6 +176,8 @@ class ProfileController extends Controller
 
                 // Send message to RabbitMQ
                 $routingKey = 'user.frontend';
+
+                \Log::info('Sending message to RabbitMQ');
 
                 $this->sendMessageToTopic($routingKey, $message);
             }
