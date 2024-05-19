@@ -3,6 +3,48 @@ import xml.etree.ElementTree as ET
 import mysql.connector
 from datetime import datetime
 import bcrypt
+import requests
+
+GET_MASTER_UUID_ENDPOINT = "http://10.2.160.51:6000/getMasterUuid"
+CREATE_MASTER_UUID_ENDPOINT = "http://10.2.160.51:6000/createMasterUuid"
+ADD_SERVICE_ID_ENDPOINT = "http://10.2.160.51:6000/addServiceId"
+
+
+def get_master_uuid(service_name, service_id):
+    payload = {
+        "Service": service_name,
+        "ServiceId": service_id
+    }
+    response = requests.post(GET_MASTER_UUID_ENDPOINT, json=payload)
+    if response.status_code == 200:
+        return response.json().get("UUID")
+    else:
+        raise Exception(f"Failed to get MasterUuid: {response.text}")
+
+def create_master_uuid(service_name, service_id):
+    payload = {
+        "Service": service_name,
+        "ServiceId": service_id
+    }
+    response = requests.post(CREATE_MASTER_UUID_ENDPOINT, json=payload)
+    if response.status_code == 200:
+        return response.json().get("MASTERUUID")
+    else:
+        raise Exception(f"Failed to create MasterUuid: {response.text}")
+
+def link_id_to_frontend(master_uuid, frontend_id):
+    payload = {
+        "MasterUuid": master_uuid,
+        "Service": "frontend",
+        "ServiceId": frontend_id
+    }
+    response = requests.post(ADD_SERVICE_ID_ENDPOINT, json=payload)
+    if response.status_code == 200:
+        print("ID successfully linked to frontend in MasterUuid table.")
+    else:
+        raise Exception(f"Failed to link ID to frontend in MasterUuid table: {response.text}")
+
+
 
 def create_user(user_data):
     try:
@@ -360,6 +402,15 @@ def process_user(root):
         print("Extracting user data...")
         print(f"User Data: {user_data}")
 
+        frontend_id = get_master_uuid('frontend', user_data['id'])
+
+        if frontend_id is None:
+            master_uuid = create_master_uuid('frontend', user_data['id'])
+            link_id_to_frontend(master_uuid, user_data['id'])
+        else:
+            user_data['id'] = frontend_id
+            print("Frontend ID already linked. Setting it as the actual ID in the XML data...")
+
         # Perform CRUD operation
         crud_operation = root.find('crud_operation').text
         print(f"Performing {crud_operation} operation...")
@@ -372,7 +423,6 @@ def process_user(root):
 
     except Exception as e:
         print("Error processing user data:", e)
-
 # Process company data
 def process_company(root):
     try:
