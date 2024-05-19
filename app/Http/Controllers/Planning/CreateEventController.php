@@ -18,7 +18,7 @@ use Carbon\Carbon;
 
 
 
-class EventController extends Controller
+class CreateEventController extends Controller
 {
     protected $rabbitMQService;
 
