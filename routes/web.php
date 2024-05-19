@@ -59,6 +59,10 @@ Route::middleware('web')->group(function () {
     // register to event
     Route::post('/events/register', [EventController::class, 'registerToEvent']);
 
+    //event details
+    Route::get('/events/{id}', [EventController::class, 'showDetails'])->name('events.show');
+
+
 
 
     // Company creation

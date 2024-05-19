@@ -80,15 +80,15 @@ public function contact()
 public function events()
     {
 
-// Activate the planning RabbitMQ consumer
-   /* $consumer = new RecievePlanningController();
-    $consumer->consume();
-*/
+        // Activate the planning RabbitMQ consumer
+        /* $consumer = new RecievePlanningController();
+            $consumer->consume();
+        */
 
-     // $event =  event::all();
-     $event = Event::with(['users', 'companies'])->get();
+        // $event =  event::all();
+        $event = Event::with(['users', 'companies'])->get();
 
-   return view('user.event', compact('event'));
+        return view('user.event', compact('event'));
     }
 
 

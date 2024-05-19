@@ -43,6 +43,13 @@ class EventController extends Controller
         }
     }
 
+    public function showDetails($id)
+    {
+        $event = Event::with(['users', 'companies'])->findOrFail($id);
+        return view('user.event-details', compact('showdetails'));
+    }
+
+
     public function registerToEvent(Request $request)
    {
     if (!Auth::check()){
