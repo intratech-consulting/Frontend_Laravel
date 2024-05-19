@@ -166,7 +166,7 @@ class ProfileController extends Controller
                 $data_update = [
                     'MASTERUUID' => $masterUuid,
                     'Service' => 'frontend',
-                    'NewServiceId' => $userId
+                    'NewServiceId' => $masterUuid
                 ];
     
                 $response = $client->post('http://10.2.160.51:6000/updateServiceId', [
@@ -182,7 +182,7 @@ class ProfileController extends Controller
             }
     
             $routingKey = 'user.frontend';
-            
+
             // Send message to RabbitMQ
             try {
                 \Log::info('Sending message to RabbitMQ');
