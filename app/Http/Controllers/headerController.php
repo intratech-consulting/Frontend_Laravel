@@ -64,7 +64,7 @@ public function planning()
         $calendar_link = $user->calendar_link;
     } else {
         // default calendar link
-        $calendar_link = "https://embed.styledcalendar.com/#RNRQ7GYT8sv7grrj2Wlv";
+        $calendar_link = "https://calendar.google.com/calendar/u/0/embed?src=7385a4a57d6b8bc946bd2d8daee469edd3098611077851dd48530aeafd315b80@group.calendar.google.com&ctz=Europe/Brussels";
     }
 
     return view('user.planning', ['calendar_link' => $calendar_link]);
