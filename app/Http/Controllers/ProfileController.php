@@ -95,6 +95,8 @@ class ProfileController extends Controller
             'ServiceId' => $userId // Assuming $userId is the ID of the user you want to delete
         ];
 
+        $masterUuid = null;
+
         try {
             // Make the POST request
             $response = $client->request('POST', 'http://10.2.160.51:6000/getMasterUuid', [
@@ -121,7 +123,7 @@ class ProfileController extends Controller
             // Handle other exceptions
             echo $e->getMessage();
         }
-        
+
             // Create XML message for user deletion
             $xmlMessage = new \SimpleXMLElement('<user/>');
             $xmlMessage->addChild('routing_key', 'user.frontend');
