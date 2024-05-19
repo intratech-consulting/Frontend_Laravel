@@ -73,9 +73,6 @@ class ProfileController extends Controller
 
             \Log::info('User before update: ' . print_r($user->toArray(), true));
 
-            // Store the old email for comparison
-            $oldEmail = $user->email;
-
             // Fill the user model with validated data from the request
             $user->fill($request->all());
 
