@@ -69,7 +69,7 @@
             border-radius: 5px;
             text-decoration: none;
             transition: all 0.3s;
-            display: inline-block; /*added */
+            display: inline-block; /*added*/
         }
 
         .event-card .btn-ghost {
