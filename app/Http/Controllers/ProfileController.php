@@ -52,7 +52,7 @@ class ProfileController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $request->user()->id,
+            'email' => 'string|email|max:255|unique:users,email,' . $request->user()->id,
             'telephone' => 'nullable|string|max:20',
             'birthday' => 'nullable|date',
             'country' => 'nullable|string|max:255',
