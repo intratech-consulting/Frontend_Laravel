@@ -181,6 +181,8 @@ class ProfileController extends Controller
                 echo $e->getMessage();
             }
     
+            $routingKey = 'user.frontend';
+            
             // Send message to RabbitMQ
             try {
                 \Log::info('Sending message to RabbitMQ');
