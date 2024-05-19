@@ -381,22 +381,22 @@ def process_user(root):
     try:
         user_data = {
             'id': root.find('id').text,
-            'first_name': root.findtext('first_name'),
-            'last_name': root.findtext('last_name'),
-            'email': root.findtext('email'),
-            'telephone': root.findtext('telephone'),
-            'birthday': root.findtext('birthday'),
-            'country': root.findtext('address/country'),
-            'state': root.findtext('address/state'),
-            'city': root.findtext('address/city'),
-            'zip': root.findtext('address/zip'),
-            'street': root.findtext('address/street'),
-            'house_number': root.findtext('address/house_number'),
-            'company_email': root.findtext('company_email') if root.find('company_email') is not None else None,
-            'company_id': root.findtext('company_id') if root.find('company_id') is not None else None,
-            'user_role': root.findtext('user_role'),
-            'invoice': root.findtext('invoice'),
-            'calendar_link': root.findtext('calendar_link')
+            'first_name': root.find('first_name').text,
+            'last_name': root.find('last_name').text,
+            'email': root.find('email').text,
+            'telephone': root.find('telephone').text,
+            'birthday': root.find('birthday').text,
+            'country': root.find('address/country').text,
+            'state': root.find('address/state').text,
+            'city': root.find('address/city').text,
+            'zip': root.find('address/zip').text,
+            'street': root.find('address/street').text,
+            'house_number': root.find('address/house_number').text,
+            'company_email': root.find('company_email').text if root.find('company_email') is not None else None,
+            'company_id': root.find('company_id').text if root.find('company_id') is not None else None,
+            'user_role': root.find('user_role').text,
+            'invoice': root.find('invoice').text,
+            'calendar_link': root.find('calendar_link').text
         }
 
         print("Extracting user data...")
