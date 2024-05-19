@@ -154,8 +154,8 @@ class ProfileController extends Controller
                 try {
                     $data_update = [
                         'MASTERUUID' => $masterUuid,
-                        'NewServiceId' => $userId + 1,
-                        'Service' => 'frontend'
+                        'Service' => 'frontend',
+                        'NewServiceId' => $masterUuid
                     ];
     
                     $response = $client->request('POST', 'http://10.2.160.51:6000/updateServiceId', [
