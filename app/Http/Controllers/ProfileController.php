@@ -167,9 +167,9 @@ class ProfileController extends Controller
 
             try {
                 $data_delete = [
-                    "MASTERUUID" => $masterUuid,
-                    "NewServiceId" => "NULL",
-                    "Service" => "frontend",
+                    'MASTERUUID' => $masterUuid,
+                    'NewServiceId' => 'NULL',
+                    'Service' => 'frontend',
                 ];
 
                 $response = $client->request('POST', 'http://10.2.160.51:6000/updateServiceId', [
