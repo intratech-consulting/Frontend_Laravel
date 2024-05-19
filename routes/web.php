@@ -60,7 +60,7 @@ Route::middleware('web')->group(function () {
     Route::post('/events/register', [EventController::class, 'registerToEvent']);
 
     //event details
-    Route::get('/events/{id}', [EventController::class, 'showDetails'])->name('showDetails');
+    Route::get('/event_details/{id}', [EventController::class, 'eventDetails']);
 
 
 
