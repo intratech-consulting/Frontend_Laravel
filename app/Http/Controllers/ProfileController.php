@@ -163,9 +163,9 @@ class ProfileController extends Controller
                     ];
     
                     $response = $client->request('POST', 'http://10.2.160.51:6000/updateServiceId', [
-                        \Log::info('Service ID Update Response: ' . $response->getBody());
                         'json' => $data_update
                     ]);
+                    \Log::info('Service ID Update Response: ' . $response->getBody());
                 } catch (\GuzzleHttp\Exception\RequestException $e) {
                     // Handle the exception
                     echo $e->getMessage();
