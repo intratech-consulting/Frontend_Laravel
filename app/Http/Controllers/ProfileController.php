@@ -92,11 +92,9 @@ class ProfileController extends Controller
 
         // Define the data for the request
         $data = [
-            'ServiceId' => $userId, // Assuming $userId is the ID of the user you want to delete
             'Service' => 'frontend',
+            'ServiceId' => $userId // Assuming $userId is the ID of the user you want to delete
         ];
-
-        $masterUuid = null;
 
         try {
             // Make the POST request
@@ -168,8 +166,8 @@ class ProfileController extends Controller
             try {
                 $data_delete = [
                     'MASTERUUID' => $masterUuid,
-                    'NewServiceId' => 'NULL',
                     'Service' => 'frontend',
+                    'NewServiceId' => 'NULL'
                 ];
 
                 $response = $client->request('POST', 'http://10.2.160.51:6000/updateServiceId', [
