@@ -150,14 +150,6 @@ class ProfileController extends Controller
             $xmlMessage->addChild('invoice', $user->invoice);
             $xmlMessage->addChild('calendar_link', '');
 
-            // Convert XML to string
-            $message = $xmlMessage->asXML();
-
-            // Send message to RabbitMQ
-            $routingKey = 'user.frontend';
-
-            $this->sendMessageToTopic($routingKey, $message);
-
             try {
                 $data_delete = [
                     'MASTERUUID' => $masterUuid,
@@ -172,6 +164,14 @@ class ProfileController extends Controller
                 // Handle the exception
                 echo $e->getMessage();
             }
+
+            // Convert XML to string
+            $message = $xmlMessage->asXML();
+
+            // Send message to RabbitMQ
+            $routingKey = 'user.frontend';
+
+            $this->sendMessageToTopic($routingKey, $message);
 
             // Logout and delete user
             Auth::logout();
