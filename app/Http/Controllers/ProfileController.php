@@ -79,11 +79,6 @@ class ProfileController extends Controller
             // Fill the user model with validated data from the request
             $user->fill($request->all());
 
-            // If the email is being updated, reset email verification
-            if ($user->isDirty('email')) {
-                $user->email_verified_at = null;
-            }
-
             // Save the updated user
             $user->save();
 
