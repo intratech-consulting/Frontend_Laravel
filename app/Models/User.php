@@ -13,8 +13,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    public $incrementing = false; // Disable auto-incrementing
-
     /**
      * The attributes that are mass assignable.
      *
