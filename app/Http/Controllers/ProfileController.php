@@ -67,6 +67,11 @@ class ProfileController extends Controller
             'invoice' => 'nullable|string|max:255',
         ]);
 
+        do {
+            // Generate a UUID and convert it to a string as long as its not unique
+            $uuid = Uuid::uuid4()->toString();
+        } while (User::find($uuid));
+
         try {
             // Retrieve the authenticated user
             $user = $request->user();
@@ -81,7 +86,7 @@ class ProfileController extends Controller
             \Log::info('User after update: ' . print_r($user->toArray(), true));
     
             // Assuming $userId is the ID of the user
-            $userId = $user->id;
+            $userId = $user ->id;
 
             \Log::info('User ID:  ' . print_r($userId, true));
     
@@ -161,10 +166,6 @@ class ProfileController extends Controller
                 \Log::error('XML Creation Exception: ' . $e->getMessage());
                 throw new \Exception('Error creating XML message: ' . $e->getMessage());
             }
-    
-            $userId = $user->id;
-
-            $user -> save();
 
             // Update Service ID
             try {
@@ -172,7 +173,7 @@ class ProfileController extends Controller
                 $data_update = [
                     'MASTERUUID' => $masterUuid,
                     'Service' => 'frontend',
-                    'NewServiceId' => $userId
+                    'NewServiceId' => $uuid
                 ];
     
                 $response = $client->post('http://10.2.160.51:6000/updateServiceId', [
@@ -216,6 +217,11 @@ class ProfileController extends Controller
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
+
+        do {
+            // Generate a UUID and convert it to a string as long as its not unique
+            $uuid = Uuid::uuid4()->toString();
+        } while (User::find($uuid));
 
         $user = $request->user();
 
