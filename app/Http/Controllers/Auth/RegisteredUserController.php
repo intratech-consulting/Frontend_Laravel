@@ -105,6 +105,7 @@ class RegisteredUserController extends Controller
 
         \Log::info('User after create: ' . print_r($user->toArray(), true));
 
+        event(new Registered($user));
 
         // Create a new Guzzle HTTP client
         $client = new \GuzzleHttp\Client();
@@ -176,8 +177,6 @@ class RegisteredUserController extends Controller
         $routingKey = 'user.frontend';
 
         $this->sendMessageToTopic($routingKey, $message);
-
-        event(new Registered($user));
 
         Auth::login($user);
 
