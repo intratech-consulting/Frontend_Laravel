@@ -41,9 +41,12 @@ jobs:
           docker compose down
           git checkout dev
           git pull
+          sed -i 's/__SERVER_NAME__/'"${{ secrets.SSH_HOST }}"'/g' docker/nginx/sites/laravel.conf
           docker compose up --build -d
-          sudo chown -R $USER:$USER /home/***/TestServer/frontend/Frontend_Laravel
-          sudo chmod -R 775 /home/***/TestServer/frontend/Frontend_Laravel
+          sudo chown -R www-data:www-data /home/***/TestServer/frontend/Frontend_Laravel/storage
+          sudo chown -R www-data:www-data /home/***/TestServer/frontend/Frontend_Laravel/public
+          sudo chmod -R 775 /home/***/TestServer/frontend/Frontend_Laravel/storage
+          sudo chmod -R 775 /home/***/TestServer/frontend/Frontend_Laravel/public
           composer install
           sudo npm install
           nohup npm run dev > /dev/null 2>&1 &
