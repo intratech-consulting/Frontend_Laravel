@@ -39,7 +39,7 @@ jobs:
           cd ~/production/frontend/Frontend_Laravel
           ls -l
           docker compose down
-          git checkout dev
+          git checkout main
           git pull
           sed -i 's/__SERVER_NAME__/'"${{ secrets.SSH_HOST }}"'/g' docker/nginx/sites/laravel.conf
           docker compose up --build -d
