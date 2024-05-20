@@ -175,6 +175,8 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        \Log::info('Session after login: ' . print_r(session()->all(), true));
+
         return redirect()->route('user.home');
     }
 }

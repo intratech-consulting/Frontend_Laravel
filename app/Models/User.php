@@ -7,12 +7,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    // Disable auto-incrementing
+    public $incrementing = false;
+    
     protected $keyType = 'string'; // Use string type for the primary key
 
     /**
@@ -47,7 +50,7 @@ class User extends Authenticatable
 
         static::creating(function ($model) {
             if (empty($model->{$model->getKeyName()})) {
-                $model->{$model->getKeyName()} = (string) Str::uuid();
+                $model->{$model->getKeyName()} = (string) Uuid::uuid4();
             }
         });
     }
