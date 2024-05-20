@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Services\RabbitMQSendToExhangeService;
 use Illuminate\Http\RedirectResponse;
@@ -113,7 +115,7 @@ class ProfileController extends Controller
             // Handle the exception
             echo $e->getMessage();
         }
-        
+
         // Create XML message for user deletion
         $xmlMessage = new \SimpleXMLElement('<user/>');
         $xmlMessage->addChild('routing_key', 'user.frontend');
