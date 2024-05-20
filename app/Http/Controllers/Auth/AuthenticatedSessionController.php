@@ -31,7 +31,7 @@ class AuthenticatedSessionController extends Controller
 
             \Log::info('Session after regeneration: ' . print_r(session()->all(), true));
 
-            return redirect()->intended('user.home');
+            return redirect()->intended('dashboard');
         }
 
         return back()->withErrors([
