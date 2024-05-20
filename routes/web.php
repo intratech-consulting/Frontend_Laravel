@@ -30,9 +30,11 @@ Route::middleware('web')->group(function () {
 
     Route::post('/send-message-to-topic', [testController::class, 'sendMessageToTopic'])->name('send_message_to_topic');
 
-    Route::get('/home', function () {
-        return view('user.home');
-    })->middleware(['auth', 'verified'])->name('user.home');
+    Route::middleware('web')->group(function () {
+        Route::get('/home', function () {
+            return view('user.home');
+        })->middleware(['auth', 'verified'])->name('user.home');
+    });
 
     Route::middleware(['web'])->group(function () {
         Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
