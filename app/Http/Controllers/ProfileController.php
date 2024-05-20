@@ -160,7 +160,7 @@ class ProfileController extends Controller
                 throw new \Exception('Error creating XML message: ' . $e->getMessage());
             }
     
-            $userId = $user->id+10000;
+            $userId = $user->id;
 
             $user -> save();
 
