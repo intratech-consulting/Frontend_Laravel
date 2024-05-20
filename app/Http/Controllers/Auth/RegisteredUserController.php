@@ -111,7 +111,7 @@ class RegisteredUserController extends Controller
         // Define the data for the request
         $data = [
             'Service' => 'frontend',
-            'ServiceId' => $uuid, // Assuming $userId is the ID of the newly created user
+            'ServiceId' => $userId, // Assuming $userId is the ID of the newly created user
         ];
 
         try {
