@@ -48,7 +48,7 @@ jobs:
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/staging/frontend/Frontend_Laravel/public
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod -R 775 /home/***/staging/frontend/Frontend_Laravel/storage
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod -R 775 /home/***/staging/frontend/Frontend_Laravel/public
-          echo ${{ secrets.SSH_PASSWORD }} | sudo -S -v && echo ${{ secrets.SSH_PASSWORD }} | sudo -S composer install
-          echo ${{ secrets.SSH_PASSWORD }} | sudo -S -v && echo ${{ secrets.SSH_PASSWORD }} | sudo -S npm install
+          docker exec frontend_laravel-php-fpm-1 composer install
+          docker exec frontend_laravel-php-fpm-1 npm install
           nohup npm run dev > /dev/null 2>&1 &
           ENDSSH
