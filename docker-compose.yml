@@ -10,7 +10,7 @@ services:
             - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
         ports:
             #            port mappings, host to docker
-            - "${NGINX_HOST_HTTPS_PORT}:443"
+            - "4443:443"
             - "9999:80"
         restart: always
         depends_on:
