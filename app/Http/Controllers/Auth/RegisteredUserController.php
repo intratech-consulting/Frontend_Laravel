@@ -76,15 +76,7 @@ class RegisteredUserController extends Controller
             'user_role' => ['required', 'string', Rule::in(['individual', 'employee', 'speaker'])],
         ]);
 
-        do {
-            // Generate a UUID and convert it to a string as long as its not unique
-            $uuid = Uuid::uuid4()->toString();
-        } while (User::find($uuid));
-
-        \Log::info('User ID:  ' . print_r($uuid, true));
-
         $user = User::create([
-            'id' => $uuid,
             'first_name' => $userData['first_name'],
             'last_name' => $userData['last_name'],
             'email' => $userData['email'],
@@ -99,10 +91,11 @@ class RegisteredUserController extends Controller
             'house_number' => $userData['house_number'],
             'invoice' => $userData['invoice'],
             'user_role' => $userData['user_role'],
-            'company_email' => isset($userData['company_email']) ? $userData['company_email'] : null,
-            'company_id' => isset($userData['company_id']) ? $userData['company_id'] : null,
+            'company_email' => $userData['company_email'] ?? null,
+            'company_id' => $userData['company_id'] ?? null,
         ]);
 
+        \Log::info('User after create: ' . print_r($user->toArray(), true));
 
         // Create a new Guzzle HTTP client
         $client = new \GuzzleHttp\Client();
@@ -110,33 +103,23 @@ class RegisteredUserController extends Controller
         // Define the data for the request
         $data = [
             'Service' => 'frontend',
-            'ServiceId' => $uuid, // Assuming $userId is the ID of the newly created user
+            'ServiceId' => $user->id,
         ];
 
         try {
-            // Make the POST request
-            $response = $client->request('POST', 'http://10.2.160.51:6000/createMasterUuid', [
+            $response = $client->post('http://10.2.160.51:6000/createMasterUuid', [
                 'json' => $data
             ]);
 
-            // Get the response body
             $body = $response->getBody();
-
-            // Decode the JSON response
             $json = json_decode($body, true);
-
-            // Get the MASTERUUID from the response
             $masterUuid = $json['MasterUuid'];
 
-            // Now you can use $masterUuid for whatever you need
+            \Log::info('Master UUID: ' . $masterUuid);
         } catch (\GuzzleHttp\Exception\RequestException $e) {
-            //Send logs to ControlRoom
             $this->rabbitMQService->sendLogEntryToTopic('make_UUID', 'Error: ' . $e->getMessage(), true);
-
-            // Handle the exception
             throw new \Exception('Failed to retrieve masterUuid: ' . $e->getMessage());
         }
-
 
         $xmlMessage = new \SimpleXMLElement('<user/>');
         $xmlMessage->addChild('routing_key', 'user.frontend');
@@ -156,23 +139,19 @@ class RegisteredUserController extends Controller
         $address->addChild('street', $userData['street']);
         $address->addChild('house_number', $userData['house_number']);
 
-        $xmlMessage->addChild('company_email', isset($userData['company_email']) ? $userData['company_email'] : '');
-        $xmlMessage->addChild('company_id', isset($userData['company_id']) ? $userData['company_id'] : '');
+        $xmlMessage->addChild('company_email', $userData['company_email'] ?? '');
+        $xmlMessage->addChild('company_id', $userData['company_id'] ?? '');
         $xmlMessage->addChild('source', 'frontend');
         $xmlMessage->addChild('user_role', $userData['user_role']);
         $xmlMessage->addChild('invoice', $userData['invoice']);
         $xmlMessage->addChild('calendar_link', '');
 
-        // Convert XML to string
         $message = $xmlMessage->asXML();
-
-        // Send message to RabbitMQ
         $routingKey = 'user.frontend';
 
         $this->sendMessageToTopic($routingKey, $message);
 
         event(new Registered($user));
-
         Auth::login($user);
 
         return redirect()->route('user.home');

@@ -10,6 +10,7 @@ use App\Http\Controllers\RoleRegisterController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CreateEventController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,14 @@ Route::middleware('web')->group(function () {
     Route::get('/home', function () {
         return view('user.home');
     })->middleware(['auth', 'verified'])->name('user.home');
+
+    Route::middleware(['web'])->group(function () {
+        Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
+        Route::post('/register', [RegisteredUserController::class, 'store']);
+        Route::get('/home', function () {
+            return view('user.home');
+        })->name('user.home');
+    });
 
     Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
