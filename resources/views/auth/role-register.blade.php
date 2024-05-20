@@ -95,7 +95,7 @@
                 <a href="{{ route('register') }}">
                     <img src="https://images.unsplash.com/photo-1572021335469-31706a17aaef?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Employee">
                 </a>
-                <a href="{{ route('register') }}" class="navigation-link">Werknemer</a>
+                <a href="{{ route('register') }}" class="navigation-link">Gast</a>
             </div>
             <div class="navigation-item">
             <a href="{{url('register_company')}}">

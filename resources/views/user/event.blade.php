@@ -69,12 +69,14 @@
             border-radius: 5px;
             text-decoration: none;
             transition: all 0.3s;
+            display: inline-block; /*added*/
         }
 
         .event-card .btn-ghost {
             border: 2px solid #333;
             color: #333;
             margin-right: 10px;
+            float: left; /*added */
         }
 
         .event-card .btn-fill {
@@ -97,7 +99,7 @@
                 <div class="event-card">
                     <img src="#" alt="Event Image">
                     <h3>Event at {{$events->location}}</h3>
-                    <p>{{$events->description}}</p>
+                    <p>{{$events->description}}</p> <!-- faut juste le voir quand il appuie sur meer weergeven, nouvelle page tout en plus grand avec description-->
                     <div class="details-container">
                         <img src="assets/img/check-square.svg" alt="tick" class="list-icon">
                         <p class="list-text">{{$events->max_registrations}} Registraties</p>
@@ -106,11 +108,20 @@
                         <img src="assets/img/check-square.svg" alt="tick" class="list-icon">
                         <p class="list-text">{{$events->available_seats}} Beschikbare plaatsen</p>
                     </div>
-                    <p class="amount-text">Gehost door {{$events->speaker_user_id}} van {{$events->speaker_company_id}}</p>
+                    <p class="amount-text">Gehost door {{$events->users->first_name}} van {{$events->companies->name}}</p> 
                     <p class="amount-text">Datum: {{$events->date}}, Tijd: {{$events->start_time}} - {{$events->end_time}}</p>
+                
+                
+                    
+                    
                     <div class="buttons-container">
-                        <a href="#" class="btn btn-ghost">Meer weergeven</a>
-                        <a href="#" class="btn btn-fill">Registreren</a>
+                        <a href="{{ url('event_details' , $events->id) }}" class="btn btn-ghost">Meer weergeven</a>
+                        <form action="/events/register" method="POST">
+                            @csrf 
+                            <input type="hidden" name="event_id" value="{{$events->id}}"> 
+                            <button type="submit" class="btn btn-fill">Registreren</button>
+                        </form>
+
                     </div>
                 </div>
             </div>

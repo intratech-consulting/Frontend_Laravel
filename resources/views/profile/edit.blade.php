@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inloggen</title>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <title>Profile</title>
     <style>
         .registration-card {
             width: 700px;
             padding: 50px;
             margin: 5vh auto;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
 
         .registration-card h2 {
@@ -79,47 +77,60 @@
         button:hover {
             background-color: #b5040a;
         }
+
+        .flex.items-center.gap-4 {
+            margin-top: 20px;
+        }
+
+        .profile-section,
+        .update-password-section,
+        .delete-account-section {
+            max-width: 700px;
+            margin: 5vh auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-header,
+        .update-password-header,
+        .delete-account-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
 
 @include('user.components.header')
 
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="registration-card">
-                <h2>Edit Profile Information</h2>
-
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <div class="max-w-xl">
-                        @include('profile.partials.update-profile-information-form')
-                    </div>
+<main class="hackathon-container">
+    <section class="space-y-6">
+        <div class="registration-card">
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                    @include('profile.partials.update-profile-information-form')
                 </div>
+            </div>
 
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <div class="max-w-xl">
-                        @include('profile.partials.update-password-form')
-                    </div>
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                    @include('profile.partials.update-password-form')
                 </div>
+            </div>
 
-                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                    <div class="max-w-xl">
-                        @include('profile.partials.delete-user-form')
-                    </div>
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                    @include('profile.partials.delete-user-form')
                 </div>
             </div>
         </div>
-    </div>
-</x-app-layout>
+    </section>
+</main>
 
 @include('user.components.footer')
+
 
 </body>
 </html>

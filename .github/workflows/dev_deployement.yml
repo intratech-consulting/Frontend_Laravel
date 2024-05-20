@@ -34,7 +34,6 @@ jobs:
         run: |
           sudo apt-get install sshpass
           sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/deployment.key <<'ENDSSH'
-          sed -i "s/NGINX-SERVER-NAME-PLACEHOLDER/$SSH_HOST/" /path/to/your/laravel.conf
           eval $(ssh-agent)
           ssh-add ~/.ssh/github_intratechconsulting
           cd ~/TestServer/frontend/Frontend_Laravel
@@ -43,7 +42,9 @@ jobs:
           git checkout dev
           git pull
           docker compose up --build -d
+          sudo chown -R $USER:$USER /home/***/TestServer/frontend/Frontend_Laravel
+          sudo chmod -R 775 /home/***/TestServer/frontend/Frontend_Laravel
           composer install
-          npm install
+          sudo npm install
           nohup npm run dev > /dev/null 2>&1 &
           ENDSSH

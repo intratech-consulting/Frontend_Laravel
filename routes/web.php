@@ -9,7 +9,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\RoleRegisterController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\CompanyController;
-
+use App\Http\Controllers\CreateEventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,13 +29,13 @@ Route::middleware('web')->group(function () {
 
     Route::post('/send-message-to-topic', [testController::class, 'sendMessageToTopic'])->name('send_message_to_topic');
 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
+    Route::get('/home', function () {
+        return view('user.home');
+    })->middleware(['auth', 'verified'])->name('user.home');
 
     Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 
@@ -48,13 +48,21 @@ Route::middleware('web')->group(function () {
     Route::get('/planning', [headerController::class, 'planning']);
     Route::get('/contact', [headerController::class, 'contact']);
     Route::get('/registration', [headerController::class, 'registration']);
-
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
     // Event creation
     Route::get('/show_events', [headerController::class, 'show_events']);
     Route::post('/send-message-to-events', [EventController::class, 'sendMessageToTopic'])->name('sendMessageToTopic_event');
     Route::match(['get', 'post'], '/create_event', [EventController::class, 'test'])->name('test_event');
     Route::post('/create_event', [EventController::class, 'create_event'])->name('create_event');
+
+    // register to event
+    Route::post('/events/register', [EventController::class, 'registerToEvent']);
+
+    //event details
+    Route::get('/event_details/{id}', [EventController::class, 'eventDetails']);
+
+
 
 
     // Company creation
@@ -80,6 +88,9 @@ Route::middleware('web')->group(function () {
     });
 
     Route::post('/test', [testController::class, 'register'])->name('register_test');
+
+    Route::post('/events/create', [CreateEventController::class, 'createEvent'])->name('create_event');
+
 
     Route::get('/home', function () {
         return view('user.home');

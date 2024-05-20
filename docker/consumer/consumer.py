@@ -2,13 +2,15 @@ import pika
 import xml.etree.ElementTree as ET
 import mysql.connector
 from datetime import datetime
-import hashlib
+import bcrypt
 
 def create_user(user_data):
     try:
         default_password = "azerty123"
-        hashed_password = hashlib.sha256(default_password.encode()).hexdigest()
-
+        hashed_password = bcrypt.hashpw(default_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        
+        hashed_password = hashed_password.replace('$2b$', '$2y$', 1)
+              
         sql = """INSERT INTO users (id, first_name, last_name, email, telephone, birthday, country, state, city, zip, street, house_number, 
                  company_email, company_id, user_role, invoice, calendar_link, password, created_at, updated_at) 
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
@@ -47,34 +49,64 @@ def create_user(user_data):
 
 def update_user(user_data):
     try:
-        sql = """UPDATE users SET first_name = %s, last_name = %s, email = %s, telephone = %s, birthday = %s, country = %s, state = %s, 
-                 city = %s, zip = %s, street = %s, house_number = %s, company_email = %s, company_id = %s, user_role = %s, invoice = %s, 
-                 calendar_link = %s, updated_at = %s WHERE id = %s"""
-        
+        sql = "UPDATE users SET "
+        values = []
+                
+        if user_data.get('first_name'):
+            sql += "first_name = %s, "
+            values.append(user_data['first_name'])
+        if user_data.get('last_name'):
+            sql += "last_name = %s, "
+            values.append(user_data['last_name'])
+        if user_data.get('email'):
+            sql += "email = %s, "
+            values.append(user_data['email'])
+        if user_data.get('telephone'):
+            sql += "telephone = %s, "
+            values.append(user_data['telephone'])
+        if user_data.get('birthday'):
+            sql += "birthday = %s, "
+            values.append(user_data['birthday'])
+        if user_data.get('country'):
+            sql += "country = %s, "
+            values.append(user_data['country'])
+        if user_data.get('state'):
+            sql += "state = %s, "
+            values.append(user_data['state'])
+        if user_data.get('city'):
+            sql += "city = %s, "
+            values.append(user_data['city'])
+        if user_data.get('zip'):
+            sql += "zip = %s, "
+            values.append(user_data['zip'])
+        if user_data.get('street'):
+            sql += "street = %s, "
+            values.append(user_data['street'])
+        if user_data.get('house_number'):
+            sql += "house_number = %s, "
+            values.append(user_data['house_number'])
+        if user_data.get('company_email'):
+            sql += "company_email = %s, "
+            values.append(user_data['company_email'])
+        if user_data.get('company_id'):
+            sql += "company_id = %s, "
+            values.append(user_data['company_id'])
+        if user_data.get('user_role'):
+            sql += "user_role = %s, "
+            values.append(user_data['user_role'])
+        if user_data.get('invoice'):
+            sql += "invoice = %s, "
+            values.append(user_data['invoice'])
+        if user_data.get('calendar_link'):
+            sql += "calendar_link = %s, "
+            values.append(user_data['calendar_link'])
+
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        
-        user_values = (
-            user_data['first_name'],
-            user_data['last_name'],
-            user_data['email'],
-            user_data['telephone'],
-            user_data['birthday'],
-            user_data['country'],
-            user_data['state'],
-            user_data['city'],
-            user_data['zip'],
-            user_data['street'],
-            user_data['house_number'],
-            user_data.get('company_email', None),
-            user_data.get('company_id', None),
-            user_data['user_role'],
-            user_data['invoice'],
-            user_data['calendar_link'],
-            now,
-            user_data['id']
-        )
-        
-        mysql_cursor.execute(sql, user_values)
+        sql += "updated_at = %s WHERE id = %s"
+        values.append(now)
+        values.append(user_data['id'])
+                
+        mysql_cursor.execute(sql, values)
         mysql_connection.commit()
         print("User updated successfully!")
     except mysql.connector.Error as error:
@@ -91,6 +123,194 @@ def delete_user(user_id):
         mysql_connection.rollback()
         print("Failed to delete user:", error)
 
+def create_company(company_data):
+    try:
+        
+        default_password = "qwerty123"
+        hashed_password = bcrypt.hashpw(default_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        
+        hashed_password = hashed_password.replace('$2b$', '$2y$', 1)
+        
+
+        sql = """INSERT INTO companies (id, name, email, telephone, logo, country, state, city, zip, street, house_number, type, invoice, user_role, password, created_at, updated_at) 
+                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        company_values = (
+            company_data['id'],
+            company_data['name'],
+            company_data['email'],
+            company_data['telephone'],
+            company_data['logo'],
+            company_data['country'],
+            company_data['state'],
+            company_data['city'],
+            company_data['zip'],
+            company_data['street'],
+            company_data['house_number'],
+            company_data['type'],
+            company_data['invoice'],
+            'company',
+            hashed_password,
+            now,
+            now
+        )
+        
+        mysql_cursor.execute(sql, company_values)
+        mysql_connection.commit()
+        print("Company inserted successfully!")
+    except mysql.connector.Error as error:
+        mysql_connection.rollback()
+        print("Failed to insert company:", error)
+
+def update_company(company_data):
+    try:
+        sql = "UPDATE companies SET "
+        values = []
+        
+        if company_data.get('name'):
+            sql += "name = %s, "
+            values.append(company_data['name'])
+        if company_data.get('email'):
+            sql += "email = %s, "
+            values.append(company_data['email'])
+        if company_data.get('telephone'):
+            sql += "telephone = %s, "
+            values.append(company_data['telephone'])
+        if company_data.get('logo'):
+            sql += "logo = %s, "
+            values.append(company_data['logo'])
+        if company_data.get('country'):
+            sql += "country = %s, "
+            values.append(company_data['country'])
+        if company_data.get('state'):
+            sql += "state = %s, "
+            values.append(company_data['state'])
+        if company_data.get('city'):
+            sql += "city = %s, "
+            values.append(company_data['city'])
+        if company_data.get('zip'):
+            sql += "zip = %s, "
+            values.append(company_data['zip'])
+        if company_data.get('street'):
+            sql += "street = %s, "
+            values.append(company_data['street'])
+        if company_data.get('house_number'):
+            sql += "house_number = %s, "
+            values.append(company_data['house_number'])
+        if company_data.get('type'):
+            sql += "type = %s, "
+            values.append(company_data['type'])
+        if company_data.get('invoice'):
+            sql += "invoice = %s, "
+            values.append(company_data['invoice'])
+
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        sql += "updated_at = %s WHERE id = %s"
+        values.append(now)
+        values.append(company_data['id'])        
+        mysql_cursor.execute(sql, values)
+        mysql_connection.commit()
+        print("Company updated successfully!")
+    except mysql.connector.Error as error:
+        mysql_connection.rollback()
+        print("Failed to update company:", error)
+
+def delete_company(company_id):
+    try:
+        sql = "DELETE FROM companies WHERE id = %s"
+        mysql_cursor.execute(sql, (company_id,))
+        mysql_connection.commit()
+        print("Company deleted successfully!")
+    except mysql.connector.Error as error:
+        mysql_connection.rollback()
+        print("Failed to delete company:", error)
+        
+def create_event(event_data):
+    try:
+        sql = """INSERT INTO events (id, date, start_time, end_time, location, speaker_user_id, speaker_company_id, max_registrations, available_seats, description, created_at, updated_at) 
+                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        event_values = (
+            event_data['id'],
+            event_data['date'],
+            event_data['start_time'],
+            event_data['end_time'],
+            event_data['location'],
+            event_data['speaker']['user_id'],
+            event_data['speaker']['company_id'],
+            event_data['max_registrations'],
+            event_data['available_seats'],
+            event_data['description'],
+            now,
+            now
+        )
+        
+        mysql_cursor.execute(sql, event_values)
+        mysql_connection.commit()
+        print("Event inserted successfully!")
+    except mysql.connector.Error as error:
+        mysql_connection.rollback()
+        print("Failed to insert event:", error)
+
+def update_event(event_data):
+    try:
+        sql = "UPDATE events SET "
+        values = []
+        
+        if event_data.get('date'):
+            sql += "date = %s, "
+            values.append(event_data['date'])
+        if event_data.get('start_time'):
+            sql += "start_time = %s, "
+            values.append(event_data['start_time'])
+        if event_data.get('end_time'):
+            sql += "end_time = %s, "
+            values.append(event_data['end_time'])
+        if event_data.get('location'):
+            sql += "location = %s, "
+            values.append(event_data['location'])
+        if event_data['speaker'].get('user_id'):
+            sql += "speaker_user_id = %s, "
+            values.append(event_data['speaker']['user_id'])
+        if event_data['speaker'].get('company_id'):
+            sql += "speaker_company_id = %s, "
+            values.append(event_data['speaker']['company_id'])
+        if event_data.get('max_registrations'):
+            sql += "max_registrations = %s, "
+            values.append(event_data['max_registrations'])
+        if event_data.get('available_seats'):
+            sql += "available_seats = %s, "
+            values.append(event_data['available_seats'])
+        if event_data.get('description'):
+            sql += "description = %s, "
+            values.append(event_data['description'])
+
+        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        sql += "updated_at = %s WHERE id = %s"
+        values.append(now)
+        values.append(event_data['id'])
+
+        mysql_cursor.execute(sql, values)
+        mysql_connection.commit()
+        print("Event updated successfully!")
+    except mysql.connector.Error as error:
+        mysql_connection.rollback()
+        print("Failed to update event:", error)
+
+def delete_event(event_id):
+    try:
+        sql = "DELETE FROM events WHERE id = %s"
+        mysql_cursor.execute(sql, (event_id,))
+        mysql_connection.commit()
+        print("Event deleted successfully!")
+    except mysql.connector.Error as error:
+        mysql_connection.rollback()
+        print("Failed to delete event:", error)
+
 def callback(ch, method, properties, body):
     try:
         print("Received message:")
@@ -100,7 +320,23 @@ def callback(ch, method, properties, body):
         # Parse XML message
         root = ET.fromstring(xml_string)
 
-        # Extract user data
+        if root.tag == "user":
+            process_user(root)
+        elif root.tag == "company":
+            process_company(root)
+        elif root.tag == "event":
+            process_event(root)
+        else:
+            print("Unknown XML format:", xml_string)
+
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+    except Exception as e:
+        print("Error processing message:", e)
+        ch.basic_nack(delivery_tag=method.delivery_tag, requeue=False)
+
+
+def process_user(root):
+    try:
         user_data = {
             'id': root.find('id').text,
             'first_name': root.find('first_name').text,
@@ -134,10 +370,79 @@ def callback(ch, method, properties, body):
         elif crud_operation == 'delete':
             delete_user(user_data['id'])
 
-        ch.basic_ack(delivery_tag=method.delivery_tag)
     except Exception as e:
-        print("Error processing message:", e)
-        ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
+        print("Error processing user data:", e)
+
+# Process company data
+def process_company(root):
+    try:
+        # Extract company data
+        company_data = {
+            'id': root.find('id').text,
+            'name': root.find('name').text,
+            'email': root.find('email').text,
+            'telephone': root.find('telephone').text,
+            'logo': root.find('logo').text,
+            'country': root.find('address/country').text,
+            'state': root.find('address/state').text,
+            'city': root.find('address/city').text,
+            'zip': root.find('address/zip').text,
+            'street': root.find('address/street').text,
+            'house_number': root.find('address/house_number').text,
+            'type': root.find('type').text,
+            'invoice': root.find('invoice').text,
+        }
+
+        print("Extracting company data...")
+        print(f"Company Data: {company_data}")
+
+        # Perform CRUD operation
+        crud_operation = root.find('crud_operation').text
+        print(f"Performing {crud_operation} operation...")
+        if crud_operation == 'create':
+            create_company(company_data)
+        elif crud_operation == 'update':
+            update_company(company_data)
+        elif crud_operation == 'delete':
+            delete_company(company_data['id'])
+
+    except Exception as e:
+        print("Error processing company data:", e)
+
+
+def process_event(root):
+    try:
+        # Extract event data
+        event_data = {
+            'id': root.find('id').text,
+            'date': root.find('date').text,
+            'start_time': root.find('start_time').text,
+            'end_time': root.find('end_time').text,
+            'location': root.find('location').text,
+            'speaker': {
+                'user_id': root.find('speaker/user_id').text,
+                'company_id': root.find('speaker/company_id').text
+            },
+            'max_registrations': root.find('max_registrations').text,
+            'available_seats': root.find('available_seats').text,
+            'description': root.find('description').text
+        }
+
+        print("Extracting event data...")
+        print(f"Event Data: {event_data}")
+
+        # Perform CRUD operation
+        crud_operation = root.find('crud_operation').text
+        print(f"Performing {crud_operation} operation...")
+        if crud_operation == 'create':
+            create_event(event_data)
+        elif crud_operation == 'update':
+            update_event(event_data)
+        elif crud_operation == 'delete':
+            delete_event(event_data['id'])
+
+    except Exception as e:
+        print("Error processing event data:", e)
 
 mysql_connection = mysql.connector.connect(
     host='10.2.160.51',
@@ -148,7 +453,7 @@ mysql_connection = mysql.connector.connect(
 )
 mysql_cursor = mysql_connection.cursor()
 
-credentials = pika.PlainCredentials('user', 'password') 
+credentials = pika.PlainCredentials('user', 'password')
 rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('10.2.160.51', 5672, '/', credentials))
 
 channel = rabbitmq_connection.channel()
@@ -160,7 +465,7 @@ channel.exchange_declare(exchange=exchange_name, exchange_type="topic", durable=
 # Declare and bind a queue
 queue_name = "frontend"
 channel.queue_declare(queue=queue_name, durable=True)
-channel.queue_bind(exchange=exchange_name, queue=queue_name, routing_key="user.crm")
+channel.queue_bind(exchange=exchange_name, queue=queue_name, routing_key="company.crm")
 
 # Set up the consumer
 channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=False)

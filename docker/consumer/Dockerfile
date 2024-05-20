@@ -9,7 +9,6 @@ COPY requirements.txt .
 COPY consumer.py .
 
 # Install any necessary dependencies
-RUN pip install pika requests
-RUN pip install mysql-connector-python
+RUN pip install --no-cache-dir -r requirements.txt
 # Command to run the Python script
-CMD ["python","-u", "consumer.py"]
+CMD ["python", "consumer.py"]
