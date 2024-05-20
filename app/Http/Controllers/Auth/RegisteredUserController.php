@@ -103,14 +103,20 @@ class RegisteredUserController extends Controller
             'company_id' => isset($userData['company_id']) ? $userData['company_id'] : null,
         ]);
 
+        \Log::info('User after create: ' . print_r($user->toArray(), true));
+
 
         // Create a new Guzzle HTTP client
         $client = new \GuzzleHttp\Client();
 
+        $user = $request->user();
+
+        $userId = $user->id;
+
         // Define the data for the request
         $data = [
             'Service' => 'frontend',
-            'ServiceId' => $uuid, // Assuming $userId is the ID of the newly created user
+            'ServiceId' => $userId, // Assuming $userId is the ID of the newly created user
         ];
 
         try {
