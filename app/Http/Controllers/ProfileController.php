@@ -82,6 +82,8 @@ class ProfileController extends Controller
     
             // Assuming $userId is the ID of the user
             $userId = $user->id;
+
+            \Log::info('User ID:  ' . print_r($userId, true));
     
             // Create a new Guzzle HTTP client
             $client = new \GuzzleHttp\Client();
