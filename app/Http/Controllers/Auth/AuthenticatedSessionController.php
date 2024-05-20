@@ -22,13 +22,21 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request)
+    public function store(Request $request)
     {
-        $request->authenticate();
+        $credentials = $request->only('email', 'password');
+        
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
 
-        $request->session()->regenerate();
+            Log::info('Session after regeneration: ' . print_r(session()->all(), true));
 
-        return view('user.home');
+            return redirect()->intended('user.home');
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
     }
 
     /**

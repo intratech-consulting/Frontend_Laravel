@@ -174,6 +174,7 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
+        $request->session()->regenerate();
 
         \Log::info('Session after login: ' . print_r(session()->all(), true));
 
