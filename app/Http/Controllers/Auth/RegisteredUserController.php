@@ -107,6 +107,8 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
+        Auth::login($user);
+
         // Create a new Guzzle HTTP client
         $client = new \GuzzleHttp\Client();
 
@@ -177,8 +179,6 @@ class RegisteredUserController extends Controller
         $routingKey = 'user.frontend';
 
         $this->sendMessageToTopic($routingKey, $message);
-
-        Auth::login($user);
 
         return redirect()->route('user.home');
     }
