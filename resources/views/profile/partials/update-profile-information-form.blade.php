@@ -13,8 +13,8 @@
     </form>
 
     <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
-        @csrf
-        @method('patch')
+            @csrf
+            @method('post')
 
         <div class="form-group">
             <x-input-label for="first_name" :value="__('Voornaam')" />
@@ -123,6 +123,15 @@
                 <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)" class="text-sm text-gray-600">
                     {{ __('Saved.') }}
                 </p>
+            @endif
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
             @endif
         </div>
     </form>

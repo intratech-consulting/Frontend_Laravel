@@ -15,6 +15,7 @@ use App\Models\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
+use Carbon\Carbon;
 
 
 
@@ -63,7 +64,7 @@ public function planning()
         $calendar_link = $user->calendar_link;
     } else {
         // default calendar link
-        $calendar_link = "https://embed.styledcalendar.com/#RNRQ7GYT8sv7grrj2Wlv";
+        $calendar_link = "https://calendar.google.com/calendar/u/0/embed?src=7385a4a57d6b8bc946bd2d8daee469edd3098611077851dd48530aeafd315b80@group.calendar.google.com&ctz=Europe/Brussels";
     }
 
     return view('user.planning', ['calendar_link' => $calendar_link]);
@@ -79,13 +80,15 @@ public function contact()
 public function events()
     {
 
-// Activate the planning RabbitMQ consumer
-   /* $consumer = new RecievePlanningController();
-    $consumer->consume();
-*/
+        // Activate the planning RabbitMQ consumer
+        /* $consumer = new RecievePlanningController();
+            $consumer->consume();
+        */
 
-     $event = event::all();
-   return view('user.event', compact('event'));
+        // $event =  event::all();
+        $event = Event::with(['users', 'companies'])->get();
+
+        return view('user.event', compact('event'));
     }
 
 

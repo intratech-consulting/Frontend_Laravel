@@ -36,7 +36,7 @@ class testController extends Controller
         }
     }
 
-    public function register(Request $request)
+    /*public function register(Request $request)
     {
         $userData = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
@@ -144,6 +144,6 @@ class testController extends Controller
         $this->sendMessageToTopic($routingKey, $message);
 
        return view('user.home');
-    }
+    }*/
 
 }

@@ -10,6 +10,8 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Carbon\Carbon;
+
 
 
 
@@ -40,6 +42,41 @@ class EventController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function eventDetails($id)
+    {
+        $event = Event::find($id);
+        return view('user.event-details', compact('eventdetails'));
+    }
+
+
+    public function registerToEvent(Request $request)
+   {
+    if (!Auth::check()){
+        return redirect()->back();
+    }
+       $request->validate([
+           // 'user_id' => 'required|exists:users,id',
+           'event_id' => 'required|exists:events,id',
+       ]);
+
+       $userId = Auth::id(); // $request->input('user_id'); //id of logged in user
+       $eventId = $request->input('event_id');
+       
+       //TODO: add register when new db
+
+    //    $xml = new \SimpleXMLElement('<root/>');
+    //    $xml->addChild('action', 'sign_in');
+    //    $xml->addChild('user_id', $userId);
+    //    $xml->addChild('event_id', $eventId);
+
+    //    $message = $xml->asXML();
+
+    //    $this->sendMessageToTopic('registerToEvent', $message);
+
+    return redirect()->back();
+
+   } 
 
     public function create_event(Request $request)
     {
@@ -72,13 +109,16 @@ class EventController extends Controller
         // Create the event
       
 
-
-
 */
-        
-  $xmlEvent = new \SimpleXMLElement('<event/>');
 
-  $xmlEvent->addChild('routing_key', 'user.crm');
+
+        
+
+
+
+$xmlEvent = new \SimpleXMLElement('<event/>');
+
+$xmlEvent->addChild('routing_key', 'user.crm');
     $xmlEvent->addChild('crud_operation', 'create');
     $xmlEvent->addChild('id', mt_rand(100000, 999999)); // Generate a random ID
     $xmlEvent->addChild('date', $eventData['date']);

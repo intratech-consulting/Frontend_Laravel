@@ -135,24 +135,23 @@
       <li><a href="{{ url('contact') }}">Contact</a></li>
       @if(Route::has('login'))
         @auth
-        <li class="user-menu">
-          <span class="user-name">{{ Auth::user()->name }}</span>
-          <div class="user-actions">
-            <a href="{{ url('/profile') }}">Profile</a>
-            <form method="POST" action="{{ route('logout') }}">
+          <li class="user-menu">
+            <span class="user-name">{{ Auth::user()->name }}</span>
+            <div class="user-actions">
+              <a href="{{ url('/profile') }}">Profile</a>
+              <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="logout-button">Logout</button>
-            </form>
-          </div>
-        </li>
+              </form>
+            </div>
+          </li>
         @else
-        <li class="connect"><a href="{{ route('login') }}">Inloggen</a></li>
-        <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
+          <li class="connect"><a href="{{ route('login') }}">Inloggen</a></li>
+          <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
         @endauth
       @endif
     </ul>
   </nav>
 </header>
-
 </body>
 </html>
