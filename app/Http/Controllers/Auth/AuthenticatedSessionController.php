@@ -29,7 +29,7 @@ class AuthenticatedSessionController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            Log::info('Session after regeneration: ' . print_r(session()->all(), true));
+            \Log::info('Session after regeneration: ' . print_r(session()->all(), true));
 
             return view('user.home');
         }
