@@ -84,7 +84,6 @@ class RegisteredUserController extends Controller
         \Log::info('User ID:  ' . print_r($uuid, true));
 
         $user = User::create([
-            'id' => $uuid,
             'first_name' => $userData['first_name'],
             'last_name' => $userData['last_name'],
             'email' => $userData['email'],
@@ -105,21 +104,13 @@ class RegisteredUserController extends Controller
 
         \Log::info('User after create: ' . print_r($user->toArray(), true));
 
-        event(new Registered($user));
-
-        Auth::login($user);
-
         // Create a new Guzzle HTTP client
         $client = new \GuzzleHttp\Client();
-
-        $user = $request->user();
-
-        $userId = $user->id;
 
         // Define the data for the request
         $data = [
             'Service' => 'frontend',
-            'ServiceId' => $userId, // Assuming $userId is the ID of the newly created user
+            'ServiceId' => $user->id, // Assuming $userId is the ID of the newly created user
         ];
 
         try {
@@ -179,6 +170,10 @@ class RegisteredUserController extends Controller
         $routingKey = 'user.frontend';
 
         $this->sendMessageToTopic($routingKey, $message);
+
+        event(new Registered($user));
+
+        Auth::login($user);
 
         return redirect()->route('user.home');
     }
