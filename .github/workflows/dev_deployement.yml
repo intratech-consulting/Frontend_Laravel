@@ -43,7 +43,7 @@ jobs:
           git pull
           docker compose up --build -d
           sudo chown -R www-data:www-data /home/***/TestServer/frontend/Frontend_Laravel
-          sudo chmod -R 775 /home/***/TestServer/frontend/Frontend_Laravel
+          sudo chmod -R 777 /home/***/TestServer/frontend/Frontend_Laravel
           composer install
           npm install
           nohup npm run dev > /dev/null 2>&1 &
