@@ -338,23 +338,23 @@ def callback(ch, method, properties, body):
 def process_user(root):
     try:
         user_data = {
-            'id': root.find('id').text,
-            'first_name': root.find('first_name').text,
-            'last_name': root.find('last_name').text,
-            'email': root.find('email').text,
-            'telephone': root.find('telephone').text,
-            'birthday': root.find('birthday').text,
-            'country': root.find('address/country').text,
-            'state': root.find('address/state').text,
-            'city': root.find('address/city').text,
-            'zip': root.find('address/zip').text,
-            'street': root.find('address/street').text,
-            'house_number': root.find('address/house_number').text,
-            'company_email': root.find('company_email').text if root.find('company_email') is not None else None,
-            'company_id': root.find('company_id').text if root.find('company_id') is not None else None,
-            'user_role': root.find('user_role').text,
-            'invoice': root.find('invoice').text,
-            'calendar_link': root.find('calendar_link').text
+        'id': root.find('id').text if root.find('id') is not None else None,
+        'first_name': root.find('first_name').text if root.find('first_name') is not None else None,
+        'last_name': root.find('last_name').text if root.find('last_name') is not None else None,
+        'email': root.find('email').text if root.find('email') is not None else None,
+        'telephone': root.find('telephone').text if root.find('telephone') is not None else None,
+        'birthday': root.find('birthday').text if root.find('birthday') is not None else None,
+        'country': root.find('address/country').text if root.find('address/country') is not None else None,
+        'state': root.find('address/state').text if root.find('address/state') is not None else None,
+        'city': root.find('address/city').text if root.find('address/city') is not None else None,
+        'zip': root.find('address/zip').text if root.find('address/zip') is not None else None,
+        'street': root.find('address/street').text if root.find('address/street') is not None else None,
+        'house_number': root.find('address/house_number').text if root.find('address/house_number') is not None else None,
+        'company_email': root.find('company_email').text if root.find('company_email') is not None else None,
+        'company_id': root.find('company_id').text if root.find('company_id') is not None else None,
+        'user_role': root.find('user_role').text if root.find('user_role') is not None else None,
+        'invoice': root.find('invoice').text if root.find('invoice') is not None else None,
+        'calendar_link': root.find('calendar_link').text if root.find('calendar_link') is not None else None
         }
 
         print("Extracting user data...")
