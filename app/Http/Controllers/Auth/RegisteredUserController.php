@@ -76,14 +76,14 @@ class RegisteredUserController extends Controller
             'user_role' => ['required', 'string', Rule::in(['individual', 'employee', 'speaker'])],
         ]);
 
-        do {
-            // Generate a UUID and convert it to a string as long as its not unique
-            $uuid = Uuid::uuid4()->toString();
-        } while (User::find($uuid));
+        
+        $uuid = Uuid::uuid4()->toString();
+        
 
         \Log::info('User ID:  ' . print_r($uuid, true));
 
         $user = User::create([
+            'id' => $uuid,
             'first_name' => $userData['first_name'],
             'last_name' => $userData['last_name'],
             'email' => $userData['email'],
