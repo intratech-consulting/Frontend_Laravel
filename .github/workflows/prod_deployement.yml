@@ -42,7 +42,6 @@ jobs:
           docker compose down
           git checkout main
           git pull
-          echo "${{ secrets.ENV_FILE }}" > .env
           sed -i 's/__SERVER_NAME__/'"${{ secrets.SSH_HOST }}"'/g' docker/nginx/sites/laravel.conf
           docker compose up --build -d
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/production/frontend/Frontend_Laravel/storage
