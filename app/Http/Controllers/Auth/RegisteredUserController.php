@@ -152,7 +152,9 @@ class RegisteredUserController extends Controller
         $this->sendMessageToTopic($routingKey, $message);
 
         event(new Registered($user));
+        \Log::info('Session before login: ' . json_encode(session()->all()));
         Auth::login($user);
+        \Log::info('Session after login: ' . json_encode(session()->all()));
 
         return redirect()->route('user.home');
     }
