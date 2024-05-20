@@ -81,6 +81,8 @@ class RegisteredUserController extends Controller
             $uuid = Uuid::uuid4()->toString();
         } while (User::find($uuid));
 
+        \Log::info('User ID:  ' . print_r($uuid, true));
+
         $user = User::create([
             'id' => $uuid,
             'first_name' => $userData['first_name'],
