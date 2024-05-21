@@ -57,9 +57,20 @@ services:
             dockerfile: Dockerfile
         restart: always
 
+
+    consumer:
+        build:
+            context: docker/consumer
+            dockerfile: Dockerfile
+        restart: always
+
 networks:
     sail:
         driver: bridge
 volumes:
     sail-mysql:
         driver: local
+
+
+
+
