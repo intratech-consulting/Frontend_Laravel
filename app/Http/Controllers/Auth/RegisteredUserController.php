@@ -77,7 +77,7 @@ class RegisteredUserController extends Controller
         ]);
 
         
-        $uuid = Uuid::uuid4()->toString();
+        $uuid = $incrementing = Uuid::uuid4()->toString();
         
 
         \Log::info('User ID:  ' . print_r($uuid, true));
