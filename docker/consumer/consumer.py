@@ -1,3 +1,6 @@
+import json
+from urllib import request
+import uuid
 import pika
 import xml.etree.ElementTree as ET
 import mysql.connector
@@ -16,9 +19,11 @@ def create_user(user_data):
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
         
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        persoonlijkId = uuid.uuid4()
         
         user_values = (
-            user_data['id'],
+            persoonlijkId,
             user_data['first_name'],
             user_data['last_name'],
             user_data['email'],
@@ -43,6 +48,25 @@ def create_user(user_data):
         mysql_cursor.execute(sql, user_values)
         mysql_connection.commit()
         print("User inserted successfully!")
+
+
+        #MasterUuid
+        masterUuid_url = f"http://10.2.160.51:6000/addServiceId"
+        masterUuid_payload = json.dumps(
+            {
+                "MasterUuid": f"{user_data['id']}",
+                "Service": "frontend",
+                "ServiceId": f"{persoonlijkId}"
+            }
+        )
+        uid_headers={
+        'Content-type':'application/json', 
+        'Accept':'application/json'
+        }
+        print(f"uid: {user_data[id]}")
+        response = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        print(response)
+        
     except mysql.connector.Error as error:
         mysql_connection.rollback()
         print("Failed to insert user:", error)
