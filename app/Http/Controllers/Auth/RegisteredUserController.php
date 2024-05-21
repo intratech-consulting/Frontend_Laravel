@@ -76,9 +76,9 @@ class RegisteredUserController extends Controller
             'user_role' => ['required', 'string', Rule::in(['individual', 'employee', 'speaker'])],
         ]);
 
-        
-        $uuid = Uuid::uuid4()->toString();
-        
+
+        $uuid = $incrementing = Uuid::uuid4()->toString();
+
 
         \Log::info('User ID:  ' . print_r($uuid, true));
 
@@ -114,7 +114,7 @@ class RegisteredUserController extends Controller
         ];
 
         try {
-            $response = $client->post('RABBITMQ_IP', [
+            $response = $client->post('http://10.2.160.51:6000/createMasterUuid', [
                 'json' => $data
             ]);
 
