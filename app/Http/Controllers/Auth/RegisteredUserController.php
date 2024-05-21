@@ -75,15 +75,8 @@ class RegisteredUserController extends Controller
             'company_id' => ['nullable', 'integer'],
             'user_role' => ['required', 'string', Rule::in(['individual', 'employee', 'speaker'])],
         ]);
-
         
-        $uuid = $incrementing = Uuid::uuid4()->toString();
-        
-
-        \Log::info('User ID:  ' . print_r($uuid, true));
-
         $user = User::create([
-            'id' => $uuid,
             'first_name' => $userData['first_name'],
             'last_name' => $userData['last_name'],
             'email' => $userData['email'],
@@ -173,9 +166,6 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
-        $request->session()->regenerate();
-
-        \Log::info('Session after login: ' . print_r(session()->all(), true));
 
         return redirect()->route('user.home');
     }

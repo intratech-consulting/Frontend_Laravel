@@ -70,11 +70,6 @@ class ProfileController extends Controller
             'invoice' => 'nullable|string|max:255',
         ]);
 
-        do {
-            // Generate a UUID and convert it to a string as long as its not unique
-            $uuid = Uuid::uuid4()->toString();
-        } while (User::find($uuid));
-
         try {
             // Retrieve the authenticated user
             $user = $request->user();
@@ -220,11 +215,6 @@ class ProfileController extends Controller
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
-
-        do {
-            // Generate a UUID and convert it to a string as long as its not unique
-            $uuid = Uuid::uuid4()->toString();
-        } while (User::find($uuid));
 
         $user = $request->user();
 

@@ -12,19 +12,12 @@ use Ramsey\Uuid\Uuid;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-
-    // Disable auto-incrementing
-    public $incrementing = false;
-    
-    protected $keyType = 'string'; // Use string type for the primary key
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'id',
         'first_name',
         'last_name',
         'email',
@@ -43,17 +36,6 @@ class User extends Authenticatable
         'calendar_link',
         'password',
     ];
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            if (empty($model->{$model->getKeyName()})) {
-                $model->{$model->getKeyName()} = (string) Uuid::uuid4();
-            }
-        });
-    }
 
     /**
      * The attributes that should be hidden for serialization.
