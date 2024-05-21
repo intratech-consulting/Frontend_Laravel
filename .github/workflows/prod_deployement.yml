@@ -17,8 +17,6 @@ jobs:
       SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       SSH_PORT: ${{ secrets.SSH_PORT }}
-      ENV_FILE: ${{ secrets.ENV_FILE }}
-      LARAVEL_CONFIG: ${{ secrets.LARAVEL_CONFIG }}
 
 
     steps:

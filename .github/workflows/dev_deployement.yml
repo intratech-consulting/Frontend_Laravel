@@ -17,8 +17,6 @@ jobs:
       SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       SSH_PORT: ${{ secrets.SSH_PORT }}
-      ENV_FILE: ${{ secrets.ENV_FILE }}
-      LARAVEL_CONFIG: ${{ secrets.LARAVEL_CONFIG }}
 
 
     steps:
@@ -44,8 +42,6 @@ jobs:
           docker compose down
           git checkout dev
           git pull
-          echo "${{ secrets.ENV_FILE }}" > ~/TestServer/frontend/Frontend_Laravel/.env
-          echo "${{ secrets.LARAVEL_CONFIG }}" > ~/TestServer/frontend/Frontend_Laravel/docker/nginx/sites/laravel.conf
           docker compose up --build -d
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/TestServer/frontend/Frontend_Laravel/storage
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/TestServer/frontend/Frontend_Laravel/public
