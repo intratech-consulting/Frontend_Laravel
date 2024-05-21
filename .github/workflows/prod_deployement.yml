@@ -9,7 +9,7 @@ on:
 jobs:
   deploy:
     name: Deploy frontend to production
-    runs-on: [self-hosted]
+    runs-on: [frontend]
     environment: production
     env:
       SSH_HOST: ${{ secrets.SSH_HOST }}
