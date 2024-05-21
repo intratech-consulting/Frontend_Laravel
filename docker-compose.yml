@@ -63,10 +63,15 @@ services:
             context: docker/consumer
             dockerfile: Dockerfile
         restart: always
+        networks: 
+            - my_shared_network
+           
 
 networks:
     sail:
         driver: bridge
+    my_shared_network:
+        external: true
 volumes:
     sail-mysql:
         driver: local
