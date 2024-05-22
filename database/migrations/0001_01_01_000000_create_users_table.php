@@ -32,6 +32,7 @@ class CreateUsersTable extends Migration
             $table->string('invoice');
             $table->string('calendar_link')->nullable();
             $table->string('password');
+            $table->rememberToken();
             $table->timestamps();
         });
     }
