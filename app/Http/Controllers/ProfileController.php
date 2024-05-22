@@ -115,31 +115,31 @@ class ProfileController extends Controller
             }
     
             // Create XML message for user update
-            try {
-                $xmlMessage = new \SimpleXMLElement('<user/>');
-                $xmlMessage->addChild('routing_key', 'user.frontend');
-                $xmlMessage->addChild('crud_operation', 'update');
-                $xmlMessage->addChild('id', $masterUuid);
-                $xmlMessage->addChild('first_name', $user->first_name);
-                $xmlMessage->addChild('last_name', $user->last_name);
-                $xmlMessage->addChild('email', $user->email);
-                $xmlMessage->addChild('telephone', $user->telephone);
-                $xmlMessage->addChild('birthday', $user->birthday);
-    
-                $address = $xmlMessage->addChild('address');
-                $address->addChild('country', $user->country);
-                $address->addChild('state', $user->state);
-                $address->addChild('city', $user->city);
-                $address->addChild('zip', $user->zip);
-                $address->addChild('street', $user->street);
-                $address->addChild('house_number', $user->house_number);
-    
-                $xmlMessage->addChild('company_email', $user->company_email ?? '');
-                $xmlMessage->addChild('company_id', $user->company_id ?? '');
-                $xmlMessage->addChild('source', 'frontend');
-                $xmlMessage->addChild('user_role', $user->user_role);
-                $xmlMessage->addChild('invoice', $user->invoice);
-                $xmlMessage->addChild('calendar_link', '');
+        try {
+            $xmlMessage = new \SimpleXMLElement('<user/>');
+            $xmlMessage->addChild('routing_key', 'user.frontend');
+            $xmlMessage->addChild('crud_operation', 'update');
+            $xmlMessage->addChild('id', $masterUuid);
+
+            // Add only changed fields to the XML
+            foreach ($user->toArray() as $key => $value) {
+                if ($oldUserData[$key] !== $value) {
+                    $xmlMessage->addChild($key, $value);
+                } else {
+                    $xmlMessage->addChild($key, ''); // Add blank for unchanged values
+                }
+            }
+
+            // Special handling for nested address fields
+            $address = $xmlMessage->addChild('address');
+            $addressFields = ['country', 'state', 'city', 'zip', 'street', 'house_number'];
+            foreach ($addressFields as $field) {
+                if ($oldUserData[$field] !== $user->$field) {
+                    $address->addChild($field, $user->$field);
+                } else {
+                    $address->addChild($field, '');
+                }
+            }
         
                 // Convert XML to string
                 $message = $xmlMessage->asXML();
