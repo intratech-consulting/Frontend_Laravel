@@ -93,8 +93,8 @@ class ProfileController extends Controller
     
             // Define the data for the request
             $data = [
-                'Service' => 'frontend',
-                'ServiceId' => $userId
+                'ServiceId' => $userId,
+                'Service' => 'frontend'
             ];
     
             $masterUuid = null;
@@ -226,8 +226,8 @@ class ProfileController extends Controller
 
         // Define the data for the request
         $data = [
-            'Service' => 'frontend',
-            'ServiceId' => $userId // Assuming $userId is the ID of the user you want to delete
+            'ServiceId' => $userId, // Assuming $userId is the ID of the user you want to delete
+            'Service' => 'frontend'
         ];
 
         $masterUuid = null;
