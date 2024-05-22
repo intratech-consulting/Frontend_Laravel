@@ -174,7 +174,7 @@ class ProfileController extends Controller
             }
     
             // Redirect back to the profile edit page with a success message
-            return view ('profile.edit');
+            return Redirect::route('user.home')->with('success', 'Profile updated successfully');
         } catch (\Exception $e) {
             // Handle any exceptions and redirect back with an error message
             return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);
