@@ -160,8 +160,6 @@ class ProfileController extends Controller
                 ]);
             } catch (\GuzzleHttp\Exception\RequestException $e) {
                 echo $e->getMessage();
-            } catch (\Exception $e) {
-                echo $e->getMessage();
             }
     
             $routingKey = 'user.frontend';
@@ -174,7 +172,7 @@ class ProfileController extends Controller
             }
     
             // Redirect back to the profile edit page with a success message
-            return Redirect::route('user.home')->with('success', 'Profile updated successfully');
+            return Redirect::route('profile.edit');
         } catch (\Exception $e) {
             // Handle any exceptions and redirect back with an error message
             return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);
