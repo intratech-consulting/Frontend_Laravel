@@ -73,7 +73,6 @@ class ProfileController extends Controller
         try {
             // Retrieve the authenticated user
             $user = $request->user();
-            \Log::info('User before update: ' . print_r($user->toArray(), true));
     
             // Store the old email for comparison
             $oldEmail = $user->email;
@@ -81,9 +80,6 @@ class ProfileController extends Controller
             // Fill the user model with validated data from the request
             $user->fill($request->all());
             $user->save();
-            \Log::info('User after update: ' . print_r($user->toArray(), true));
-
-            \Log::info('User ID:  ' . print_r($user->id, true));
     
             // Create a new Guzzle HTTP client
             $client = new \GuzzleHttp\Client();
@@ -95,7 +91,6 @@ class ProfileController extends Controller
             ];
         
             try {
-                \Log::info('Fetching Master UUID with data: ' . print_r($data, true));
                 // Make the POST request to get Master UUID
                 $response = $client->post('http://10.2.160.51:6000/getMasterUuid', [
                     'json' => $data
@@ -103,11 +98,9 @@ class ProfileController extends Controller
     
                 // Get the response body
                 $body = $response->getBody();
-                \Log::info('UUID Response Body: ' . $body);
     
                 // Decode the JSON response
                 $json = json_decode($body, true);
-                \Log::info('UUID Response: ' . print_r($json, true));
     
                 // Check if UUID exists in the response
                 if (isset($json['UUID'])) {
@@ -116,16 +109,13 @@ class ProfileController extends Controller
                     throw new \Exception('UUID not found in response');
                 }
             } catch (\GuzzleHttp\Exception\RequestException $e) {
-                \Log::error('RequestException: ' . $e->getMessage());
                 return Redirect::back()->withErrors(['error' => 'Error retrieving UUID: ' . $e->getMessage()]);
             } catch (\Exception $e) {
-                \Log::error('Exception: ' . $e->getMessage());
                 return Redirect::back()->withErrors(['error' => 'Error retrieving UUID: ' . $e->getMessage()]);
             }
     
             // Create XML message for user update
             try {
-                \Log::info('Creating XML message');
                 $xmlMessage = new \SimpleXMLElement('<user/>');
                 $xmlMessage->addChild('routing_key', 'user.frontend');
                 $xmlMessage->addChild('crud_operation', 'update');
@@ -150,19 +140,15 @@ class ProfileController extends Controller
                 $xmlMessage->addChild('user_role', $user->user_role);
                 $xmlMessage->addChild('invoice', $user->invoice);
                 $xmlMessage->addChild('calendar_link', '');
-    
-                \Log::info('XML Message: ' . $xmlMessage->asXML());
-    
+        
                 // Convert XML to string
                 $message = $xmlMessage->asXML();
             } catch (\Exception $e) {
-                \Log::error('XML Creation Exception: ' . $e->getMessage());
                 throw new \Exception('Error creating XML message: ' . $e->getMessage());
             }
 
             // Update Service ID
             try {
-                \Log::info('Updating Service ID with UUID: ' . $masterUuid);
                 $data_update = [
                     'MASTERUUID' => $masterUuid,
                     'Service' => 'frontend',
@@ -172,12 +158,9 @@ class ProfileController extends Controller
                 $response = $client->post('http://10.2.160.51:6000/updateServiceId', [
                     'json' => $data_update
                 ]);
-                \Log::info('Service ID Update Response: ' . $response->getBody());
             } catch (\GuzzleHttp\Exception\RequestException $e) {
-                \Log::error('Service ID Update RequestException: ' . $e->getMessage());
                 echo $e->getMessage();
             } catch (\Exception $e) {
-                \Log::error('Service ID Update Exception: ' . $e->getMessage());
                 echo $e->getMessage();
             }
     
@@ -185,17 +168,14 @@ class ProfileController extends Controller
 
             // Send message to RabbitMQ
             try {
-                \Log::info('Sending message to RabbitMQ');
                 $this->sendMessageToTopic($routingKey, $message);
             } catch (\Exception $e) {
-                \Log::error('RabbitMQ Send Exception: ' . $e->getMessage());
                 throw new \Exception('Error sending message to RabbitMQ: ' . $e->getMessage());
             }
     
             // Redirect back to the profile edit page with a success message
             return Redirect::route('profile.edit')->with('status', 'profile-updated');
         } catch (\Exception $e) {
-            \Log::error('Update failed: ' . $e->getMessage());
             // Handle any exceptions and redirect back with an error message
             return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);
         }
