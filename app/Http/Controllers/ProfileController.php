@@ -82,9 +82,6 @@ class ProfileController extends Controller
             $user->fill($request->all());
             $user->save();
             \Log::info('User after update: ' . print_r($user->toArray(), true));
-    
-            // Assuming $userId is the ID of the user
-            $userId = $user ->id;
 
             \Log::info('User ID:  ' . print_r($userId, true));
     
@@ -93,7 +90,7 @@ class ProfileController extends Controller
     
             // Define the data for the request
             $data = [
-                'ServiceId' => $userId,
+                'ServiceId' => $user -> id,
                 'Service' => 'frontend'
             ];
         
@@ -169,7 +166,7 @@ class ProfileController extends Controller
                 $data_update = [
                     'MASTERUUID' => $masterUuid,
                     'Service' => 'frontend',
-                    'NewServiceId' => $userId
+                    'NewServiceId' => $user -> id
                 ];
     
                 $response = $client->post('http://10.2.160.51:6000/updateServiceId', [
@@ -216,15 +213,12 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        // Assuming $userId is the ID of the user
-        $userId = $user->id;
-
         // Create a new Guzzle HTTP client
         $client = new \GuzzleHttp\Client();
 
         // Define the data for the request
         $data = [
-            'ServiceId' => $userId, // Assuming $userId is the ID of the user you want to delete
+            'ServiceId' => $user -> id,
             'Service' => 'frontend'
         ];
 
