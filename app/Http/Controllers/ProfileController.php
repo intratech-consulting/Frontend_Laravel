@@ -174,7 +174,7 @@ class ProfileController extends Controller
             }
     
             // Redirect back to the profile edit page with a success message
-            return Redirect::route('profile.edit')->with('status', 'profile-updated');
+            return Redirect::route('profile.edit');
         } catch (\Exception $e) {
             // Handle any exceptions and redirect back with an error message
             return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);
