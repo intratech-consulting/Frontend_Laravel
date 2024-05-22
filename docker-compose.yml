@@ -11,7 +11,7 @@ services:
         ports:
             #            port mappings, host to docker
             - "4443:443"
-            - "80:80"
+            - "9999:80"
         restart: always
         depends_on:
             -   php-fpm
