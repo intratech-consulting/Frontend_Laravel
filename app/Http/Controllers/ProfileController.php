@@ -90,8 +90,8 @@ class ProfileController extends Controller
     
             // Define the data for the request
             $data = [
-                'ServiceId' => $user -> id,
-                'Service' => 'frontend'
+                'Service' => 'frontend',
+                'ServiceId' => $user->id, // Assuming $userId is the ID of the newly created user
             ];
         
             try {

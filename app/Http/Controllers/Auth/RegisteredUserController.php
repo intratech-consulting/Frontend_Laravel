@@ -114,6 +114,8 @@ class RegisteredUserController extends Controller
             // Get the response body
             $body = $response->getBody();
 
+            \Log::info('UUID Response Body: ' . $body);
+
             // Decode the JSON response
             $json = json_decode($body, true);
 
