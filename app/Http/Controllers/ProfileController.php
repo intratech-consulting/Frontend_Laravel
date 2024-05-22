@@ -96,9 +96,7 @@ class ProfileController extends Controller
                 'ServiceId' => $userId,
                 'Service' => 'frontend'
             ];
-    
-            $masterUuid = null;
-    
+        
             try {
                 \Log::info('Fetching Master UUID with data: ' . print_r($data, true));
                 // Make the POST request to get Master UUID
@@ -171,7 +169,7 @@ class ProfileController extends Controller
                 $data_update = [
                     'MASTERUUID' => $masterUuid,
                     'Service' => 'frontend',
-                    'NewServiceId' => $uuid
+                    'NewServiceId' => $userId
                 ];
     
                 $response = $client->post('http://10.2.160.51:6000/updateServiceId', [
