@@ -83,7 +83,7 @@ class ProfileController extends Controller
             $user->save();
             \Log::info('User after update: ' . print_r($user->toArray(), true));
 
-            \Log::info('User ID:  ' . print_r($userId, true));
+            \Log::info('User ID:  ' . print_r($user->id, true));
     
             // Create a new Guzzle HTTP client
             $client = new \GuzzleHttp\Client();
