@@ -80,7 +80,6 @@
         <p>{{ $event->max_registrations }} Registraties</p>
         <p>{{ $event->available_seats }} Beschikbare plaatsen</p>
     </div>
-    <a href="{{ url()->previous() }}" class="btn">Terug</a>
 </div>
 
 @include('user.components.footer')
