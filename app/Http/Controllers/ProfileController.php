@@ -159,7 +159,7 @@ class ProfileController extends Controller
                     'json' => $data_update
                 ]);
             } catch (\GuzzleHttp\Exception\RequestException $e) {
-                echo $e->getMessage();
+                \Log::info($e->getMessage());
             }
     
             $routingKey = 'user.frontend';
