@@ -15,13 +15,14 @@ class CompanyAuthController extends Controller
 
     public function login(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        $credentials = $request->only('email', 'password');
+        
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'user_role' => 'company'])) {
-            return redirect()->intended('/home');
+            \Log::info('Session after regeneration: ' . print_r(session()->all(), true));
+
+            return view('company.profile.edit');
         }
 
         return back()->withErrors([
