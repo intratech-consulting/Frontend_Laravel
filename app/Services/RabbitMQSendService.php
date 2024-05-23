@@ -13,7 +13,7 @@ class RabbitMQSendService
     public function __construct()
     {
         try {
-            $this->connection = new AMQPStreamConnection('10.2.160.51', 5672, 'user', 'password');
+            $this->connection = new AMQPStreamConnection(env('GENERAL_IP'), 5672, 'user', 'password');
             $this->channel = $this->connection->channel();
         } catch (\Exception $e) {
             throw new \Exception("Failed to connect to RabbitMQ: " . $e->getMessage());
