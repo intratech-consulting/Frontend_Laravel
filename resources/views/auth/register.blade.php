@@ -84,16 +84,14 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
-        <div style="display: flex; justify-content: space-between; width: 100%;">
-            <div class="form-group">
-                <label for="first_name">Voornaam</label>
-                <input id="first_name" type="text" name="first_name" value="{{ old('first_name') }}" required autofocus>
-            </div>
+        <div class="form-group">
+            <label for="first_name">Voornaam</label>
+            <input id="first_name" type="text" name="first_name" value="{{ old('first_name') }}" required autofocus>
+        </div>
 
-            <div class="form-group">
-                <label for="last_name">Achternaam</label>
-                <input id="last_name" type="text" name="last_name" value="{{ old('last_name') }}" required>
-            </div>
+        <div class="form-group">
+            <label for="last_name">Achternaam</label>
+            <input id="last_name" type="text" name="last_name" value="{{ old('last_name') }}" required>
         </div>
 
         <div class="form-group">
@@ -101,52 +99,45 @@
             <input id="email" type="email" name="email" value="{{ old('email') }}" required>
         </div>
 
-        <div style="display: flex; justify-content: space-between; width: 100%;">
-            <div class="form-group">
-                <label for="birthday">Geboortedatum</label>
-                <input id="birthday" type="date" name="birthday" value="{{ old('birthday') }}">
-            </div>
-
-            <div class="form-group">
-                <label for="telephone">Telefoon</label>
-                <input id="telephone" type="text" name="telephone" value="{{ old('telephone') }}">
-            </div>
+        <div class="form-group">
+            <label for="birthday">Geboortedatum</label>
+            <input id="birthday" type="date" name="birthday" value="{{ old('birthday') }}">
         </div>
 
-        <div style="display: flex; justify-content: space-between; width: 100%;">
-            <div class="form-group">
-                <label for="street">Straat</label>
-                <input id="street" type="text" name="street" value="{{ old('street') }}">
-            </div>
-
-            <div class="form-group">
-                <label for="house_number">Huisnummer</label>
-                <input id="house_number" type="text" name="house_number" value="{{ old('house_number') }}">
-            </div>
+        <div class="form-group">
+            <label for="telephone">Telefoon</label>
+            <input id="telephone" type="text" name="telephone" value="{{ old('telephone') }}">
         </div>
 
-        <div style="display: flex; justify-content: space-between; width: 100%;">
-            <div class="form-group">
-                <label for="city">Stad</label>
-                <input id="city" type="text" name="city" value="{{ old('city') }}">
-            </div>
-
-            <div class="form-group">
-                <label for="zip">Postcode</label>
-                <input id="zip" type="text" name="zip" value="{{ old('zip') }}">
-            </div>
+        <div class="form-group">
+            <label for="street">Straat</label>
+            <input id="street" type="text" name="street" value="{{ old('street') }}">
         </div>
 
-        <div style="display: flex; justify-content: space-between; width: 100%;">
-            <div class="form-group">
-                <label for="state">Provincie</label>
-                <input id="state" type="text" name="state" value="{{ old('state') }}">
-            </div>
+        <div class="form-group">
+            <label for="house_number">Huisnummer</label>
+            <input id="house_number" type="text" name="house_number" value="{{ old('house_number') }}">
+        </div>
 
-            <div class="form-group">
-                <label for="country">Land</label>
-                <input id="country" type="text" name="country" value="{{ old('country') }}">
-            </div>
+        <div class="form-group">
+            <label for="city">Stad</label>
+            <input id="city" type="text" name="city" value="{{ old('city') }}">
+        </div>
+
+        <div class="form-group">
+            <label for="zip">Postcode</label>
+            <input id="zip" type="text" name="zip" value="{{ old('zip') }}">
+        </div>
+
+        <div class="form-group">
+            <label for="state">Provincie</label>
+            <input id="state" type="text" name="state" value="{{ old('state') }}">
+        </div>
+
+
+        <div class="form-group">
+            <label for="country">Land</label>
+            <input id="country" type="text" name="country" value="{{ old('country') }}">
         </div>
 
 
@@ -159,16 +150,14 @@
             </select>
         </div>
 
-        <div style="display: flex; width: 100%;">
-            <div class="form-group">
-                <label for="password">Wachtwoord</label>
-                <input id="password" type="password" name="password" required autocomplete="new-password">
-            </div>
+        <div class="form-group">
+            <label for="password">Wachtwoord</label>
+            <input id="password" type="password" name="password" required autocomplete="new-password">
+        </div>
 
-            <div class="form-group">
-                <label for="password_confirmation">Wachtwoord bevestigen</label>
-                <input id="password_confirmation" type="password" name="password_confirmation" required>
-            </div>
+        <div class="form-group">
+            <label for="password_confirmation">Wachtwoord bevestigen</label>
+            <input id="password_confirmation" type="password" name="password_confirmation" required>
         </div>
 
         <input type="hidden" name="user_role" value="individual">
