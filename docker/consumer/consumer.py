@@ -160,9 +160,51 @@ def update_user(user_data):
 def delete_user(user_id):
     try:
         sql = "DELETE FROM users WHERE id = %s"
-        mysql_cursor.execute(sql, (user_id,))
+        
+
+        #get user id from masteruid
+        masterUuid_url = f"http://10.2.160.51:6000/getServiceId"
+        masterUuid_payload = json.dumps(
+            {
+                "MasterUuid": f"{user_id}",
+                "Service": "frontend",
+            }
+        )
+        uid_headers={
+        'Content-type':'application/json', 
+        'Accept':'application/json'
+        }
+        print(f"uid: {user_id}")
+        response = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        print(response)
+
+        userID = response
+
+
+        mysql_cursor.execute(sql, (userID))
         mysql_connection.commit()
         print("User deleted successfully!")
+        
+
+        #Update user id
+        masterUuid_url = f"http://10.2.160.51:6000/UpdateServiceId"
+        masterUuid_payload = json.dumps(
+            {
+                "MASTERUUID": "{user_id}",
+                "NewServiceId": "{NULL}", 
+                "Service": "frontend",
+            }
+        )
+        uid_headers={
+        'Content-type':'application/json', 
+        'Accept':'application/json'
+        }
+        print(f"uid: {user_id}")
+        response2 = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        print(response2)
+
+        
+
     except mysql.connector.Error as error:
         mysql_connection.rollback()
         print("Failed to delete user:", error)
