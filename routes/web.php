@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\testController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CreateEventController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\CompanyAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +52,20 @@ Route::middleware('web')->group(function () {
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 
+    Route::get('/company/login', [CompanyAuthController::class, 'showLoginForm'])->name('company.login.view');
+    Route::post('/company/login', [CompanyAuthController::class, 'login'])->name('company.login');
+    Route::post('/company/logout', [CompanyAuthController::class, 'logout'])->name('company.logout');
+
+    Route::middleware(['web', 'auth'])->group(function () {
+        Route::get('/company/profile/edit', [CompanyController::class, 'edit'])->name('company.profile.edit');
+        Route::post('/company/profile/update', [CompanyController::class, 'update'])->name('company.profile.update');
+    });
+
+    Route::get('/company/login', function () {
+        return view('auth.company-login');
+    })->name('company.login.view');
+    
+
     Route::match(['get', 'post'], '/test', [testController::class, 'test'])->name('test');
 
     // Header Routes
@@ -67,26 +83,21 @@ Route::middleware('web')->group(function () {
     Route::match(['get', 'post'], '/create_event', [EventController::class, 'test'])->name('test_event');
     Route::post('/create_event', [EventController::class, 'create_event'])->name('create_event');
 
-    // register to event
+    // Register to event
     Route::post('/events/register', [EventController::class, 'registerToEvent']);
 
-    //event details
+    // Event details
     Route::get('/event_details/{id}', [EventController::class, 'eventDetails']);
-
-
-
 
     // Company creation
     Route::get('/make_company', [headerController::class, 'show_company']);
     Route::post('/create_company', [CompanyController::class, 'create_company'])->name('create_company');
-    //Route::match(['get', 'post'], '/create_company', [CompanyController::class, 'test'])->name('test_company');
+    // Route::match(['get', 'post'], '/create_company', [CompanyController::class, 'test'])->name('test_company');
     Route::post('/send-message-to-topics_company', [CompanyController::class, 'sendMessageToTopic'])->name('sendMessageToTopic_company');
 
-
-    //role register
+    // Role register
     Route::get('/register_speaker', [RoleRegisterController::class, 'register_speaker']);
     Route::get('/register_company', [RoleRegisterController::class, 'register_company']);
-
 
     // Footer Routes
     Route::get('/privacy', [footerController::class, 'privacy']);
@@ -102,11 +113,9 @@ Route::middleware('web')->group(function () {
 
     Route::post('/events/create', [CreateEventController::class, 'createEvent'])->name('create_event');
 
-
     Route::get('/home', function () {
         return view('user.home');
     })->name('user.home');
-
 
     require __DIR__ . '/auth.php';
 });

@@ -31,6 +31,8 @@ class CreateCompaniesTable extends Migration
             $table->string('password');
             $table->timestamps();
         });
+
+        DB::statement('ALTER TABLE companies AUTO_INCREMENT = 1000001');
     }
 
     /**

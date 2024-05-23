@@ -77,13 +77,47 @@ class CompanyController extends Controller
             'password' => Hash::make($companyData['password']),
         ]);
 
-        $companyId = $company->id;
+        $masterUuid = null;
+
+        // Create a new Guzzle HTTP client
+        $client = new \GuzzleHttp\Client();
+
+        // Define the data for the request
+        $data = [
+            'Service' => 'frontend',
+            'ServiceId' => $company->id, // Assuming $company->id is the ID of the newly created company
+        ];
+
+        try {
+            $response = $client->post('http://10.2.160.51:6000/createMasterUuid', [
+                'json' => $data
+            ]);
+
+            // Get the response body
+            $body = $response->getBody();
+
+            \Log::info('UUID Response Body: ' . $body);
+
+            // Decode the JSON response
+            $json = json_decode($body, true);
+
+            // Get the MASTERUUID from the response
+            $masterUuid = $json['MasterUuid'];
+
+            // Now you can use $masterUuid for whatever you need
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            //Send logs to ControlRoom
+            $this->rabbitMQService->sendLogEntryToTopic('make_UUID', 'Error: ' . $e->getMessage(), true);
+
+            // Handle the exception
+            throw new \Exception('Failed to retrieve masterUuid: ' . $e->getMessage());
+        };
 
         $xmlCompany = new \SimpleXMLElement('<company/>');
         $xmlCompany->addChild('routing_key', 'company.frontend');
         $xmlCompany->addChild('crud_operation', 'create');
 
-        $xmlCompany->addChild('id', $companyId); // Generate a random ID
+        $xmlCompany->addChild('id', $masterUuid); // give masterUuid as id
         $xmlCompany->addChild('name', $companyData['name']);
         $xmlCompany->addChild('email', $companyData['email']);
         $xmlCompany->addChild('telephone', $companyData['telephone']);
@@ -113,5 +147,27 @@ class CompanyController extends Controller
         Auth::login($company);
 
         return view('user.home');
+    }
+
+    public function edit()
+    {
+        $company = Auth::user()->company;
+
+        return view('company.profile-edit', compact('company'));
+    }
+
+    public function update(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:companies,email,' . Auth::user()->company->id,
+            'telephone' => 'nullable|string|max:20',
+            'address' => 'nullable|string|max:255',
+        ]);
+
+        $company = Auth::user()->company;
+        $company->update($request->all());
+
+        return Redirect::route('company.profile.edit')->with('status', 'Company profile updated successfully.');
     }
 }
