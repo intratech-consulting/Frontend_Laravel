@@ -75,7 +75,7 @@ class RegisteredUserController extends Controller
             'company_id' => ['nullable', 'integer'],
             'user_role' => ['required', 'string', Rule::in(['individual', 'employee', 'speaker'])],
         ]);
-        
+
         $user = User::create([
             'first_name' => $userData['first_name'],
             'last_name' => $userData['last_name'],
@@ -107,7 +107,7 @@ class RegisteredUserController extends Controller
         ];
 
         try {
-            $response = $client->post('http://10.2.160.51:6000/createMasterUuid', [
+            $response = $client->post('http://' . env('GENERAL_IP') . ':6000/createMasterUuid', [
                 'json' => $data
             ]);
 
