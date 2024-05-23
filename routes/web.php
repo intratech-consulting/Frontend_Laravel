@@ -12,6 +12,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CreateEventController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\CompanyAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,10 @@ Route::middleware('web')->group(function () {
         Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
+
+    Route::get('/company/login', [CompanyAuthController::class, 'showLoginForm'])->name('company.login.view');
+    Route::post('/company/login', [CompanyAuthController::class, 'login'])->name('company.login');
+    Route::post('/company/logout', [CompanyAuthController::class, 'logout'])->name('company.logout');
 
     Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/company/profile/edit', [CompanyController::class, 'edit'])->name('company.profile.edit');
