@@ -21,7 +21,7 @@ class CompanyAuthController extends Controller
         ]);
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'user_role' => 'company'])) {
-            return redirect()->intended('/company/profile');
+            return redirect()->intended('/home');
         }
 
         return back()->withErrors([
