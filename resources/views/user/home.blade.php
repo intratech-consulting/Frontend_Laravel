@@ -243,8 +243,6 @@
 
 @include('user.components.header')
 
-@include('user.components.message')
-
 <main class="hackathon-container">
 <section class="hero-section">
   <div class="hero-content">
