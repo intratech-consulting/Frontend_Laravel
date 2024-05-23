@@ -75,6 +75,24 @@ def update_user(user_data):
     try:
         sql = "UPDATE users SET "
         values = []
+
+        #get user id from masteruid
+        masterUuid_url = f"http://10.2.160.51:6000/getServiceId"
+        masterUuid_payload = json.dumps(
+            {
+                "MasterUuid": f"{user_data['id']}",
+                "Service": "frontend",
+            }
+        )
+        uid_headers={
+        'Content-type':'application/json', 
+        'Accept':'application/json'
+        }
+        print(f"uid: {user_data[id]}")
+        response = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        print(response)
+
+        userID = response
                 
         if user_data.get('first_name'):
             sql += "first_name = %s, "
@@ -128,11 +146,13 @@ def update_user(user_data):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         sql += "updated_at = %s WHERE id = %s"
         values.append(now)
-        values.append(user_data['id'])
+        values.append(userID)
                 
         mysql_cursor.execute(sql, values)
         mysql_connection.commit()
         print("User updated successfully!")
+
+        
     except mysql.connector.Error as error:
         mysql_connection.rollback()
         print("Failed to update user:", error)
