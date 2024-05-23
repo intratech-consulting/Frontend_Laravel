@@ -470,7 +470,7 @@ def process_event(root):
 
 mysql_connection = mysql.connector.connect(
     host='10.2.160.51',
-    port='3307',
+    port='3306',
     database='frontend',
     user='root',
     password='mypassword'
