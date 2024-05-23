@@ -50,6 +50,11 @@ Route::middleware('web')->group(function () {
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 
+    Route::middleware(['web', 'auth'])->group(function () {
+        Route::get('/company/profile/edit', [CompanyController::class, 'edit'])->name('company.profile.edit');
+        Route::post('/company/profile/update', [CompanyController::class, 'update'])->name('company.profile.update');
+    });
+
     Route::match(['get', 'post'], '/test', [testController::class, 'test'])->name('test');
 
     // Header Routes
