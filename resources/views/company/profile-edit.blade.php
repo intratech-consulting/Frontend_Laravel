@@ -89,7 +89,7 @@
 </head>
 <body>
 
-@include('user.components.header')
+@include('company.components.header')
 
 <main class="hackathon-container">
     <section class="space-y-6">
