@@ -28,7 +28,7 @@ class EmployeeController extends Controller
 
     public function register(Request $request)
     {
-       
+
         $userData = $request->validate([
 
             'first_name' => ['required', 'string', 'max:255'],
@@ -46,7 +46,7 @@ class EmployeeController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
 
         ]);
-        
+
         $user = User::create([
             'first_name' => $userData['first_name'],
             'last_name' => $userData['last_name'],
@@ -82,7 +82,7 @@ class EmployeeController extends Controller
 
         try {
             // Make the POST request
-            $response = $client->request('POST', 'http://10.2.160.51:6000/createMasterUuid', [
+            $response = $client->request('POST', 'http://' . env('GENERAL_IP') . ':6000/createMasterUuid', [
                 'json' => $data
             ]);
 
@@ -100,8 +100,8 @@ class EmployeeController extends Controller
             // Handle the exception
             echo $e->getMessage();
         }
-        
-        
+
+
         $xmlMessage = new \SimpleXMLElement('<user/>');
         $xmlMessage->addChild('routing_key', 'user.crm');
         $xmlMessage->addChild('user_id', $masterUuid);
@@ -110,7 +110,7 @@ class EmployeeController extends Controller
         $xmlMessage->addChild('email', $userData['email']);
         $xmlMessage->addChild('telephone', $userData['telephone']);
         $xmlMessage->addChild('birthday', $userData['birthday']);
-        
+
         $address = $xmlMessage->addChild('address');
         $address->addChild('country', $userData['country']);
         $address->addChild('state', $userData['state']);
@@ -136,7 +136,7 @@ class EmployeeController extends Controller
     public function test(Request $request)
     {
         dd('test');
-        
+
         $routingKey = 'user.frontend';
 
                 // Validate the message
@@ -146,7 +146,7 @@ class EmployeeController extends Controller
 
             // Extract the message from the request
         $message = $request->input('message');
-    
+
             // Call sendMessage method to send the message
          $this->sendMessageToTopic($routingKey, $message);
 

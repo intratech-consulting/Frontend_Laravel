@@ -89,7 +89,7 @@ class CompanyController extends Controller
         ];
 
         try {
-            $response = $client->post('http://10.2.160.51:6000/createMasterUuid', [
+            $response = $client->post('http://' . env('GENERAL_IP') . ':6000/createMasterUuid', [
                 'json' => $data
             ]);
 
