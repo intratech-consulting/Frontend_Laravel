@@ -90,69 +90,71 @@
     }
 
     .features-section {
-      padding: 60px 20px;
-      background-color: #fff;
-      text-align: center;
-    }
+            padding: 40px 20px;
+            background-color: #fff;
+            text-align: center;
+        }
 
-    .features-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-    }
+        .features-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
 
-    .features-title {
-      color: #121212;
-      font-weight: 700;
-      font-size: 48px;
-    }
+        .features-title {
+            color: #121212;
+            font-weight: 700;
+            font-size: 36px;
+        }
 
-    .features-list {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-    }
+        .features-list {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
 
-    .feature-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      padding: 20px;
-      background: #f9f9f9;
-      border-radius: 10px;
-    }
+        .feature-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
 
-    .feature-divider {
-      width: 60px;
-      height: 3px;
-      background-color: #e30613;
-    }
+        .feature-divider {
+            width: 60px;
+            height: 3px;
+            background-color: #e30613;
+        }
 
-    .feature-content {
-      text-align: center;
-    }
+        .feature-content {
+            text-align: center;
+        }
 
-    .feature-icon {
-      width: 100px;
-      height: 100px;
-    }
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+        }
 
-    .feature-name {
-      color: #121212;
-      font-weight: 700;
-      font-size: 18px;
-      margin: 20px 0 10px;
-    }
+        .feature-name {
+            color: #121212;
+            font-weight: 700;
+            font-size: 18px;
+            margin: 20px 0 10px;
+        }
 
-    .feature-description {
-      color: #696969;
-      font-weight: 400;
-      font-size: 14px;
-    }
+        .feature-description {
+            color: #696969;
+            font-weight: 400;
+            font-size: 14px;
+        }
+
+    
 
     .cta-section {
       background-color: #fafafa;
