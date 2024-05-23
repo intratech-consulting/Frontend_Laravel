@@ -23,71 +23,58 @@
     }
 
     .hero-section {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 40px;
-      padding: 20px;
-      background: #f0f0f0;
-    }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px; 
+  padding: 20px;
+  background: #f0f0f0;
+}
 
-    .hero-content {
-      flex: 1;
-    }
+.hero-content {
+  flex: 1;
+}
 
-    .hero-title {
-      color: #121212;
-      font-weight: 700;
-      font-size: 48px;
-      margin: 0 0 20px;
-    }
+.hero-title {
+  color: #121212;
+  font-weight: 700;
+  font-size: 36px; 
+  margin: 0 0 20px;
+}
 
-    .hero-description {
-      color: #696969;
-      font-weight: 400;
-      font-size: 18px;
-      margin: 0 0 20px;
-    }
+.hero-description {
+  color: #696969;
+  font-weight: 400;
+  font-size: 16px; 
+  margin: 0 0 20px;
+}
 
-    .hero-cta {
-      display: inline-block;
-      padding: 15px 30px;
-      border-radius: 10px;
-      background-color: #e30613;
-      color: #fff;
-      font-weight: 500;
-      font-size: 18px;
-    }
+.hero-cta {
+  display: inline-block;
+  padding: 10px 20px; 
+  border-radius: 10px;
+  background-color: #e30613;
+  color: #fff;
+  font-weight: 500;
+  font-size: 16px; 
+}
 
-    .hero-section {
-      display: flex;
-      max-width: 100%;
-    }
+.hero-image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 16px 60px 33px;
+}
 
-    .hero-content {
-      align-self: start;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      margin-right: 40px;
-      flex-grow: 1;
-      flex-basis: 0;
-    }
+.hero-image {
+  width: 100%;
+  max-width: 500px; 
+  margin-top: 79px;
+  border-radius: 15px; 
+}
 
-    .hero-image-container {
-      display: flex;
-      flex-direction: column;
-      min-height: 671px;
-      align-items: flex-end; /* Adjusted alignment */
-      padding: 16px 60px 33px;
-    }
 
-    .hero-image {
-      width: 100%;
-      max-width: 600px; /* Adjust the max-width as needed */
-      margin-top: 79px;
-    }
+  
 
     .features-section {
             padding: 40px 20px;
