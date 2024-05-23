@@ -56,6 +56,12 @@ Route::middleware('web')->group(function () {
     Route::post('/company/login', [CompanyAuthController::class, 'login'])->name('company.login');
     Route::post('/company/logout', [CompanyAuthController::class, 'logout'])->name('company.logout');
 
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/company/profile', function () {
+            return view('company.profile.edit');
+        })->name('company.profile.edit');
+    });
+
     Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/company/profile/edit', [CompanyController::class, 'edit'])->name('company.profile.edit');
         Route::post('/company/profile/update', [CompanyController::class, 'update'])->name('company.profile.update');
