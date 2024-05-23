@@ -10,78 +10,78 @@
       margin: 0;
       font-family: Manrope, sans-serif;
     }
-
+ 
     a {
       text-decoration: none;
     }
-
+ 
     .hackathon-container {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 30px;
       padding: 30px;
     }
-
+ 
     .hero-section {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 20px; 
+  gap: 20px; /* Reduced gap */
   padding: 20px;
   background: #f0f0f0;
 }
-
+ 
 .hero-content {
   flex: 1;
 }
-
+ 
 .hero-title {
   color: #121212;
   font-weight: 700;
-  font-size: 36px; 
+  font-size: 36px; /* Reduced font size */
   margin: 0 0 20px;
 }
-
+ 
 .hero-description {
   color: #696969;
   font-weight: 400;
-  font-size: 16px; 
+  font-size: 16px; /* Reduced font size */
   margin: 0 0 20px;
 }
-
+ 
 .hero-cta {
   display: inline-block;
-  padding: 10px 20px; 
+  padding: 10px 20px; /* Reduced padding */
   border-radius: 10px;
   background-color: #e30613;
   color: #fff;
   font-weight: 500;
-  font-size: 16px; 
+  font-size: 16px; /* Reduced font size */
 }
-
+ 
 .hero-image-container {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   padding: 16px 60px 33px;
 }
-
+ 
 .hero-image {
   width: 100%;
-  max-width: 500px; 
+  max-width: 500px; /* Reduced max-width */
   margin-top: 79px;
-  border-radius: 15px; 
+  border-radius: 15px; /* Added rounded borders */
 }
-
-
-  
-
+ 
+ 
+   
+ 
     .features-section {
             padding: 40px 20px;
             background-color: #fff;
             text-align: center;
         }
-
+ 
         .features-container {
             max-width: 1100px;
             margin: 0 auto;
@@ -89,19 +89,19 @@
             flex-direction: column;
             gap: 40px;
         }
-
+ 
         .features-title {
             color: #121212;
             font-weight: 700;
             font-size: 36px;
         }
-
+ 
         .features-list {
             display: flex;
             justify-content: space-between;
             gap: 20px;
         }
-
+ 
         .feature-item {
             flex: 1;
             display: flex;
@@ -112,43 +112,43 @@
             background: #f9f9f9;
             border-radius: 10px;
         }
-
+ 
         .feature-divider {
             width: 60px;
             height: 3px;
             background-color: #e30613;
         }
-
+ 
         .feature-content {
             text-align: center;
         }
-
+ 
         .feature-icon {
             width: 80px;
             height: 80px;
         }
-
+ 
         .feature-name {
             color: #121212;
             font-weight: 700;
             font-size: 18px;
             margin: 20px 0 10px;
         }
-
+ 
         .feature-description {
             color: #696969;
             font-weight: 400;
             font-size: 14px;
         }
-
-    
-
+ 
+   
+ 
     .cta-section {
       background-color: #fafafa;
       padding: 60px 20px;
       text-align: center;
     }
-
+ 
     .cta-container {
       max-width: 1100px;
       margin: 0 auto;
@@ -156,32 +156,32 @@
       flex-direction: column;
       gap: 40px;
     }
-
+ 
     .cta-title {
       color: #121212;
       font-weight: 700;
       font-size: 54px;
     }
-
+ 
     .cta-description {
       color: #696969;
       font-weight: 400;
       font-size: 18px;
       margin: 0 0 20px;
     }
-
+ 
     .cta-benefit {
       display: flex;
       justify-content: center;
       gap: 12px;
       font-weight: 600;
     }
-
+ 
     .cta-benefit-icon {
       width: 24px;
       height: 24px;
     }
-
+ 
     .cta-button {
       display: inline-block;
       padding: 15px 30px;
@@ -194,9 +194,9 @@
   </style>
 </head>
 <body>
-
+ 
 @include('user.components.header')
-
+ 
 <main class="hackathon-container">
 <section class="hero-section">
   <div class="hero-content">
@@ -208,7 +208,7 @@
     <img src="https://images.unsplash.com/photo-1582192730841-2a682d7375f9?q=80&w=2748&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="hero-image" />
   </div>
 </section>
-
+ 
   <section class="features-section">
     <div class="features-container">
       <h2 class="features-title">80+ Hackathon Horizons: Verken, Innoveer, Verstoor!</h2>
@@ -240,7 +240,7 @@
       </div>
     </div>
   </section>
-
+ 
   <section class="cta-section">
     <div class="cta-container">
       <div class="cta-content">
@@ -261,8 +261,8 @@
     </div>
   </section>
 </main>
-
+ 
 @include('user.components.footer')
-
+ 
 </body>
 </html>
