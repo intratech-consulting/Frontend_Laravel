@@ -146,7 +146,7 @@
             </div>
           </li>
         @else
-          <li class="connect"><a href="{{ route('login') }}">Inloggen</a></li>
+          <li class="connect"><a href="{{ route('') }}">Inloggen</a></li>
           <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
         @endauth
       @endif
