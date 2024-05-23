@@ -17,8 +17,8 @@ jobs:
       SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       SSH_PORT: ${{ secrets.SSH_PORT }}
-      ENV_FILE: ${{ secrets.ENV_FILE }}
-      LARAVEL_CONFIG: ${{ secrets.LARAVEL_CONFIG }}
+      APP_DEBUG: ${{ secrets.APP_DEBUG }}
+      APP_ENV: ${{ secrets.APP_ENV }}
 
     steps:
       - name: Configure SSH
@@ -43,8 +43,12 @@ jobs:
           docker compose down
           git checkout staging
           git pull
-          echo "${{ secrets.ENV_FILE }}" > .env
-          echo "${{ secrets.LARAVEL_CONFIG }}" > docker/nginx/sites/laravel.conf
+          cp -f .env.example .env
+          sed -i 's/DB_HOST=.*/DB_HOST=${{ secrets.SSH_HOST }}/' .env
+          sed -i 's/GENERAL_IP=.*/GENERAL_IP=${{ secrets.SSH_HOST }}/' .env
+          sed -i 's/APP_DEBUG=.*/APP_DEBUG=${{ env.APP_DEBUG }}/' .env
+          sed -i 's/APP_ENV=.*/APP_ENV=${{ env.APP_ENV }}/' .env
+          sed -i 's/server_name .*/server_name ${{ secrets.SSH_HOST }};' ./docker/nginx/sites/laravel.conf
           docker compose up --build -d
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/staging/frontend/Frontend_Laravel/storage
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/staging/frontend/Frontend_Laravel/public
