@@ -21,7 +21,7 @@ class CompanyAuthController extends Controller
         ]);
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'user_role' => 'company'])) {
-            return redirect()->intended('/company/dashboard');
+            return redirect()->intended('/company/profile');
         }
 
         return back()->withErrors([
@@ -35,6 +35,6 @@ class CompanyAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/company/login');
+        return redirect('/home');
     }
 }
