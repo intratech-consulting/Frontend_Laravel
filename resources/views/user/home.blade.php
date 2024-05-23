@@ -4,210 +4,223 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home</title>
-  <link rel="stylesheet" href="{{ asset('/user/home.css') }}">
   <style>
     body {
       margin: 0;
       font-family: Manrope, sans-serif;
     }
-
+ 
     a {
       text-decoration: none;
     }
-
+ 
     .hackathon-container {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 30px;
       padding: 30px;
     }
-
+ 
     .hero-section {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 40px;
-      padding: 20px;
-      background: #f0f0f0;
-    }
-
-    .hero-content {
-      flex: 1;
-    }
-
-    .hero-title {
-      color: #121212;
-      font-weight: 700;
-      font-size: 48px;
-      margin: 0 0 20px;
-    }
-
-    .hero-description {
-      color: #696969;
-      font-weight: 400;
-      font-size: 18px;
-      margin: 0 0 20px;
-    }
-
-    .hero-cta {
-      display: inline-block;
-      padding: 15px 30px;
-      border-radius: 10px;
-      background-color: #e30613;
-      color: #fff;
-      font-weight: 500;
-      font-size: 18px;
-    }
-
-    .hero-section {
-      display: flex;
-      max-width: 100%;
-    }
-
-    .hero-content {
-      align-self: start;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      margin-right: 40px;
-      flex-grow: 1;
-      flex-basis: 0;
-    }
-
-    .hero-image-container {
-      display: flex;
-      flex-direction: column;
-      min-height: 671px;
-      align-items: flex-end; /* Adjusted alignment */
-      padding: 16px 60px 33px;
-    }
-
-    .hero-image {
-      width: 100%;
-      max-width: 600px; /* Adjust the max-width as needed */
-      margin-top: 79px;
-    }
-
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px; 
+  padding: 20px;
+  background: #f0f0f0;
+}
+ 
+.hero-content {
+  flex: 1;
+}
+ 
+.hero-title {
+  color: #121212;
+  font-weight: 700;
+  font-size: 36px; 
+  margin: 0 0 20px;
+}
+ 
+.hero-description {
+  color: #696969;
+  font-weight: 400;
+  font-size: 16px; 
+  margin: 0 0 20px;
+}
+ 
+.hero-cta {
+  display: inline-block;
+  padding: 10px 20px; 
+  border-radius: 10px;
+  background-color: #e30613;
+  color: #fff;
+  font-weight: 500;
+  font-size: 16px; 
+}
+ 
+.hero-image-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 16px 60px 33px;
+}
+ 
+.hero-image {
+  width: 100%;
+  max-width: 500px; 
+  margin-top: 79px;
+  border-radius: 15px; /* for rounded borders */
+}
+ 
+ 
+   
+ 
     .features-section {
-      padding: 60px 20px;
-      background-color: #fff;
-      text-align: center;
-    }
+            padding: 40px 20px;
+            background-color: #fff;
+            text-align: center;
+        }
+ 
+        .features-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+ 
+        .features-title {
+            color: #121212;
+            font-weight: 700;
+            font-size: 36px;
+        }
+ 
+        .features-list {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+ 
+        .feature-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+ 
+        .feature-divider {
+            width: 60px;
+            height: 3px;
+            background-color: #e30613;
+        }
+ 
+        .feature-content {
+            text-align: center;
+        }
+ 
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+        }
+ 
+        .feature-name {
+            color: #121212;
+            font-weight: 700;
+            font-size: 18px;
+            margin: 20px 0 10px;
+        }
+ 
+        .feature-description {
+            color: #696969;
+            font-weight: 400;
+            font-size: 14px;
+        }
+    
+        .cta-section {
+  background-color: #fafafa;
+  display: flex;
+  margin-top: 89px;
+  width: 100%;
+  align-items: center;
+  font-size: 22px;
+  color: var(--Black, #121212);
+  letter-spacing: 0.44px;
+  justify-content: center;
+}
 
-    .features-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-    }
+.cta-container {
+  display: flex;
+  width: 100%;
+  max-width: 1650px;
+  gap: 20px;
+  justify-content: space-between;
+  margin: 43px 0 54px;
+}
 
-    .features-title {
-      color: #121212;
-      font-weight: 700;
-      font-size: 48px;
-    }
+.cta-content {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 14px;
+}
 
-    .features-list {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-    }
+.cta-title {
+  letter-spacing: 0.81px;
+  align-self: stretch;
+  font: 700 54px/70px Manrope, sans-serif;
+}
 
-    .feature-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      padding: 20px;
-      background: #f9f9f9;
-      border-radius: 10px;
-    }
+.cta-description {
+  color: var(--Grey, #696969);
+  font-family: Manrope, sans-serif;
+  font-weight: 400;
+  line-height: 30px;
+  align-self: stretch;
+  margin: 26px 81px 0 0;
+}
 
-    .feature-divider {
-      width: 60px;
-      height: 3px;
-      background-color: #e30613;
-    }
+.cta-benefit {
+  justify-content: center;
+  display: flex;
+  margin-top: 26px;
+  gap: 12px;
+  font-weight: 600;
+  line-height: 91%;
+}
 
-    .feature-content {
-      text-align: center;
-    }
+.cta-benefit-icon {
+  aspect-ratio: 1;
+  object-fit: auto;
+  object-position: center;
+  width: 24px;
+}
 
-    .feature-icon {
-      width: 100px;
-      height: 100px;
-    }
+.cta-benefit-text {
+  font-family: Manrope, sans-serif;
+  margin: auto 0;
+}
 
-    .feature-name {
-      color: #121212;
-      font-weight: 700;
-      font-size: 18px;
-      margin: 20px 0 10px;
-    }
-
-    .feature-description {
-      color: #696969;
-      font-weight: 400;
-      font-size: 14px;
-    }
-
-    .cta-section {
-      background-color: #fafafa;
-      padding: 60px 20px;
-      text-align: center;
-    }
-
-    .cta-container {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-    }
-
-    .cta-title {
-      color: #121212;
-      font-weight: 700;
-      font-size: 54px;
-    }
-
-    .cta-description {
-      color: #696969;
-      font-weight: 400;
-      font-size: 18px;
-      margin: 0 0 20px;
-    }
-
-    .cta-benefit {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      font-weight: 600;
-    }
-
-    .cta-benefit-icon {
-      width: 24px;
-      height: 24px;
-    }
-
-    .cta-button {
-      display: inline-block;
-      padding: 15px 30px;
-      border-radius: 10px;
-      background-color: #e30613;
-      color: #fff;
-      font-weight: 500;
-      font-size: 18px;
-    }
+.cta-button {
+  justify-content: center;
+  border-radius: 10px;
+  background-color: #e30613;
+  margin-top: 146px;
+  color: var(--White, #fff);
+  letter-spacing: 0.54px;
+  padding: 16px 36px;
+  font: 500 18px/111% Manrope, sans-serif;
+}     
+   
   </style>
 </head>
 <body>
-
+ 
 @include('user.components.header')
-
+ 
 <main class="hackathon-container">
 <section class="hero-section">
   <div class="hero-content">
@@ -219,7 +232,7 @@
     <img src="https://images.unsplash.com/photo-1582192730841-2a682d7375f9?q=80&w=2748&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="hero-image" />
   </div>
 </section>
-
+ 
   <section class="features-section">
     <div class="features-container">
       <h2 class="features-title">80+ Hackathon Horizons: Verken, Innoveer, Verstoor!</h2>
@@ -251,7 +264,7 @@
       </div>
     </div>
   </section>
-
+ 
   <section class="cta-section">
     <div class="cta-container">
       <div class="cta-content">
@@ -272,8 +285,8 @@
     </div>
   </section>
 </main>
-
+ 
 @include('user.components.footer')
-
+ 
 </body>
 </html>
