@@ -20,7 +20,7 @@ def create_user(user_data):
         
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        persoonlijkId = uuid.uuid4()
+        persoonlijkId = int(uuid.uuid4())
         
         user_values = (
             persoonlijkId,
