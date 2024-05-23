@@ -56,6 +56,11 @@ Route::middleware('web')->group(function () {
         Route::post('/company/profile/update', [CompanyController::class, 'update'])->name('company.profile.update');
     });
 
+    Route::get('/company/login', function () {
+        return view('auth.company-login');
+    })->name('company.login.view');
+    
+
     Route::match(['get', 'post'], '/test', [testController::class, 'test'])->name('test');
 
     // Header Routes
