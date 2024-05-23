@@ -1,54 +1,53 @@
-name: Deploy to Development
-
-on:
-  push:
-    branches:
-      - dev
-  workflow_dispatch:
-
-jobs:
-  deploy:
-    name: Deploy frontend to dev
-    runs-on: [self-hosted]
-    environment: development
-    env:
-      SSH_HOST: ${{ secrets.SSH_HOST }}
-      SSH_USER: ${{ secrets.SSH_USER }}
-      SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
-      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      SSH_PORT: ${{ secrets.SSH_PORT }}
-      ENV_FILE: ${{ secrets.ENV_FILE }}
-
-    steps:
-      - name: Configure SSH
-        run: |
-          mkdir -p ~/.ssh/
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deployment.key
-          chmod 600 ~/.ssh/deployment.key
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-          sudo apt-get install sshpass
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Deploy new version
-        run: |
-          sudo apt-get install sshpass
-          sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/deployment.key <<'ENDSSH'
-          eval $(ssh-agent)
-          ssh-add ~/.ssh/github_intratechconsulting
-          cd ~/TestServer/frontend/Frontend_Laravel
-          ls -l
-          docker compose down
-          git checkout dev
-          git pull
-          sed -i 's/__SERVER_NAME__/'"${{ secrets.SSH_HOST }}"'/g' docker/nginx/sites/laravel.conf
-          docker compose up --build -d
-          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/TestServer/frontend/Frontend_Laravel/storage
-          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/TestServer/frontend/Frontend_Laravel/public
-          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod -R 775 /home/***/TestServer/frontend/Frontend_Laravel/storage
-          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod -R 775 /home/***/TestServer/frontend/Frontend_Laravel/public
-          docker exec -it frontend_laravel-php-fpm-1 bash -c "cd /var/www/laravel/current && composer install"
-          docker exec -it frontend_laravel-php-fpm-1 bash -c "cd /var/www/laravel/current && npm install"
-          nohup npm run dev > /dev/null 2>&1 &
-          ENDSSH
+#name: Deploy to Development
+#
+#on:
+#  push:
+#    branches:
+#      - dev
+#  workflow_dispatch:
+#
+#jobs:
+#  deploy:
+#    name: Deploy frontend to dev
+#    runs-on: [frontend]
+#    environment: development
+#    env:
+#      SSH_HOST: ${{ secrets.SSH_HOST }}
+#      SSH_USER: ${{ secrets.SSH_USER }}
+#      SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+#      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+#      SSH_PORT: ${{ secrets.SSH_PORT }}
+#
+#
+#    steps:
+#      - name: Configure SSH
+#        run: |
+#          mkdir -p ~/.ssh/
+#          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deployment.key
+#          chmod 600 ~/.ssh/deployment.key
+#          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+#          sudo apt-get install sshpass
+#
+#      - name: Checkout code
+#        uses: actions/checkout@v4
+#
+#      - name: Deploy new version
+#        run: |
+#          sudo apt-get install sshpass
+#          sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -v -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} -i ~/.ssh/deployment.key <<'ENDSSH'
+#          eval $(ssh-agent)
+#          ssh-add ~/.ssh/github_intratechconsulting
+#          cd ~/TestServer/frontend/Frontend_Laravel
+#          ls -l
+#          docker compose down
+#          git checkout dev
+#          git pull
+#          docker compose up --build -d
+#          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/TestServer/frontend/Frontend_Laravel/storage
+#          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/TestServer/frontend/Frontend_Laravel/public
+#          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod -R 775 /home/***/TestServer/frontend/Frontend_Laravel/storage
+#          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod -R 775 /home/***/TestServer/frontend/Frontend_Laravel/public
+#          docker exec -it frontend_laravel-php-fpm-1 bash -c "cd /var/www/laravel/current && composer install"
+#          docker exec -it frontend_laravel-php-fpm-1 bash -c "cd /var/www/laravel/current && npm install"
+#          nohup npm run dev > /dev/null 2>&1 &
+#          ENDSSH

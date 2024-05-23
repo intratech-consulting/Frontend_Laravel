@@ -99,7 +99,7 @@
                 <div class="event-card">
                     <img src="#" alt="Event Image">
                     <h3>Event at {{$events->location}}</h3>
-                    <p>{{$events->description}}</p> <!-- faut juste le voir quand il appuie sur meer weergeven, nouvelle page tout en plus grand avec description-->
+                    <p>{{$events->description}}</p> <!-- to be in details-->
                     <div class="details-container">
                         <img src="assets/img/check-square.svg" alt="tick" class="list-icon">
                         <p class="list-text">{{$events->max_registrations}} Registraties</p>

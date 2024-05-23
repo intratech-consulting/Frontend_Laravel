@@ -16,11 +16,11 @@ class CreateEventsTable extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->date('title');
+            $table->string('title'); // Assuming this should be a string, not a date
             $table->time('start_time');
             $table->time('end_time');
             $table->string('location');
-            $table->string('speaker_user_id');
+            $table->unsignedBigInteger('speaker_user_id'); // Change to unsignedBigInteger
             $table->unsignedBigInteger('speaker_company_id');
             $table->integer('max_registrations');
             $table->integer('available_seats');
