@@ -78,6 +78,8 @@
 
 @include('user.components.header')
 
+@include('user.components.message')
+
 <div class="registration-card">
     <h2>Gast Registreren</h2>
 
