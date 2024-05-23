@@ -20,7 +20,7 @@ class CompanyAuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'role' => 'company'])) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'user_role' => 'company'])) {
             return redirect()->intended('/company/dashboard');
         }
 
