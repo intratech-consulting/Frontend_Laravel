@@ -15,6 +15,7 @@
       text-decoration: none;
     }
 
+
     .hackathon-container {
       display: flex;
       flex-direction: column;
@@ -234,6 +235,7 @@
 .cta-button:hover {
   background-color: #c1050f;
 }
+
 
   </style>
 </head>
