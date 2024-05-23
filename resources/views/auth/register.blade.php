@@ -159,7 +159,7 @@
             </select>
         </div>
 
-        <div style="display: flex; justify-content: space-between; width: 100%;">
+        <div style="display: flex; width: 100%;">
             <div class="form-group">
                 <label for="password">Wachtwoord</label>
                 <input id="password" type="password" name="password" required autocomplete="new-password">
