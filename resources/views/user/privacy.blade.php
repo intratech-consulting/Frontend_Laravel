@@ -4,16 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Privacy</title>
-  <link rel="stylesheet" href="user/privacy.css">
   <style>
-    *{
+    * {
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+      font-family: 'Public Sans', -apple-system, Roboto, Helvetica, sans-serif;
+
+    }
+
+    body {
+      background: #f4f4f9;
+      color: #313131;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
     }
 
     .privacy-container {
+      background: #ffffff;
       padding: 50px;
       max-width: 994px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       display: flex;
       flex-direction: column;
       justify-content: center; /* Centers vertically */
@@ -24,13 +38,11 @@
     .privacy-title {
       color: #1f1f1f;
       width: 100%;
-      font: 700 29px Raleway, sans-serif;
-    }
-
-    @media (max-width: 991px) {
-      .privacy-title {
-        max-width: 100%;
-      }
+      font: 700 29px 'Raleway', sans-serif;
+      text-align: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 10px;
     }
 
     .privacy-content {
@@ -38,15 +50,49 @@
       letter-spacing: 0.6px;
       margin-top: 44px;
       width: 100%;
-      font: 400 15px/26px Public Sans, -apple-system, Roboto, Helvetica, sans-serif;
+      font: 400 14px/24px 'Public Sans', -apple-system, Roboto, Helvetica, sans-serif;
+      line-height: 1.6;
+    }
+
+    .privacy-content h2 {
+      color: #1f1f1f;
+      margin-bottom: 20px;
+      font-size: 22px;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 10px;
+    }
+
+    .privacy-content p {
+      margin-bottom: 20px;
+    }
+
+    .privacy-content a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .privacy-content a:hover {
+      text-decoration: underline;
     }
 
     @media (max-width: 991px) {
+      .privacy-container {
+        padding: 20px;
+      }
+
+      .privacy-title {
+        font-size: 24px;
+      }
+
       .privacy-content {
-        max-width: 100%;
-        margin-top: 40px;
+        font-size: 13px;
+      }
+
+      .privacy-content h2 {
+        font-size: 20px;
       }
     }
+    
 
   </style>
 </head>
