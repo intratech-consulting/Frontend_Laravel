@@ -141,52 +141,65 @@
         }
     
         .cta-section {
-  background-color: #fafafa;
+  background-color: #f8f8f8;
   display: flex;
-  margin-top: 89px;
-  width: 100%;
+  justify-content: center;
   align-items: center;
-  font-size: 22px;
+  padding: 60px 20px; 
+  width: 100%;
+  font-size: 18px;
   color: var(--Black, #121212);
   letter-spacing: 0.44px;
-  justify-content: center;
 }
 
 .cta-container {
   display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
-  max-width: 1650px;
-  gap: 20px;
-  justify-content: space-between;
-  margin: 43px 0 54px;
+  max-width: 1000px;
+  padding: 40px 30px; 
+  background-color: #fff;
+  border-radius: 15px; 
+  border: 1px solid #e0e0e0; 
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); 
+  gap: 30px; 
 }
 
 .cta-content {
   display: flex;
   flex-direction: column;
-  align-items: start;
-  gap: 14px;
+  align-items: center;
+  gap: 20px; 
 }
 
 .cta-title {
-  letter-spacing: 0.81px;
-  align-self: stretch;
-  font: 700 54px/70px Manrope, sans-serif;
+  letter-spacing: 0.5px;
+  text-align: center;
+  font: 700 32px/40px Manrope, sans-serif; 
+  color: #333; 
 }
 
 .cta-description {
-  color: var(--Grey, #696969);
+  color: #696969;
   font-family: Manrope, sans-serif;
   font-weight: 400;
-  line-height: 30px;
-  align-self: stretch;
-  margin: 26px 81px 0 0;
+  line-height: 26px; 
+  text-align: center;
+  margin: 0 0 20px;
+  max-width: 800px; 
+}
+
+.cta-benefits {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; 
 }
 
 .cta-benefit {
-  justify-content: center;
   display: flex;
-  margin-top: 26px;
+  align-items: center;
   gap: 12px;
   font-weight: 600;
   line-height: 91%;
@@ -194,26 +207,32 @@
 
 .cta-benefit-icon {
   aspect-ratio: 1;
-  object-fit: auto;
-  object-position: center;
-  width: 24px;
+  object-fit: cover;
+  width: 24px; 
 }
 
 .cta-benefit-text {
   font-family: Manrope, sans-serif;
-  margin: auto 0;
+  font-size: 16px; 
+  color: #555; 
 }
 
 .cta-button {
-  justify-content: center;
-  border-radius: 10px;
+  display: inline-block;
+  border-radius: 12px; 
   background-color: #e30613;
-  margin-top: 146px;
-  color: var(--White, #fff);
+  color: #fff;
   letter-spacing: 0.54px;
-  padding: 16px 36px;
-  font: 500 18px/111% Manrope, sans-serif;
-}     
+  padding: 14px 28px; 
+  font: 500 16px/111% Manrope, sans-serif; 
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s; 
+}
+
+.cta-button:hover {
+  background-color: #c1050f; 
+}
    
   </style>
 </head>

@@ -6,11 +6,20 @@
     <title>Company Login</title>
 </head>
 <body>
+    @if ($errors->any())
+        <div>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <form method="POST" action="{{ route('company.login') }}">
         @csrf
         <div>
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required autofocus>
+            <input type="email" id="email" name="email" value="{{ old('email') }}" required autofocus>
         </div>
         <div>
             <label for="password">Password:</label>
