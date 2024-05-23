@@ -73,35 +73,35 @@ class ProfileController extends Controller
         try {
             // Retrieve the authenticated user
             $user = $request->user();
-    
+
             // Store the old email for comparison
             $oldEmail = $user->email;
-    
+
             // Fill the user model with validated data from the request
             $user->fill($request->all());
             $user->save();
-    
+
             // Create a new Guzzle HTTP client
             $client = new \GuzzleHttp\Client();
-    
+
             // Define the data for the request
             $data = [
                 'Service' => 'frontend',
                 'ServiceId' => $user->id, // Assuming $userId is the ID of the newly created user
             ];
-        
+
             try {
                 // Make the POST request to get Master UUID
-                $response = $client->post('http://10.2.160.51:6000/getMasterUuid', [
+                $response = $client->post('http://' . env('GENERAL_IP') . ':6000/getMasterUuid', [
                     'json' => $data
                 ]);
-    
+
                 // Get the response body
                 $body = $response->getBody();
-    
+
                 // Decode the JSON response
                 $json = json_decode($body, true);
-    
+
                 // Check if UUID exists in the response
                 if (isset($json['UUID'])) {
                     $masterUuid = $json['UUID'];
@@ -113,7 +113,7 @@ class ProfileController extends Controller
             } catch (\Exception $e) {
                 return Redirect::back()->withErrors(['error' => 'Error retrieving UUID: ' . $e->getMessage()]);
             }
-    
+
             // Create XML message for user update
             try {
                 $xmlMessage = new \SimpleXMLElement('<user/>');
@@ -125,7 +125,7 @@ class ProfileController extends Controller
                 $xmlMessage->addChild('email', $user->email);
                 $xmlMessage->addChild('telephone', $user->telephone);
                 $xmlMessage->addChild('birthday', $user->birthday);
-    
+
                 $address = $xmlMessage->addChild('address');
                 $address->addChild('country', $user->country);
                 $address->addChild('state', $user->state);
@@ -133,14 +133,14 @@ class ProfileController extends Controller
                 $address->addChild('zip', $user->zip);
                 $address->addChild('street', $user->street);
                 $address->addChild('house_number', $user->house_number);
-    
+
                 $xmlMessage->addChild('company_email', $user->company_email ?? '');
                 $xmlMessage->addChild('company_id', $user->company_id ?? '');
                 $xmlMessage->addChild('source', 'frontend');
                 $xmlMessage->addChild('user_role', $user->user_role);
                 $xmlMessage->addChild('invoice', $user->invoice);
                 $xmlMessage->addChild('calendar_link', '');
-        
+
                 // Convert XML to string
                 $message = $xmlMessage->asXML();
             } catch (\Exception $e) {
@@ -154,14 +154,14 @@ class ProfileController extends Controller
                     'Service' => 'frontend',
                     'NewServiceId' => $user -> id
                 ];
-    
-                $response = $client->post('http://10.2.160.51:6000/updateServiceId', [
+
+                $response = $client->post('http://' . env('GENERAL_IP') . ':6000/updateServiceId', [
                     'json' => $data_update
                 ]);
             } catch (\GuzzleHttp\Exception\RequestException $e) {
                 \Log::info($e->getMessage());
             }
-    
+
             $routingKey = 'user.frontend';
 
             // Send message to RabbitMQ
@@ -170,7 +170,7 @@ class ProfileController extends Controller
             } catch (\Exception $e) {
                 throw new \Exception('Error sending message to RabbitMQ: ' . $e->getMessage());
             }
-    
+
             // Redirect back to the profile edit page with a success message
             return Redirect::route('profile.edit');
         } catch (\Exception $e) {
@@ -204,7 +204,7 @@ class ProfileController extends Controller
 
         try {
             // Make the POST request
-            $response = $client->request('POST', 'http://10.2.160.51:6000/getMasterUuid', [
+            $response = $client->request('POST', 'http://' . env('GENERAL_IP') . ':6000/getMasterUuid', [
                 'json' => $data
             ]);
 
@@ -262,7 +262,7 @@ class ProfileController extends Controller
                     'NewServiceId' => null
                 ];
 
-                $response = $client->request('POST', 'http://10.2.160.51:6000/updateServiceId', [
+                $response = $client->request('POST', 'http://' . env('GENERAL_IP') . ':6000/updateServiceId', [
                     'json' => $data_delete
                 ]);
             } catch (\GuzzleHttp\Exception\RequestException $e) {
