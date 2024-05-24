@@ -7,7 +7,7 @@ import mysql.connector
 from datetime import datetime
 import bcrypt
 
-GENERAL_IP=
+GENERAL_IP = '10.2.160.51'
 
 def create_user(user_data):
     try:
