@@ -7,6 +7,8 @@ import mysql.connector
 from datetime import datetime
 import bcrypt
 
+GENERAL_IP = '10.2.160.51'
+
 def create_user(user_data):
     try:
         default_password = "azerty123"
@@ -51,7 +53,7 @@ def create_user(user_data):
 
 
         #MasterUuid
-        masterUuid_url = f"http://10.2.160.51:6000/addServiceId"
+        masterUuid_url = f"http://{GENERAL_IP}:6000/addServiceId"
         masterUuid_payload = json.dumps(
             {
                 "MasterUuid": f"{user_data['id']}",
@@ -77,7 +79,7 @@ def update_user(user_data):
         values = []
 
         #get user id from masteruid
-        masterUuid_url = f"http://10.2.160.51:6000/getServiceId"
+        masterUuid_url = f"http://{GENERAL_IP}:6000/getServiceId"
         masterUuid_payload = json.dumps(
             {
                 "MasterUuid": f"{user_data['id']}",
@@ -163,7 +165,7 @@ def delete_user(user_id):
         
 
         #get user id from masteruid
-        masterUuid_url = f"http://10.2.160.51:6000/getServiceId"
+        masterUuid_url = f"http://{GENERAL_IP}:6000/getServiceId"
         masterUuid_payload = json.dumps(
             {
                 "MasterUuid": f"{user_id}",
@@ -187,7 +189,7 @@ def delete_user(user_id):
         
 
         #Update user id
-        masterUuid_url = f"http://10.2.160.51:6000/UpdateServiceId"
+        masterUuid_url = f"http://{GENERAL_IP}:6000/UpdateServiceId"
         masterUuid_payload = json.dumps(
             {
                 "MASTERUUID": "{user_id}",
@@ -531,7 +533,7 @@ def process_event(root):
         print("Error processing event data:", e)
 
 mysql_connection = mysql.connector.connect(
-    host='10.2.160.51',
+    host='{GENERAL_IP}',
     port='3307',
     database='frontend',
     user='root',
@@ -540,7 +542,7 @@ mysql_connection = mysql.connector.connect(
 mysql_cursor = mysql_connection.cursor()
 
 credentials = pika.PlainCredentials('user', 'password')
-rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('10.2.160.51', 5672, '/', credentials))
+rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('{GENERAL_IP}', 5672, '/', credentials))
 
 channel = rabbitmq_connection.channel()
 
