@@ -10,12 +10,18 @@
       padding: 0;
       box-sizing: border-box;
       font-family: 'Public Sans', -apple-system, Roboto, Helvetica, sans-serif;
-
     }
 
     body {
       background: #f4f4f9;
       color: #313131;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .main-content {
+      flex: 1;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -30,9 +36,9 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       display: flex;
       flex-direction: column;
-      justify-content: center; /* Centers vertically */
-      align-items: center; /* Centers horizontally */
-      margin: 0 auto; /* Centers horizontally within parent */
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto;
     }
 
     .privacy-title {
@@ -92,8 +98,6 @@
         font-size: 20px;
       }
     }
-    
-
   </style>
 </head>
 <body>
