@@ -264,6 +264,10 @@
 </head>
 <body>
 
+@php
+    dd(session()->has('success'));
+@endphp
+
 @include('user.components.header')
 
 <div class="flex-grow ml-56 p-8">
