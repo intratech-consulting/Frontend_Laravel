@@ -173,7 +173,7 @@ class RegisteredUserController extends Controller
             ->route('user.home')
             ->with('success', 'Uw account is succesvol aangemaakt');
 
-        dd(session()->all());  // Dump all session data
+        \Log::info('Session data in RegisteredUserController: ' . print_r(session()->all(), true));
 
         return $redirect;
     }
