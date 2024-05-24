@@ -92,9 +92,11 @@ def update_user(user_data):
         }
         print(f"uid: {user_data[id]}")
         response = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
-        print(response)
+        data = response.json()
+        user_pk=data['frontend']
+        print(user_pk)
 
-        userID = response
+        userID = user_pk
 
         if user_data.get('first_name'):
             sql += "first_name = %s, "
@@ -193,7 +195,7 @@ def delete_user(user_id):
         masterUuid_payload = json.dumps(
             {
                 "MASTERUUID": "{user_id}",
-                "NewServiceId": "{NULL}",
+                "NewServiceId": "NULL",
                 "Service": "frontend",
             }
         )
