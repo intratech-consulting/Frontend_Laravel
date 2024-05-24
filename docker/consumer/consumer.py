@@ -516,7 +516,7 @@ def process_event(root):
             'description': root.find('description').text
         }
 
-        print("Extracting event data...")
+        print("Extracting events data...")
         print(f"Event Data: {event_data}")
 
         # Perform CRUD operation
