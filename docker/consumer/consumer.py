@@ -533,7 +533,7 @@ def process_event(root):
         print("Error processing event data:", e)
 
 mysql_connection = mysql.connector.connect(
-    host='{GENERAL_IP}',
+    host=GENERAL_IP,
     port='3307',
     database='frontend',
     user='root',
