@@ -1,12 +1,10 @@
-<!-- resources/views/test.blade.php -->
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Send Message Form</title>
+    <title>Received Message</title>
 </head>
 <body>
     @include('user.components.header')
-
+    <h1>Message test</h1>
 </body>
 </html>

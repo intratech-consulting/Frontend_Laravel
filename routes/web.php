@@ -70,8 +70,8 @@ Route::middleware('web')->group(function () {
     })->name('company.login.view');
 
 
-    Route::get('/test', function () {
-        return view('test')->with('success', 'Dit is een test succesmelding!');
+    Route::get('/message_test', function () {
+        return view('message_test')->with('success', 'Dit is een test succesmelding!');
     });
 
     // Header Routes
