@@ -7,23 +7,23 @@ import mysql.connector
 from datetime import datetime
 import bcrypt
 
-GENERAL_IP = '10.2.160.51'
+GENERAL_IP=
 
 def create_user(user_data):
     try:
         default_password = "azerty123"
         hashed_password = bcrypt.hashpw(default_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-        
+
         hashed_password = hashed_password.replace('$2b$', '$2y$', 1)
-              
-        sql = """INSERT INTO users (id, first_name, last_name, email, telephone, birthday, country, state, city, zip, street, house_number, 
-                 company_email, company_id, user_role, invoice, calendar_link, password, created_at, updated_at) 
+
+        sql = """INSERT INTO users (id, first_name, last_name, email, telephone, birthday, country, state, city, zip, street, house_number,
+                 company_email, company_id, user_role, invoice, calendar_link, password, created_at, updated_at)
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-        
+
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         persoonlijkId =  1023#int(uuid.uuid4())
-        
+
         user_values = (
             persoonlijkId,
             user_data['first_name'],
@@ -46,7 +46,7 @@ def create_user(user_data):
             now,
             now
         )
-        
+
         mysql_cursor.execute(sql, user_values)
         mysql_connection.commit()
         print("User inserted successfully!")
@@ -62,13 +62,13 @@ def create_user(user_data):
             }
         )
         uid_headers={
-        'Content-type':'application/json', 
+        'Content-type':'application/json',
         'Accept':'application/json'
         }
         print(f"uid: {user_data[id]}")
         response = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
         print(response)
-        
+
     except mysql.connector.Error as error:
         mysql_connection.rollback()
         print("Failed to insert user:", error)
@@ -87,7 +87,7 @@ def update_user(user_data):
             }
         )
         uid_headers={
-        'Content-type':'application/json', 
+        'Content-type':'application/json',
         'Accept':'application/json'
         }
         print(f"uid: {user_data[id]}")
@@ -95,7 +95,7 @@ def update_user(user_data):
         print(response)
 
         userID = response
-                
+
         if user_data.get('first_name'):
             sql += "first_name = %s, "
             values.append(user_data['first_name'])
@@ -149,12 +149,12 @@ def update_user(user_data):
         sql += "updated_at = %s WHERE id = %s"
         values.append(now)
         values.append(userID)
-                
+
         mysql_cursor.execute(sql, values)
         mysql_connection.commit()
         print("User updated successfully!")
 
-        
+
     except mysql.connector.Error as error:
         mysql_connection.rollback()
         print("Failed to update user:", error)
@@ -162,7 +162,7 @@ def update_user(user_data):
 def delete_user(user_id):
     try:
         sql = "DELETE FROM users WHERE id = %s"
-        
+
 
         #get user id from masteruid
         masterUuid_url = f"http://{GENERAL_IP}:6000/getServiceId"
@@ -173,7 +173,7 @@ def delete_user(user_id):
             }
         )
         uid_headers={
-        'Content-type':'application/json', 
+        'Content-type':'application/json',
         'Accept':'application/json'
         }
         print(f"uid: {user_id}")
@@ -186,26 +186,26 @@ def delete_user(user_id):
         mysql_cursor.execute(sql, (userID))
         mysql_connection.commit()
         print("User deleted successfully!")
-        
+
 
         #Update user id
         masterUuid_url = f"http://{GENERAL_IP}:6000/UpdateServiceId"
         masterUuid_payload = json.dumps(
             {
                 "MASTERUUID": "{user_id}",
-                "NewServiceId": "{NULL}", 
+                "NewServiceId": "{NULL}",
                 "Service": "frontend",
             }
         )
         uid_headers={
-        'Content-type':'application/json', 
+        'Content-type':'application/json',
         'Accept':'application/json'
         }
         print(f"uid: {user_id}")
         response2 = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
         print(response2)
 
-        
+
 
     except mysql.connector.Error as error:
         mysql_connection.rollback()
@@ -213,18 +213,18 @@ def delete_user(user_id):
 
 def create_company(company_data):
     try:
-        
+
         default_password = "qwerty123"
         hashed_password = bcrypt.hashpw(default_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-        
-        hashed_password = hashed_password.replace('$2b$', '$2y$', 1)
-        
 
-        sql = """INSERT INTO companies (id, name, email, telephone, logo, country, state, city, zip, street, house_number, type, invoice, user_role, password, created_at, updated_at) 
+        hashed_password = hashed_password.replace('$2b$', '$2y$', 1)
+
+
+        sql = """INSERT INTO companies (id, name, email, telephone, logo, country, state, city, zip, street, house_number, type, invoice, user_role, password, created_at, updated_at)
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-        
+
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        
+
         company_values = (
             company_data['id'],
             company_data['name'],
@@ -244,7 +244,7 @@ def create_company(company_data):
             now,
             now
         )
-        
+
         mysql_cursor.execute(sql, company_values)
         mysql_connection.commit()
         print("Company inserted successfully!")
@@ -256,7 +256,7 @@ def update_company(company_data):
     try:
         sql = "UPDATE companies SET "
         values = []
-        
+
         if company_data.get('name'):
             sql += "name = %s, "
             values.append(company_data['name'])
@@ -297,7 +297,7 @@ def update_company(company_data):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         sql += "updated_at = %s WHERE id = %s"
         values.append(now)
-        values.append(company_data['id'])        
+        values.append(company_data['id'])
         mysql_cursor.execute(sql, values)
         mysql_connection.commit()
         print("Company updated successfully!")
@@ -314,14 +314,14 @@ def delete_company(company_id):
     except mysql.connector.Error as error:
         mysql_connection.rollback()
         print("Failed to delete company:", error)
-        
+
 def create_event(event_data):
     try:
-        sql = """INSERT INTO events (id, date, start_time, end_time, location, speaker_user_id, speaker_company_id, max_registrations, available_seats, description, created_at, updated_at) 
+        sql = """INSERT INTO events (id, date, start_time, end_time, location, speaker_user_id, speaker_company_id, max_registrations, available_seats, description, created_at, updated_at)
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-        
+
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        
+
         event_values = (
             event_data['id'],
             event_data['date'],
@@ -336,7 +336,7 @@ def create_event(event_data):
             now,
             now
         )
-        
+
         mysql_cursor.execute(sql, event_values)
         mysql_connection.commit()
         print("Event inserted successfully!")
@@ -348,7 +348,7 @@ def update_event(event_data):
     try:
         sql = "UPDATE events SET "
         values = []
-        
+
         if event_data.get('date'):
             sql += "date = %s, "
             values.append(event_data['date'])
