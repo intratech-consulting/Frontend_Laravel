@@ -18,7 +18,6 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      padding: 20px;
     }
 
     .main-content {
@@ -26,7 +25,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px 0;
+      padding: 20px;
     }
 
     .privacy-container {
@@ -39,7 +38,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      margin: 0 auto;
+      margin: 20px auto;
     }
 
     .privacy-title {
