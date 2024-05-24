@@ -165,7 +165,7 @@ class RegisteredUserController extends Controller
 
         $this->sendMessageToTopic($routingKey, $message);
 
-        event(new Registered($user));
+        Auth::login($user);
 
         return redirect()
             ->route('register')
