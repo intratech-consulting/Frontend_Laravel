@@ -167,12 +167,8 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        $redirect = redirect()
+        return redirect()
             ->route('register')
-            ->with('success', 'Uw account is succesvol aangemaakt');
-
-        \Log::info('Session data in RegisteredUserController: ' . print_r(session()->all(), true));
-
-        return $redirect;
+            ->with('success', 'Uw account is succesvol aangemaakt, welkom ' . $user->first_name . " " . $user->last_name .  '!');
     }
 }
