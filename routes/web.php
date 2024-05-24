@@ -30,8 +30,6 @@ Route::middleware('web')->group(function () {
         return view('user.home');
     });
 
-    Route::post('/send-message-to-topic', [testController::class, 'sendMessageToTopic'])->name('send_message_to_topic');
-
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/home', function () {
             return view('user.home');
@@ -70,9 +68,11 @@ Route::middleware('web')->group(function () {
     Route::get('/company/login', function () {
         return view('auth.company-login');
     })->name('company.login.view');
-    
 
-    Route::match(['get', 'post'], '/test', [testController::class, 'test'])->name('test');
+
+    Route::get('/test', function () {
+        return view('test')->with('success', 'Dit is een test succesmelding!');
+    });
 
     // Header Routes
     Route::get('/home', [headerController::class, 'home']);
@@ -114,8 +114,6 @@ Route::middleware('web')->group(function () {
     Route::fallback(function () {
         abort(404, 'Page not found');
     });
-
-    Route::post('/test', [testController::class, 'register'])->name('register_test');
 
     Route::post('/events/create', [CreateEventController::class, 'createEvent'])->name('create_event');
 
