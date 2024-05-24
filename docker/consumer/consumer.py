@@ -542,7 +542,7 @@ mysql_connection = mysql.connector.connect(
 mysql_cursor = mysql_connection.cursor()
 
 credentials = pika.PlainCredentials('user', 'password')
-rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('{GENERAL_IP}', 5672, '/', credentials))
+rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters(GENERAL_IP, 5672, '/', credentials))
 
 channel = rabbitmq_connection.channel()
 
