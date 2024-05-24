@@ -7,6 +7,8 @@ import mysql.connector
 from datetime import datetime
 import bcrypt
 
+GENERAL_IP = '10.2.160.51'
+
 def create_user(user_data):
     try:
         default_password = "azerty123"
@@ -20,7 +22,7 @@ def create_user(user_data):
         
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        persoonlijkId = uuid.uuid4()
+        persoonlijkId =  1023#int(uuid.uuid4())
         
         user_values = (
             persoonlijkId,
@@ -51,7 +53,7 @@ def create_user(user_data):
 
 
         #MasterUuid
-        masterUuid_url = f"http://10.2.160.51:6000/addServiceId"
+        masterUuid_url = f"http://{GENERAL_IP}:6000/addServiceId"
         masterUuid_payload = json.dumps(
             {
                 "MasterUuid": f"{user_data['id']}",
@@ -75,6 +77,24 @@ def update_user(user_data):
     try:
         sql = "UPDATE users SET "
         values = []
+
+        #get user id from masteruid
+        masterUuid_url = f"http://{GENERAL_IP}:6000/getServiceId"
+        masterUuid_payload = json.dumps(
+            {
+                "MasterUuid": f"{user_data['id']}",
+                "Service": "frontend",
+            }
+        )
+        uid_headers={
+        'Content-type':'application/json', 
+        'Accept':'application/json'
+        }
+        print(f"uid: {user_data[id]}")
+        response = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        print(response)
+
+        userID = response
                 
         if user_data.get('first_name'):
             sql += "first_name = %s, "
@@ -128,11 +148,13 @@ def update_user(user_data):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         sql += "updated_at = %s WHERE id = %s"
         values.append(now)
-        values.append(user_data['id'])
+        values.append(userID)
                 
         mysql_cursor.execute(sql, values)
         mysql_connection.commit()
         print("User updated successfully!")
+
+        
     except mysql.connector.Error as error:
         mysql_connection.rollback()
         print("Failed to update user:", error)
@@ -140,9 +162,51 @@ def update_user(user_data):
 def delete_user(user_id):
     try:
         sql = "DELETE FROM users WHERE id = %s"
-        mysql_cursor.execute(sql, (user_id,))
+        
+
+        #get user id from masteruid
+        masterUuid_url = f"http://{GENERAL_IP}:6000/getServiceId"
+        masterUuid_payload = json.dumps(
+            {
+                "MasterUuid": f"{user_id}",
+                "Service": "frontend",
+            }
+        )
+        uid_headers={
+        'Content-type':'application/json', 
+        'Accept':'application/json'
+        }
+        print(f"uid: {user_id}")
+        response = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        print(response)
+
+        userID = response
+
+
+        mysql_cursor.execute(sql, (userID))
         mysql_connection.commit()
         print("User deleted successfully!")
+        
+
+        #Update user id
+        masterUuid_url = f"http://{GENERAL_IP}:6000/UpdateServiceId"
+        masterUuid_payload = json.dumps(
+            {
+                "MASTERUUID": "{user_id}",
+                "NewServiceId": "{NULL}", 
+                "Service": "frontend",
+            }
+        )
+        uid_headers={
+        'Content-type':'application/json', 
+        'Accept':'application/json'
+        }
+        print(f"uid: {user_id}")
+        response2 = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        print(response2)
+
+        
+
     except mysql.connector.Error as error:
         mysql_connection.rollback()
         print("Failed to delete user:", error)
@@ -469,7 +533,7 @@ def process_event(root):
         print("Error processing event data:", e)
 
 mysql_connection = mysql.connector.connect(
-    host='10.2.160.51',
+    host='{GENERAL_IP}',
     port='3307',
     database='frontend',
     user='root',
@@ -478,7 +542,7 @@ mysql_connection = mysql.connector.connect(
 mysql_cursor = mysql_connection.cursor()
 
 credentials = pika.PlainCredentials('user', 'password')
-rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('10.2.160.51', 5672, '/', credentials))
+rabbitmq_connection = pika.BlockingConnection(pika.ConnectionParameters('{GENERAL_IP}', 5672, '/', credentials))
 
 channel = rabbitmq_connection.channel()
 

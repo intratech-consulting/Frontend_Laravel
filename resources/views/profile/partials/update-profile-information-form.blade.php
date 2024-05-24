@@ -1,10 +1,10 @@
 <section class="profile-section">
     <header class="profile-header">
         <h2 class="text-lg font-medium text-gray-900">
-            {{ __('Profile Information') }}
+            {{ __('Profiel informatie') }}
         </h2>
         <p class="mt-1 text-sm text-gray-600">
-            {{ __("Update your account's profile information and email address.") }}
+            {{ __("De profielgegevens en het e-mailadres van je account bijwerken") }}
         </p>
     </header>
 
@@ -88,8 +88,8 @@
             <div class="form-group">
                 <label for="user_role" class="block font-medium text-gray-700">Type account</label>
                 <select id="user_role" name="user_role" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    <option value="employee" {{ (Auth::user()->user_role == 'employee') ? 'selected' : '' }}>Employee</option>
-                    <option value="speaker" {{ (Auth::user()->user_role == 'speaker') ? 'selected' : '' }}>Speaker</option>
+                    <option value="employee" {{ (Auth::user()->user_role == 'employee') ? 'selected' : '' }}>Werknemer</option>
+                    <option value="speaker" {{ (Auth::user()->user_role == 'speaker') ? 'selected' : '' }}>Spreker</option>
                 </select>
             </div>
         @endif
@@ -102,15 +102,15 @@
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
                 <div class="mt-2">
                     <p class="text-sm text-gray-800">
-                        {{ __('Your email address is unverified.') }}
+                        {{ __('Je e-mailadres is niet geverifieerd.') }}
                         <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            {{ __('Click here to re-send the verification email.') }}
+                            {{ __('Klik hier om de verificatiemail opnieuw te versturen.') }}
                         </button>
                     </p>
 
                     @if (session('status') === 'verification-link-sent')
                         <p class="mt-2 font-medium text-sm text-green-600">
-                            {{ __('A new verification link has been sent to your email address.') }}
+                            {{ __('Er is een nieuwe verificatielink naar uw e-mailadres verzonden.') }}
                         </p>
                     @endif
                 </div>
@@ -118,10 +118,10 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <x-primary-button>{{ __('Opslaan') }}</x-primary-button>
             @if (session('status') === 'profile-updated')
                 <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)" class="text-sm text-gray-600">
-                    {{ __('Saved.') }}
+                    {{ __('Opgeslagen') }}
                 </p>
             @endif
             @if ($errors->any())

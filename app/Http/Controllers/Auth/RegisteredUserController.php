@@ -169,6 +169,12 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('user.home');
+        $redirect = redirect()
+            ->route('user.home')
+            ->with('success', 'Uw account is succesvol aangemaakt');
+
+        \Log::info('Session data in RegisteredUserController: ' . print_r(session()->all(), true));
+
+        return $redirect;
     }
 }
