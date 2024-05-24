@@ -167,8 +167,6 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
-
         $redirect = redirect()
             ->route('register')
             ->with('success', 'Uw account is succesvol aangemaakt');
