@@ -1,5 +1,6 @@
 import json
-from urllib import request
+import request
+import json
 import uuid
 import pika
 import xml.etree.ElementTree as ET
@@ -90,7 +91,7 @@ def update_user(user_data):
         'Content-type':'application/json',
         'Accept':'application/json'
         }
-        print(f"uid: {user_data[id]}")
+        print(f"uid: {user_data['id']}")
         response = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
         data = response.json()
         user_pk=data['frontend']
