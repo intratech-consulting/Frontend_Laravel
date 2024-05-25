@@ -191,9 +191,10 @@ def delete_user(user_id):
         print(user_pk)
 
         userID = user_pk
+        values = []
+        values.append(userID)
 
-
-        mysql_cursor.execute(sql, (userID))
+        mysql_cursor.execute(sql, values)
         mysql_connection.commit()
         print("User deleted successfully!")
 
