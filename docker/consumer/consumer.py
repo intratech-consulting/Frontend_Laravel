@@ -200,12 +200,12 @@ def delete_user(user_id):
 
 
         #Update user id
-        masterUuid_url = f"http://{GENERAL_IP}:6000/UpdateServiceId"
+        masterUuid_url = f"http://{GENERAL_IP}:6000/updateServiceId"
         masterUuid_payload = json.dumps(
             {
                 "MASTERUUID": f"{user_id}",
-                "NewServiceId": "NULL",
                 "Service": "frontend",
+                "ServiceId": "NULL",
 
             }
         )
