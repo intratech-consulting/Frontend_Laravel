@@ -66,7 +66,7 @@ def create_user(user_data):
         'Content-type':'application/json',
         'Accept':'application/json'
         }
-        print(f"uid: {user_data[id]}")
+        print(f"uid: {user_data['id']}")
         response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
         print(response)
 
