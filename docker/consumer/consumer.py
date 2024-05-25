@@ -1,5 +1,5 @@
 import json
-import request
+import requests
 import json
 import uuid
 import pika
@@ -67,7 +67,7 @@ def create_user(user_data):
         'Accept':'application/json'
         }
         print(f"uid: {user_data[id]}")
-        response = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
         print(response)
 
     except mysql.connector.Error as error:
@@ -92,7 +92,7 @@ def update_user(user_data):
         'Accept':'application/json'
         }
         print(f"uid: {user_data['id']}")
-        response = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
         data = response.json()
         user_pk=data['frontend']
         print(user_pk)
@@ -180,7 +180,7 @@ def delete_user(user_id):
         'Accept':'application/json'
         }
         print(f"uid: {user_id}")
-        response = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
         print(response)
 
         userID = response
@@ -205,7 +205,7 @@ def delete_user(user_id):
         'Accept':'application/json'
         }
         print(f"uid: {user_id}")
-        response2 = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        response2 = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
         print(response2)
 
 
