@@ -167,6 +167,7 @@ def delete_user(user_id):
     try:
         sql = "DELETE FROM users WHERE id = %s"
 
+        print(user_id)
 
         #get user id from masteruid
         masterUuid_url = f"http://{GENERAL_IP}:6000/getServiceId"
