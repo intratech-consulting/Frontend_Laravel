@@ -94,7 +94,8 @@ def update_user(user_data):
         print(f"uid: {user_data['id']}")
         response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
         data = response.json()
-        user_pk=data['service_name']
+        print(data)
+        user_pk=data.get["frontend"]
         print(user_pk)
 
         userID = user_pk
