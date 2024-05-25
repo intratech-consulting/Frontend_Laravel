@@ -184,7 +184,12 @@ def delete_user(user_id):
         response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
         print(response)
 
-        userID = response
+        data = response.json()
+        print(data)
+        user_pk=data["frontend"]
+        print(user_pk)
+
+        userID = user_pk
 
 
         mysql_cursor.execute(sql, (userID))
@@ -196,7 +201,7 @@ def delete_user(user_id):
         masterUuid_url = f"http://{GENERAL_IP}:6000/UpdateServiceId"
         masterUuid_payload = json.dumps(
             {
-                "MASTERUUID": "{user_id}",
+                "MASTERUUID": f"{user_id}",
                 "NewServiceId": "NULL",
                 "Service": "frontend",
             }
