@@ -83,7 +83,7 @@ def update_user(user_data):
         masterUuid_url = f"http://{GENERAL_IP}:6000/getServiceId"
         masterUuid_payload = json.dumps(
             {
-                "MasterUuid": f"{user_data['id']}",
+                "MASTERUUID": f"{user_data['id']}",
                 "Service": "frontend",
             }
         )
@@ -95,7 +95,7 @@ def update_user(user_data):
         response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
         data = response.json()
         print(data)
-        user_pk=data.get["frontend"]
+        user_pk=data["frontend"]
         print(user_pk)
 
         userID = user_pk
@@ -172,7 +172,7 @@ def delete_user(user_id):
         masterUuid_url = f"http://{GENERAL_IP}:6000/getServiceId"
         masterUuid_payload = json.dumps(
             {
-                "MasterUuid": f"{user_id}",
+                "MASTERUUID": f"{user_id}",
                 "Service": "frontend",
             }
         )
