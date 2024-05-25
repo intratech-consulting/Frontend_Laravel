@@ -204,8 +204,8 @@ def delete_user(user_id):
         masterUuid_payload = json.dumps(
             {
                 "MASTERUUID": f"{user_id}",
+                "NewServiceId": "NULL",
                 "Service": "frontend",
-                "ServiceId": "NULL",
 
             }
         )
