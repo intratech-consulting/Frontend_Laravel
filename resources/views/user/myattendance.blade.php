@@ -52,7 +52,7 @@
                     @csrf 
                         <input type="hidden" name="attendences_id" value="{{$attendance->id}}">
                         <button class="delete-button">Uitschrijven</button>
-                        <p>{{$events->id}}</p>
+                        <p>{{$attendence->id}}</p>
                 </form>
             </div>
         @endif
