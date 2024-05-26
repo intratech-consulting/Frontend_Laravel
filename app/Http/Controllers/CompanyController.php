@@ -186,7 +186,7 @@ class CompanyController extends Controller
             // Retrieve the authenticated company
             $company = Auth::guard('company')->user();
 
-            Log::info('Authenticated company: ' . json_encode($company)); // Log the authenticated company
+            \Log::info('Authenticated company: ' . json_encode($company)); // Log the authenticated company
 
             // Store the old email for comparison
             $oldEmail = $company->email;
@@ -195,7 +195,7 @@ class CompanyController extends Controller
             $company->fill($request->all());
             $company->save();
 
-            Log::info('Company data after update: ' . json_encode($company)); // Log the updated company data
+            \Log::info('Company data after update: ' . json_encode($company)); // Log the updated company data
 
             // Create a new Guzzle HTTP client
             $client = new \GuzzleHttp\Client();
@@ -218,7 +218,7 @@ class CompanyController extends Controller
                 // Decode the JSON response
                 $json = json_decode($body, true);
 
-                Log::info('Response from getMasterUuid: ' . json_encode($json)); // Log the response
+                \Log::info('Response from getMasterUuid: ' . json_encode($json)); // Log the response
 
                 // Check if UUID exists in the response
                 if (isset($json['UUID'])) {
@@ -227,10 +227,10 @@ class CompanyController extends Controller
                     throw new \Exception('UUID not found in response');
                 }
             } catch (\GuzzleHttp\Exception\RequestException $e) {
-                Log::error('Error retrieving UUID: ' . $e->getMessage()); // Log the error
+                \Log::error('Error retrieving UUID: ' . $e->getMessage()); // Log the error
                 return Redirect::back()->withErrors(['error' => 'Error retrieving UUID: ' . $e->getMessage()]);
             } catch (\Exception $e) {
-                Log::error('Error retrieving UUID: ' . $e->getMessage()); // Log the error
+                \Log::error('Error retrieving UUID: ' . $e->getMessage()); // Log the error
                 return Redirect::back()->withErrors(['error' => 'Error retrieving UUID: ' . $e->getMessage()]);
             }
 
@@ -261,9 +261,9 @@ class CompanyController extends Controller
                 // Convert XML to string
                 $message = $xmlMessage->asXML();
 
-                Log::info('XML message for company update: ' . $message); // Log the XML message
+                \Log::info('XML message for company update: ' . $message); // Log the XML message
             } catch (\Exception $e) {
-                Log::error('Error creating XML message: ' . $e->getMessage()); // Log the error
+                \Log::error('Error creating XML message: ' . $e->getMessage()); // Log the error
                 throw new \Exception('Error creating XML message: ' . $e->getMessage());
             }
 
@@ -279,9 +279,9 @@ class CompanyController extends Controller
                     'json' => $data_update
                 ]);
 
-                Log::info('Response from updateServiceId: ' . $response->getBody()); // Log the response
+                \Log::info('Response from updateServiceId: ' . $response->getBody()); // Log the response
             } catch (\GuzzleHttp\Exception\RequestException $e) {
-                Log::error('Error updating Service ID: ' . $e->getMessage()); // Log the error
+                \Log::error('Error updating Service ID: ' . $e->getMessage()); // Log the error
                 \Log::info($e->getMessage());
             }
 
@@ -290,16 +290,16 @@ class CompanyController extends Controller
             // Send message to RabbitMQ
             try {
                 $this->sendMessageToTopic($routingKey, $message);
-                Log::info('Message sent to RabbitMQ: ' . $routingKey); // Log successful send
+                \Log::info('Message sent to RabbitMQ: ' . $routingKey); // Log successful send
             } catch (\Exception $e) {
-                Log::error('Error sending message to RabbitMQ: ' . $e->getMessage()); // Log the error
+                \Log::error('Error sending message to RabbitMQ: ' . $e->getMessage()); // Log the error
                 throw new \Exception('Error sending message to RabbitMQ: ' . $e->getMessage());
             }
 
             // Redirect back to the profile edit page with a success message
             return Redirect::route('company-profile.edit')->with('success', 'Profile updated successfully');
         } catch (\Exception $e) {
-            Log::error('Error updating profile: ' . $e->getMessage()); // Log the error
+            \Log::error('Error updating profile: ' . $e->getMessage()); // Log the error
             // Handle any exceptions and redirect back with an error message
             return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);
         }
