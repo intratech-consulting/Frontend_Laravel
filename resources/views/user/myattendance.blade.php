@@ -46,7 +46,7 @@
             <div class="reservation-card">
                 <h2>Event bij {{$event->location}}</h2>
                 <p>{{$event->description}}</p>
-                <p>Gehost door {{$event->speaker->first_name}} van {{$event->speaker_company_id}}</p>
+                <p>Gehost door {{$event->users->first_name}} van {{$event->speaker_company_id}}</p>
                 <p>Datum: {{$event->date}}, Tijd: {{$event->start_time}} - {{$event->end_time}}</p>
                 <button class="delete-button">Uitschrijven</button>
             </div>
