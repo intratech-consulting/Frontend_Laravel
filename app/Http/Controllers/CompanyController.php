@@ -281,7 +281,7 @@ class CompanyController extends Controller
             }
         
             // Redirect back to the profile edit page with a success message
-            return redirect()->back()->with('success', 'Profile updated successfully.');
+            return Redirect::route('company-profile.edit')->with('success', 'Profile updated successfully');
         } catch (\Exception $e) {
             // Handle any exceptions and redirect back with an error message
             return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);
