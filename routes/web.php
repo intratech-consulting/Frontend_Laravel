@@ -68,6 +68,7 @@ Route::middleware('web')->group(function () {
     
         if (Auth::guard('company')->check()) {
             Auth::guard('company')->logout();
+            Session::flush();
         }
     
         request()->session()->invalidate();
