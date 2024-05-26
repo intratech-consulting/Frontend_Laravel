@@ -1,5 +1,3 @@
-<!-- user/components/header.blade.php -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,6 +17,30 @@
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .flash-success {
+        padding: 20px;
+        background-color: #33a43a;
+        color: white;
+        margin: 20px 0px;
+        border-radius: 4px;
+    }
+
+    .flash-error {
+        padding: 20px;
+        background-color: rgb(235, 47, 47);
+        color: white;
+        margin: 20px 0px;
+        border-radius: 4px;
+    }
+
+    .flash-remove{
+        padding: 20px;
+        background-color: #FF5733;
+        color: white;
+        margin: 20px 0px;
+        border-radius: 4px;
     }
 
     .home {
@@ -132,26 +154,61 @@
       <li><a href="{{ url('events') }}">Evenementen</a></li>
       <li><a href="{{ url('planning') }}">Planning</a></li>
       <li><a href="{{ url('about') }}">Over ons</a></li>
-{{--      <li><a href="{{ url('contact') }}">Contact</a></li>--}}
       @if(Route::has('login'))
-        @auth
+        @auth('web')
           <li class="user-menu">
-            <span class="user-name">{{ Auth::user()->name }}</span>
+            <span class="user-name">{{ Auth::guard('web')->user()->name }}</span>
             <div class="user-actions">
               <a href="{{ url('/profile') }}">Profile</a>
+              <a href="{{ url('/mijnReservaties') }}">Mijn reservaties</a>
               <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="logout-button">Logout</button>
               </form>
             </div>
           </li>
-        @else
-          <li class="connect"><a href="{{ route('login') }}">Inloggen</a></li>
-          <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
         @endauth
+        @auth('company')
+          <li class="user-menu">
+            <span class="user-name">{{ Auth::guard('company')->user()->name }}</span>
+            <div class="user-actions">
+              <a href="{{ url('/company-profile') }}">Company Profile</a>
+              <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="logout-button">Logout</button>
+              </form>
+            </div>
+          </li>
+        @endauth
+        @guest('web')
+          @guest('company')
+            <li class="connect"><a href="{{ route('login') }}">Inloggen</a></li>
+            <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
+          @endguest
+        @endguest
       @endif
     </ul>
   </nav>
 </header>
+
+<div class="flex-grow ml-56 p-8">
+    @if (session('success'))
+        <div class="flash-success">
+            {{session('success')}}
+        </div>
+    @endif
+
+    @if (session('remove'))
+        <div class="flash-remove">
+            {{session('remove')}}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="flash-error">
+            {{session('error')}}
+        </div>
+    @endif
+</div>
 </body>
 </html>

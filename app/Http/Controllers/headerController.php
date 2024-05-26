@@ -64,7 +64,7 @@ public function planning()
         $calendar_link = $user->calendar_link;
     } else {
         // default calendar link
-        $calendar_link = "https://calendar.google.com/calendar/u/0/embed?src=7385a4a57d6b8bc946bd2d8daee469edd3098611077851dd48530aeafd315b80@group.calendar.google.com&ctz=Europe/Brussels";
+        $calendar_link = "https://calendar.google.com/calendar/embed?src=9ecbb3026111b91a9ce21bfed88d67b95783a5a418c6d82aaa220776eb70f5d3%40group.calendar.google.com&ctz=Europe%2FBrussels";
     }
 
     return view('user.planning', ['calendar_link' => $calendar_link]);
@@ -102,4 +102,11 @@ public function show_events()
     {
    return view('user.event-create');
     }
+
+public function mijnReservaties()
+    {
+   return view('user.myattendance');
+    }
+
+
 }
