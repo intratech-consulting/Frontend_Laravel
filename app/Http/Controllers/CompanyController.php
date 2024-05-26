@@ -148,13 +148,10 @@ class CompanyController extends Controller
             Auth::login($company);
     }
 
-    public function edit()
+    public function editProfile()
     {
-        // Fetch the authenticated company's data
         $company = Auth::guard('company')->user();
-
-        // Return a view with the company's data
-        return view('profile.edit-company-profile', compact('company'));
+        return view('profile.edit', compact('company'));
     }
 
     public function updateProfile(Request $request)
@@ -182,10 +179,8 @@ class CompanyController extends Controller
             $company->logo = $logoPath;
         }
 
-        $company->update($request->only([
-            'name', 'email', 'telephone', 'country', 'state', 'city', 'zip', 'street', 'house_number', 'iban'
-        ]));
+        $company->update($request->all());
 
-        return redirect()->route('company-profile.edit')->with('status', 'profile-updated');
+        return redirect()->back()->with('success', 'Profile updated successfully.');
     }
 }
