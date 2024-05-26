@@ -36,6 +36,10 @@ Route::middleware('web')->group(function () {
         })->name('user.home');
     });
 
+    Route::group(['middleware' => ['auth:company']], function () {
+        Route::get('/company-dashboard', [CompanyController::class, 'index'])->name('company-dashboard');
+    });
+
     Route::middleware(['web'])->group(function () {
         Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
         Route::post('/register', [RegisteredUserController::class, 'store']);

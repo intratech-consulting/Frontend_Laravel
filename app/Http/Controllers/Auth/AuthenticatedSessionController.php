@@ -25,13 +25,15 @@ class AuthenticatedSessionController extends Controller
     public function store(Request $request)
     {
         $credentials = $request->only('email', 'password');
-        
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
 
-            \Log::info('Session after regeneration: ' . print_r(session()->all(), true));
+        // Attempt to log in as a regular user
+        if (Auth::guard('web')->attempt($credentials)) {
+            return redirect()->intended('home');
+        }
 
-            return view('user.home');
+        // Attempt to log in as a company
+        if (Auth::guard('company')->attempt($credentials)) {
+            return redirect()->intended('home');
         }
 
         return back()->withErrors([
