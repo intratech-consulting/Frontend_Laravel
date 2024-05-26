@@ -154,7 +154,6 @@
       <li><a href="{{ url('events') }}">Evenementen</a></li>
       <li><a href="{{ url('planning') }}">Planning</a></li>
       <li><a href="{{ url('about') }}">Over ons</a></li>
-{{--      <li><a href="{{ url('contact') }}">Contact</a></li>--}}
       @if(Route::has('login'))
         @auth('web')
           <li class="user-menu">

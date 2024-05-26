@@ -37,7 +37,7 @@ Route::middleware('web')->group(function () {
     });
 
     Route::group(['middleware' => ['auth:company']], function () {
-        Route::get('/company-dashboard', [CompanyController::class, 'index'])->name('company-dashboard');
+        Route::get('/home', [CompanyController::class, 'index'])->name('home');
     });
 
     Route::middleware(['web'])->group(function () {
@@ -62,8 +62,14 @@ Route::middleware('web')->group(function () {
     Route::get('/contact', [headerController::class, 'contact']);
     Route::get('/registration', [headerController::class, 'registration']);
     Route::post('/logout', function () {
-        Auth::guard('web')->logout();
-        Auth::guard('company')->logout();
+        if (Auth::guard('web')->check()) {
+            Auth::guard('web')->logout();
+        }
+    
+        if (Auth::guard('company')->check()) {
+            Auth::guard('company')->logout();
+        }
+    
         request()->session()->invalidate();
         request()->session()->regenerateToken();
         return redirect('/');
