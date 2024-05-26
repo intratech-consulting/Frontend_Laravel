@@ -143,8 +143,9 @@ class CompanyController extends Controller
         $this->sendMessageToTopic($routingKey, $message);
 
         return redirect()
-            ->route('login')
+            ->route('home')
             ->with('success', 'Je account is succesvol aangemaakt  ' . $company->name . '!');
+            Auth::login($company);
     }
 
     public function edit()
