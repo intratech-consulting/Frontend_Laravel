@@ -50,11 +50,11 @@ class AuthenticatedSessionController extends Controller
         Auth::guard('web')->logout();
         Auth::guard('company')->logout();
 
+        dd($request->session()->get('company_logged_in')); // Dump session data
+
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
-
-        dd($request->session()->get('company_logged_in')); // Dump session data
 
         return redirect('/');
     }
