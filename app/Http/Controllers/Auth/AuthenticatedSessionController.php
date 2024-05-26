@@ -34,7 +34,6 @@ class AuthenticatedSessionController extends Controller
         // Attempt to log in as a company
         if (Auth::guard('company')->attempt($credentials)) {
             session(['company_logged_in' => true]);
-            dd(session('company_logged_in')); // Dump session data
             return redirect()->intended('home');
         }
 
@@ -51,11 +50,11 @@ class AuthenticatedSessionController extends Controller
         Auth::guard('web')->logout();
         Auth::guard('company')->logout();
 
+        dd($request->session()->get('company_logged_in')); // Dump session data
+
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
-
-        dd($request->session()->get('company_logged_in')); // Dump session data
 
         return redirect('/');
     }
