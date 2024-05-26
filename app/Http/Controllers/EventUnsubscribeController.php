@@ -51,11 +51,8 @@ class EventUnsubscribeController extends Controller
                                 ->where('event_id', $eventId)
                                 ->first();
 
-        
         $attendanceId = $attendance->id;             
-        
-        // verwijder attendance
-        $attendance->delete();
+    
  
         // Create XML message
         $xmlMessage = new \SimpleXMLElement('<attendance/>');
@@ -72,6 +69,9 @@ class EventUnsubscribeController extends Controller
         $routingKey = 'attendance.frontend';
  
         $this->sendMessageToTopic($routingKey, $message);
+
+        // verwijder attendance
+        $attendance->delete();
  
         return redirect()->back()->with('success', 'Gelukt!');
     }
