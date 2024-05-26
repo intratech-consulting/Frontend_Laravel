@@ -1,5 +1,6 @@
 import json
-from urllib import request
+import requests
+import json
 import uuid
 import pika
 import xml.etree.ElementTree as ET
@@ -65,8 +66,8 @@ def create_user(user_data):
         'Content-type':'application/json',
         'Accept':'application/json'
         }
-        print(f"uid: {user_data[id]}")
-        response = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        print(f"uid: {user_data['id']}")
+        response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
         print(response)
 
     except mysql.connector.Error as error:
@@ -82,7 +83,7 @@ def update_user(user_data):
         masterUuid_url = f"http://{GENERAL_IP}:6000/getServiceId"
         masterUuid_payload = json.dumps(
             {
-                "MasterUuid": f"{user_data['id']}",
+                "MASTERUUID": f"{user_data['id']}",
                 "Service": "frontend",
             }
         )
@@ -90,11 +91,14 @@ def update_user(user_data):
         'Content-type':'application/json',
         'Accept':'application/json'
         }
-        print(f"uid: {user_data[id]}")
-        response = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
-        print(response)
+        print(f"uid: {user_data['id']}")
+        response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        data = response.json()
+        print(data)
+        user_pk=data["frontend"]
+        print(user_pk)
 
-        userID = response
+        userID = user_pk
 
         if user_data.get('first_name'):
             sql += "first_name = %s, "
@@ -163,12 +167,13 @@ def delete_user(user_id):
     try:
         sql = "DELETE FROM users WHERE id = %s"
 
+        print(user_id)
 
         #get user id from masteruid
         masterUuid_url = f"http://{GENERAL_IP}:6000/getServiceId"
         masterUuid_payload = json.dumps(
             {
-                "MasterUuid": f"{user_id}",
+                "MASTERUUID": f"{user_id}",
                 "Service": "frontend",
             }
         )
@@ -177,24 +182,31 @@ def delete_user(user_id):
         'Accept':'application/json'
         }
         print(f"uid: {user_id}")
-        response = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
         print(response)
 
-        userID = response
+        data = response.json()
+        print(data)
+        user_pk=data["frontend"]
+        print(user_pk)
 
+        userID = user_pk
+        values = []
+        values.append(userID)
 
-        mysql_cursor.execute(sql, (userID))
+        mysql_cursor.execute(sql, values)
         mysql_connection.commit()
         print("User deleted successfully!")
 
 
         #Update user id
-        masterUuid_url = f"http://{GENERAL_IP}:6000/UpdateServiceId"
+        masterUuid_url = f"http://{GENERAL_IP}:6000/updateServiceId"
         masterUuid_payload = json.dumps(
             {
-                "MASTERUUID": "{user_id}",
-                "NewServiceId": "{NULL}",
+                "MASTERUUID": f"{user_id}",
                 "Service": "frontend",
+                "ServiceId": "NULL",
+
             }
         )
         uid_headers={
@@ -202,7 +214,7 @@ def delete_user(user_id):
         'Accept':'application/json'
         }
         print(f"uid: {user_id}")
-        response2 = request.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        response2 = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
         print(response2)
 
 

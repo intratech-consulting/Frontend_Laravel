@@ -36,6 +36,10 @@ Route::middleware('web')->group(function () {
         })->name('user.home');
     });
 
+    Route::group(['middleware' => ['auth:company']], function () {
+        Route::get('/home', [CompanyController::class, 'index'])->name('home');
+    });
+
     Route::middleware(['web'])->group(function () {
         Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
         Route::post('/register', [RegisteredUserController::class, 'store']);
@@ -50,26 +54,6 @@ Route::middleware('web')->group(function () {
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 
-    Route::get('/company/login', [CompanyAuthController::class, 'showLoginForm'])->name('company.login.view');
-    Route::post('/company/login', [CompanyAuthController::class, 'login'])->name('company.login');
-    Route::post('/company/logout', [CompanyAuthController::class, 'logout'])->name('company.logout');
-
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/company/profile', function () {
-            return view('company.profile.edit');
-        })->name('company.profile.edit');
-    });
-
-    Route::middleware(['web', 'auth'])->group(function () {
-        Route::get('/company/profile/edit', [CompanyController::class, 'edit'])->name('company.profile.edit');
-        Route::post('/company/profile/update', [CompanyController::class, 'update'])->name('company.profile.update');
-    });
-
-    Route::get('/company/login', function () {
-        return view('auth.company-login');
-    })->name('company.login.view');
-
-
     // Header Routes
     Route::get('/home', [headerController::class, 'home']);
     Route::get('/about', [headerController::class, 'about']);
@@ -77,7 +61,23 @@ Route::middleware('web')->group(function () {
     Route::get('/planning', [headerController::class, 'planning']);
     Route::get('/contact', [headerController::class, 'contact']);
     Route::get('/registration', [headerController::class, 'registration']);
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::post('/logout', function () {
+        if (Auth::guard('web')->check()) {
+            Auth::guard('web')->logout();
+        }
+    
+        if (Auth::guard('company')->check()) {
+            Auth::guard('company')->logout();
+            Session::flush();
+        }
+    
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        return redirect('/');
+    })->name('logout');
+
+    Route::get('/mijnReservaties', [headerController::class, 'mijnReservaties']);
+
 
     // Event creation
     Route::get('/show_events', [headerController::class, 'show_events']);
