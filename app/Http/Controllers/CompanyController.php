@@ -397,19 +397,27 @@ class CompanyController extends Controller
         // Send message to RabbitMQ
         $routingKey = 'company.frontend';
 
-        $this->sendMessageToTopic($routingKey, $message);
-
-        \Log::info('Company deleted: ' . $company);
-
-        // Logout and delete company
-        Auth::guard('company')->logout();
-
-        $company->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return view('user.home');
+        try {
+            $this->sendMessageToTopic($routingKey, $message);
+        } catch (\Exception $e) {
+            \Log::error('Error sending message to RabbitMQ: ' . $e->getMessage());
+        }
+    
+        // Attempt to logout the company and delete the company record
+        try {
+            Auth::guard('company')->logout();
+            $company->delete();
+            
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            
+            \Log::info('Company deleted successfully: ' . $company->id);
+    
+            return redirect()->route('user.home')->with('success', 'Company deleted successfully');
+        } catch (\Exception $e) {
+            \Log::error('Error deleting company: ' . $e->getMessage());
+            return Redirect::back()->withErrors(['error' => 'An error occurred while deleting the company. Please try again later.']);
+        }
     }
 
 }
