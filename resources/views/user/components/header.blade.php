@@ -1,5 +1,3 @@
-<!-- user/components/header.blade.php -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -182,9 +180,11 @@
             </div>
           </li>
         @endauth
-        @guest
-          <li class="connect"><a href="{{ route('login') }}">Inloggen</a></li>
-          <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
+        @guest('web')
+          @guest('company')
+            <li class="connect"><a href="{{ route('login') }}">Inloggen</a></li>
+            <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
+          @endguest
         @endguest
       @endif
     </ul>
