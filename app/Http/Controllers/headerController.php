@@ -102,4 +102,11 @@ public function show_events()
     {
    return view('user.event-create');
     }
+
+public function mijnReservaties()
+    {
+   return view('user.myattendance');
+    }
+
+
 }
