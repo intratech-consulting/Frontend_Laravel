@@ -51,8 +51,9 @@ class EventUnsubscribeController extends Controller
                                 ->where('event_id', $eventId)
                                 ->first();
 
+        die($attendance);
+
         $attendanceId = $attendance->id;             
-    
  
         // Create XML message
         $xmlMessage = new \SimpleXMLElement('<attendance/>');
