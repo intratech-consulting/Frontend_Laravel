@@ -33,8 +33,8 @@ class AuthenticatedSessionController extends Controller
 
         // Attempt to log in as a company
         if (Auth::guard('company')->attempt($credentials)) {
-            dd('Company login successful');
             session(['company_logged_in' => true]);
+            dd(session('company_logged_in')); // Dump session data
             return redirect()->intended('home');
         }
 
