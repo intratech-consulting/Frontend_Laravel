@@ -111,7 +111,7 @@ public function mijnReservaties()
         $user = Auth::user();
         $attendances = Attendance::where('user_id', $user->id)->get();
         $eventIds = $attendances->pluck('event_id')->unique();
-        $events = Event::whereIn('id', $eventIds)->with('speaker')->get();
+        $events = Event::whereIn('id', $eventIds)->with('users')->get();
 
         return view('user.myattendance', compact('user', 'attendances', 'events'));
     
