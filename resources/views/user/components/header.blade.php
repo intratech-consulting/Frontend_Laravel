@@ -174,6 +174,10 @@
             <div class="user-actions">
               <a href="{{ url('/company-profile') }}">Company Profile</a>
             </div>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="logout-button">Logout</button>
+              </form>
           </li>
         @endauth
         @guest('web')
