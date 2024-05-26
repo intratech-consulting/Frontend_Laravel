@@ -182,10 +182,6 @@
             <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
           @endguest
         @endguest
-        <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="logout-button">Logout</button>
-              </form>
       @endif
     </ul>
   </nav>
