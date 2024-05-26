@@ -166,7 +166,7 @@ class RegisteredUserController extends Controller
         $this->sendMessageToTopic($routingKey, $message);
 
         return redirect()
-            ->route('register')
-            ->with('success', 'Uw account is succesvol aangemaakt, welkom ' . $user->first_name . " " . $user->last_name .  '!');
+            ->route('login')
+            ->with('success', 'Je account is succesvol aangemaakt ' . $user->first_name . " " . $user->last_name .  '!');
     }
 }
