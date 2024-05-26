@@ -50,7 +50,7 @@
                 <p>Datum: {{$event->date}}, Tijd: {{$event->start_time}} - {{$event->end_time}}</p>
                 <form action="{{ route('events.unsubscribe') }}" method="POST">
                     @csrf 
-                        <input type="hidden" name="attendences_id" value="{{$attendances->id}}">
+                        <input type="hidden" name="attendences_id" value="{{$attendance->id}}">
                         <button class="delete-button">Uitschrijven</button>
                 </form>
             </div>
