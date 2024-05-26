@@ -160,10 +160,6 @@
             <span class="user-name">{{ Auth::guard('web')->user()->name }}</span>
             <div class="user-actions">
               <a href="{{ url('/profile') }}">Profile</a>
-              <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="logout-button">Logout</button>
-              </form>
             </div>
           </li>
         @endauth
@@ -172,10 +168,6 @@
             <span class="user-name">{{ Auth::guard('company')->user()->name }}</span>
             <div class="user-actions">
               <a href="{{ url('/company-profile') }}">Company Profile</a>
-              <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="logout-button">Logout</button>
-              </form>
             </div>
           </li>
         @endauth
@@ -185,6 +177,10 @@
             <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
           @endguest
         @endguest
+        <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="logout-button">Logout</button>
+              </form>
       @endif
     </ul>
   </nav>
