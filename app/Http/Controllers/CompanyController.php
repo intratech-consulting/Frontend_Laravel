@@ -399,6 +399,8 @@ class CompanyController extends Controller
 
         $this->sendMessageToTopic($routingKey, $message);
 
+        \Log::info('Company deleted: ' . $company);
+
         // Logout and delete company
         Auth::guard('company')->logout();
 
