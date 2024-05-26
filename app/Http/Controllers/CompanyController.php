@@ -144,7 +144,7 @@ class CompanyController extends Controller
         $this->sendMessageToTopic($routingKey, $message);
 
         return redirect()
-            ->route('/home')
+            ->route('user.home')
             ->with('success', 'Je account is succesvol aangemaakt  ' . $company->name . '!');
             Auth::login($company);
     }
