@@ -44,14 +44,13 @@ class EventUnsubscribeController extends Controller
     public function unsubscribe(Request $request)
     {
         $user = Auth::user();
-        $eventId = $request->input('attendences_id');
+        $event = Auth::event();
+        $attendanceId = $request->input('attendences_id');
 
         //zoek attendance
         $attendance = Attendance::where('user_id', $user->id)
-                                ->where('event_id', $eventId)
-                                ->first();
-
-        $attendanceId = $attendance->id;             
+                                ->where('event_id', $event->id)
+                                ->first();           
  
         // Create XML message
         $xmlMessage = new \SimpleXMLElement('<attendance/>');
@@ -59,7 +58,7 @@ class EventUnsubscribeController extends Controller
         $xmlMessage->addChild('crud_operation', 'delete');
         $xmlMessage->addChild('id', $attendanceId);
         $xmlMessage->addChild('user_id', $user->id);
-        $xmlMessage->addChild('event_id', $eventId);
+        $xmlMessage->addChild('event_id', $event->id);
  
         // Convert XML to string
         $message = $xmlMessage->asXML();
