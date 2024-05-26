@@ -181,6 +181,111 @@ class CompanyController extends Controller
 
         $company->update($request->all());
 
-        return redirect()->back()->with('success', 'Profile updated successfully.');
+        try {
+            // Retrieve the authenticated company
+            $company = Auth::guard('company')->user();
+        
+            // Store the old email for comparison
+            $oldEmail = $company->email;
+        
+            // Fill the company model with validated data from the request
+            $company->fill($request->all());
+            $company->save();
+        
+            // Create a new Guzzle HTTP client
+            $client = new \GuzzleHttp\Client();
+        
+            // Define the data for the request
+            $data = [
+                'Service' => 'frontend',
+                'ServiceId' => $company->id, // Assuming $companyId is the ID of the updated company
+            ];
+        
+            try {
+                // Make the POST request to get Master UUID
+                $response = $client->post('http://' . env('GENERAL_IP') . ':6000/getMasterUuid', [
+                    'json' => $data
+                ]);
+        
+                // Get the response body
+                $body = $response->getBody();
+        
+                // Decode the JSON response
+                $json = json_decode($body, true);
+        
+                // Check if UUID exists in the response
+                if (isset($json['UUID'])) {
+                    $masterUuid = $json['UUID'];
+                } else {
+                    throw new \Exception('UUID not found in response');
+                }
+            } catch (\GuzzleHttp\Exception\RequestException $e) {
+                return Redirect::back()->withErrors(['error' => 'Error retrieving UUID: ' . $e->getMessage()]);
+            } catch (\Exception $e) {
+                return Redirect::back()->withErrors(['error' => 'Error retrieving UUID: ' . $e->getMessage()]);
+            }
+        
+            // Create XML message for company update
+            try {
+                $xmlMessage = new \SimpleXMLElement('<company/>');
+                $xmlMessage->addChild('routing_key', 'company.frontend');
+                $xmlMessage->addChild('crud_operation', 'update');
+                $xmlMessage->addChild('id', $masterUuid);
+                $xmlMessage->addChild('name', $company->name);
+                $xmlMessage->addChild('email', $company->email);
+                $xmlMessage->addChild('telephone', $company->telephone);
+                $xmlCompany->addChild('logo', $company->logo);
+                $xmlMessage->addChild('address', $company->address);
+        
+                $address = $xmlMessage->addChild('address');
+                $address->addChild('country', $company->country);
+                $address->addChild('state', $company->state);
+                $address->addChild('city', $company->city);
+                $address->addChild('zip', $company->zip);
+                $address->addChild('street', $company->street);
+                $address->addChild('house_number', $company->house_number);
+        
+                $xmlCompany->addChild('invoice', $company->invoice);
+                $xmlMessage->addChild('source', 'frontend');
+                $xmlMessage->addChild('company_id', $company->id);
+                $xmlMessage->addChild('calendar_link', '');
+        
+                // Convert XML to string
+                $message = $xmlMessage->asXML();
+            } catch (\Exception $e) {
+                throw new \Exception('Error creating XML message: ' . $e->getMessage());
+            }
+        
+            // Update Service ID
+            try {
+                $data_update = [
+                    'MASTERUUID' => $masterUuid,
+                    'Service' => 'frontend',
+                    'NewServiceId' => $company->id
+                ];
+        
+                $response = $client->post('http://' . env('GENERAL_IP') . ':6000/updateServiceId', [
+                    'json' => $data_update
+                ]);
+            } catch (\GuzzleHttp\Exception\RequestException $e) {
+                \Log::info($e->getMessage());
+            }
+        
+            $routingKey = 'company.frontend';
+        
+            // Send message to RabbitMQ
+            try {
+                $this->sendMessageToTopic($routingKey, $message);
+            } catch (\Exception $e) {
+                throw new \Exception('Error sending message to RabbitMQ: ' . $e->getMessage());
+            }
+        
+            // Redirect back to the profile edit page with a success message
+            return redirect()->back()->with('success', 'Profile updated successfully.');
+        } catch (\Exception $e) {
+            // Handle any exceptions and redirect back with an error message
+            return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);
+        }
+        
     }
 }
