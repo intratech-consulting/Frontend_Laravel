@@ -13,6 +13,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CreateEventController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\EventRegistrationController;
+use App\Http\Controllers\EventUnsubscribeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,6 +89,9 @@ Route::middleware('web')->group(function () {
 
     //register events
     Route::post('/events/register', [EventRegistrationController::class, 'register'])->name('events.register');
+
+    //unsubscribe events
+    Route::post('/events/unsubscribe', [EventUnsubscribeController::class, 'unsubscribe'])->name('events.unsubscribe');
 
     // Register to event
     //Route::post('/events/register', [EventController::class, 'registerToEvent']);
