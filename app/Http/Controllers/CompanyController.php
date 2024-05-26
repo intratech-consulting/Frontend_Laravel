@@ -273,7 +273,7 @@ class CompanyController extends Controller
                 $data_update = [
                     'MASTERUUID' => $masterUuid,
                     'Service' => 'frontend',
-                    'NewServiceId' => $company->id
+                    'NewServiceId' => $company->company_id,
                 ];
 
                 $response = $client->post('http://' . env('GENERAL_IP') . ':6000/updateServiceId', [
