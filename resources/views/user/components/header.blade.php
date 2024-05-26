@@ -180,6 +180,7 @@
         @else
           <li class="connect"><a href="{{ route('login') }}">Inloggen</a></li>
           <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
+        @endif
       @endif
     </ul>
   </nav>
