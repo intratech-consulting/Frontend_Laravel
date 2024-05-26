@@ -51,7 +51,7 @@
                 <form action="{{ route('events.unsubscribe') }}" method="POST">
                     @csrf 
                         <input type="hidden" name="attendances_id" value="{{$attendance->id}}">
-                        <input type="hidden" name="event_id" value="{{$events->id}}"> 
+                        <input type="hidden" name="event_id" value="{{$event->id}}"> 
                         <button class="delete-button">Uitschrijven</button>
                 </form>
             </div>
