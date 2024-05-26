@@ -150,9 +150,11 @@ class CompanyController extends Controller
 
     public function edit()
     {
-        $company = Auth::user()->company;
+        // Fetch the authenticated company's data
+        $company = Auth::guard('company')->user();
 
-        return view('company.profile-edit', compact('company'));
+        // Return a view with the company's data
+        return view('profile.edit-company-profile', compact('company'));
     }
 
     public function updateProfile(Request $request)
