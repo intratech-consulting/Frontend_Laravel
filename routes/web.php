@@ -76,6 +76,9 @@ Route::middleware('web')->group(function () {
         return redirect('/');
     })->name('logout');
 
+    Route::get('/mijnReservaties', [headerController::class, 'mijnReservaties']);
+
+
     // Event creation
     Route::get('/show_events', [headerController::class, 'show_events']);
     Route::post('/send-message-to-events', [EventController::class, 'sendMessageToTopic'])->name('sendMessageToTopic_event');
