@@ -168,7 +168,7 @@
           <li class="user-menu">
             <span class="user-name">{{ Auth::guard('company')->user()->name }}</span>
             <div class="user-actions">
-              <a href="{{ url('/company-profile/update') }}">Company Profile</a>
+              <a href="{{ url('/company-profile') }}">Company Profile</a>
             </div>
           </li>
         @endauth
