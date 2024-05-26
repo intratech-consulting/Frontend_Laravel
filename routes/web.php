@@ -61,7 +61,13 @@ Route::middleware('web')->group(function () {
     Route::get('/planning', [headerController::class, 'planning']);
     Route::get('/contact', [headerController::class, 'contact']);
     Route::get('/registration', [headerController::class, 'registration']);
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::post('/logout', function () {
+        Auth::guard('web')->logout();
+        Auth::guard('company')->logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+        return redirect('/');
+    })->name('logout');
 
     // Event creation
     Route::get('/show_events', [headerController::class, 'show_events']);
