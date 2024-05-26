@@ -256,7 +256,7 @@ class CompanyController extends Controller
 
                 $xmlMessage->addChild('invoice', $company->invoice);
                 $xmlMessage->addChild('source', 'frontend');
-                $xmlMessage->addChild('company_id', $company->id);
+                $xmlMessage->addChild('company_id', $company->company_id);
                 $xmlMessage->addChild('calendar_link', '');
 
                 // Convert XML to string
@@ -305,4 +305,109 @@ class CompanyController extends Controller
             return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);
         }
     }
+
+    public function destroy(Request $request)
+    {
+        $request->validateWithBag('companyDeletion', [
+            'password' => ['required', 'current_password'],
+        ]);
+
+        $company = Auth::guard('company')->user();
+
+        // Create a new Guzzle HTTP client
+        $client = new \GuzzleHttp\Client();
+
+        // Define the data for the request
+        $data = [
+            'ServiceId' => $company->id,
+            'Service' => 'frontend'
+        ];
+
+        $masterUuid = null;
+
+        try {
+            // Make the POST request
+            $response = $client->request('POST', 'http://' . env('GENERAL_IP') . ':6000/getMasterUuid', [
+                'json' => $data
+            ]);
+
+            // Get the response body
+            $body = $response->getBody();
+
+            // Decode the JSON response
+            $json = json_decode($body, true);
+
+            // Check if UUID exists in the response
+            if (isset($json['UUID'])) {
+                $masterUuid = $json['UUID'];
+            } else {
+                // Handle the case where UUID is not present in the response
+                throw new \Exception('UUID not found in response');
+            }
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            // Handle the Guzzle exception
+            echo $e->getMessage();
+        } catch (\Exception $e) {
+            // Handle other exceptions
+            echo $e->getMessage();
+        }
+
+        // Create XML message for company deletion
+        $xmlMessage = new \SimpleXMLElement('<company/>');
+        $xmlMessage->addChild('routing_key', 'company.frontend');
+        $xmlMessage->addChild('crud_operation', 'delete');
+        $xmlMessage->addChild('id', $masterUuid);
+        $xmlMessage->addChild('name', $company->name);
+        $xmlMessage->addChild('email', $company->email);
+        $xmlMessage->addChild('telephone', $company->telephone);
+        $xmlMessage->addChild('logo', $company->logo);
+
+        $address = $xmlMessage->addChild('address');
+        $address->addChild('country', $company->country);
+        $address->addChild('state', $company->state);
+        $address->addChild('city', $company->city);
+        $address->addChild('zip', $company->zip);
+        $address->addChild('street', $company->street);
+        $address->addChild('house_number', $company->house_number);
+
+        $xmlMessage->addChild('type', $company->type);
+        $xmlMessage->addChild('invoice', $company->invoice);
+        $xmlMessage->addChild('source', 'frontend');
+        $xmlMessage->addChild('company_id', $company->company_id);
+        $xmlMessage->addChild('calendar_link', '');
+
+        try {
+            $data_delete = [
+                'MASTERUUID' => $masterUuid,
+                'Service' => 'frontend',
+                'NewServiceId' => null
+            ];
+
+            $response = $client->request('POST', 'http://' . env('GENERAL_IP') . ':6000/updateServiceId', [
+                'json' => $data_delete
+            ]);
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            // Handle the exception
+            echo $e->getMessage();
+        }
+
+        // Convert XML to string
+        $message = $xmlMessage->asXML();
+
+        // Send message to RabbitMQ
+        $routingKey = 'company.frontend';
+
+        $this->sendMessageToTopic($routingKey, $message);
+
+        // Logout and delete company
+        Auth::guard('company')->logout();
+
+        $company->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return view('user.home');
+    }
+
 }
