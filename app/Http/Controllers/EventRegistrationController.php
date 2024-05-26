@@ -62,6 +62,8 @@ class EventRegistrationController extends Controller
  
         // Create XML message
         $xmlMessage = new \SimpleXMLElement('<attendance/>');
+        $xmlMessage->addChild('routing_key', 'attendance.frontend');
+        $xmlMessage->addChild('crud_operation', 'create');
         $xmlMessage->addChild('id', $attendance->id);
         $xmlMessage->addChild('user_id', $user->id);
         $xmlMessage->addChild('event_id', $eventId);
