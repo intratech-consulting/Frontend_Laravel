@@ -205,6 +205,7 @@ class CompanyController extends Controller
                 'Service' => 'frontend',
                 'ServiceId' => $company->id, // Assuming $companyId is the ID of the updated company
             ];
+            \Log::info('Company ID: '($company->id));
 
             try {
                 // Make the POST request to get Master UUID
