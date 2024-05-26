@@ -56,6 +56,10 @@ Route::middleware('web')->group(function () {
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 
+    Route::middleware(['auth:company'])->group(function () {
+        Route::post('/company-profile/update', [CompanyController::class, 'updateProfile'])->name('company-profile.update');
+    });
+
     // Header Routes
     Route::get('/home', [headerController::class, 'home']);
     Route::get('/about', [headerController::class, 'about']);

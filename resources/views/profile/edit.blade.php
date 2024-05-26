@@ -108,11 +108,20 @@
 <main class="hackathon-container">
     <section class="space-y-6">
         <div class="registration-card">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    @include('profile.partials.update-profile-information-form')
+            @auth('web')
+                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                    <div class="max-w-xl">
+                        @include('profile.partials.update-profile-information-form')
+                    </div>
                 </div>
-            </div>
+            @endauth
+            @auth('company')
+                <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                    <div class="max-w-xl">
+                        @include('profile.partials.update-company-profile-information')
+                    </div>
+                </div>
+            @endauth
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
