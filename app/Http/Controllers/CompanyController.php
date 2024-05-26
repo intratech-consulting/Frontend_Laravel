@@ -155,18 +155,35 @@ class CompanyController extends Controller
         return view('company.profile-edit', compact('company'));
     }
 
-    public function update(Request $request)
+    public function updateProfile(Request $request)
     {
+        $company = Auth::guard('company')->user();
+
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:companies,email,' . Auth::user()->company->id,
-            'telephone' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'telephone' => 'required|string|max:20',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'country' => 'required|string|max:100',
+            'state' => 'required|string|max:100',
+            'city' => 'required|string|max:100',
+            'zip' => 'required|string|max:10',
+            'street' => 'required|string|max:100',
+            'house_number' => 'required|string|max:10',
+            'invoice' => 'required|string|max:34',
         ]);
 
-        $company = Auth::user()->company;
-        $company->update($request->all());
+        // Handle file upload
+        if ($request->hasFile('logo')) {
+            $logo = $request->file('logo');
+            $logoPath = $logo->store('logos', 'public');
+            $company->logo = $logoPath;
+        }
 
-        return Redirect::route('company.profile.edit')->with('status', 'Company profile updated successfully.');
+        $company->update($request->only([
+            'name', 'email', 'telephone', 'country', 'state', 'city', 'zip', 'street', 'house_number', 'iban'
+        ]));
+
+        return redirect()->route('company-profile.edit')->with('status', 'profile-updated');
     }
 }
