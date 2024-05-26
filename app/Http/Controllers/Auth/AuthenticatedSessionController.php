@@ -53,6 +53,8 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
+        dd($request->session()->all()); // Dump session data
+
         return redirect('/');
     }
 }
