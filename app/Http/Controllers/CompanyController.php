@@ -185,35 +185,41 @@ class CompanyController extends Controller
         try {
             // Retrieve the authenticated company
             $company = Auth::guard('company')->user();
-        
+
+            Log::info('Authenticated company: ' . json_encode($company)); // Log the authenticated company
+
             // Store the old email for comparison
             $oldEmail = $company->email;
-        
+
             // Fill the company model with validated data from the request
             $company->fill($request->all());
             $company->save();
-        
+
+            Log::info('Company data after update: ' . json_encode($company)); // Log the updated company data
+
             // Create a new Guzzle HTTP client
             $client = new \GuzzleHttp\Client();
-        
+
             // Define the data for the request
             $data = [
                 'Service' => 'frontend',
                 'ServiceId' => $company->id, // Assuming $companyId is the ID of the updated company
             ];
-        
+
             try {
                 // Make the POST request to get Master UUID
                 $response = $client->post('http://' . env('GENERAL_IP') . ':6000/getMasterUuid', [
                     'json' => $data
                 ]);
-        
+
                 // Get the response body
                 $body = $response->getBody();
-        
+
                 // Decode the JSON response
                 $json = json_decode($body, true);
-        
+
+                Log::info('Response from getMasterUuid: ' . json_encode($json)); // Log the response
+
                 // Check if UUID exists in the response
                 if (isset($json['UUID'])) {
                     $masterUuid = $json['UUID'];
@@ -221,11 +227,13 @@ class CompanyController extends Controller
                     throw new \Exception('UUID not found in response');
                 }
             } catch (\GuzzleHttp\Exception\RequestException $e) {
+                Log::error('Error retrieving UUID: ' . $e->getMessage()); // Log the error
                 return Redirect::back()->withErrors(['error' => 'Error retrieving UUID: ' . $e->getMessage()]);
             } catch (\Exception $e) {
+                Log::error('Error retrieving UUID: ' . $e->getMessage()); // Log the error
                 return Redirect::back()->withErrors(['error' => 'Error retrieving UUID: ' . $e->getMessage()]);
             }
-        
+
             // Create XML message for company update
             try {
                 $xmlMessage = new \SimpleXMLElement('<company/>');
@@ -235,9 +243,8 @@ class CompanyController extends Controller
                 $xmlMessage->addChild('name', $company->name);
                 $xmlMessage->addChild('email', $company->email);
                 $xmlMessage->addChild('telephone', $company->telephone);
-                $xmlCompany->addChild('logo', $company->logo);
-                $xmlMessage->addChild('address', $company->address);
-        
+                $xmlMessage->addChild('logo', $company->logo);
+
                 $address = $xmlMessage->addChild('address');
                 $address->addChild('country', $company->country);
                 $address->addChild('state', $company->state);
@@ -245,18 +252,21 @@ class CompanyController extends Controller
                 $address->addChild('zip', $company->zip);
                 $address->addChild('street', $company->street);
                 $address->addChild('house_number', $company->house_number);
-        
-                $xmlCompany->addChild('invoice', $company->invoice);
+
+                $xmlMessage->addChild('invoice', $company->invoice);
                 $xmlMessage->addChild('source', 'frontend');
                 $xmlMessage->addChild('company_id', $company->id);
                 $xmlMessage->addChild('calendar_link', '');
-        
+
                 // Convert XML to string
                 $message = $xmlMessage->asXML();
+
+                Log::info('XML message for company update: ' . $message); // Log the XML message
             } catch (\Exception $e) {
+                Log::error('Error creating XML message: ' . $e->getMessage()); // Log the error
                 throw new \Exception('Error creating XML message: ' . $e->getMessage());
             }
-        
+
             // Update Service ID
             try {
                 $data_update = [
@@ -264,29 +274,34 @@ class CompanyController extends Controller
                     'Service' => 'frontend',
                     'NewServiceId' => $company->id
                 ];
-        
+
                 $response = $client->post('http://' . env('GENERAL_IP') . ':6000/updateServiceId', [
                     'json' => $data_update
                 ]);
+
+                Log::info('Response from updateServiceId: ' . $response->getBody()); // Log the response
             } catch (\GuzzleHttp\Exception\RequestException $e) {
+                Log::error('Error updating Service ID: ' . $e->getMessage()); // Log the error
                 \Log::info($e->getMessage());
             }
-        
+
             $routingKey = 'company.frontend';
-        
+
             // Send message to RabbitMQ
             try {
                 $this->sendMessageToTopic($routingKey, $message);
+                Log::info('Message sent to RabbitMQ: ' . $routingKey); // Log successful send
             } catch (\Exception $e) {
+                Log::error('Error sending message to RabbitMQ: ' . $e->getMessage()); // Log the error
                 throw new \Exception('Error sending message to RabbitMQ: ' . $e->getMessage());
             }
-        
+
             // Redirect back to the profile edit page with a success message
             return Redirect::route('company-profile.edit')->with('success', 'Profile updated successfully');
         } catch (\Exception $e) {
+            Log::error('Error updating profile: ' . $e->getMessage()); // Log the error
             // Handle any exceptions and redirect back with an error message
             return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);
         }
-        
     }
 }
