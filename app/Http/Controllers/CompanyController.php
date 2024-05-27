@@ -23,7 +23,7 @@ class CompanyController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('user.home')->with('success', 'Logged out successfully');
+        return redirect()->route('user.home');
     }
 
      protected $rabbitMQService;

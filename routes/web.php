@@ -59,6 +59,7 @@ Route::middleware('web')->group(function () {
     Route::middleware(['auth:company'])->group(function () {
         Route::get('/company-profile', [CompanyController::class, 'editProfile'])->name('company-profile.edit');
         Route::post('/company-profile/update', [CompanyController::class, 'updateProfile'])->name('company-profile.update');
+        Route::delete('/company-profile/destroy', [CompanyController::class, 'destroy'])->name('company.destroy');
     });
 
     Route::post('/company/logout', [CompanyController::class, 'logout'])->name('company.logout');
