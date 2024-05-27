@@ -131,7 +131,7 @@ class CompanyController extends Controller
         $xmlCompany->addChild('name', $this->convertToUtf8($companyData['name']));
         $xmlCompany->addChild('email', $this->convertToUtf8($companyData['email']));
         $xmlCompany->addChild('telephone', $this->convertToUtf8($companyData['telephone']));
-        $xmlCompany->addChild('logo', $logoPath ? Storage::disk('public')->url($logoPath) : '');
+        $xmlCompany->addChild('logo', $logo);
 
         $address = $xmlCompany->addChild('address');
         $address->addChild('country', $this->convertToUtf8($companyData['country']));
@@ -267,7 +267,7 @@ class CompanyController extends Controller
                 $xmlMessage->addChild('name', $this->convertToUtf8($company->name));
                 $xmlMessage->addChild('email', $this->convertToUtf8($company->email));
                 $xmlMessage->addChild('telephone', $this->convertToUtf8($company->telephone));
-                $xmlMessage->addChild('logo', $logoPath ? Storage::disk('public')->url($logoPath) : '');
+                $xmlMessage->addChild('logo', $company->logo);
 
                 $address = $xmlMessage->addChild('address');
                 $address->addChild('country', $this->convertToUtf8($company->country));
@@ -383,7 +383,7 @@ class CompanyController extends Controller
         $xmlMessage->addChild('name', $this->convertToUtf8($company->name));
         $xmlMessage->addChild('email', $this->convertToUtf8($company->email));
         $xmlMessage->addChild('telephone', $this->convertToUtf8($company->telephone));
-        $xmlMessage->addChild('logo', $logoPath ? Storage::disk('public')->url($logoPath) : '');
+        $xmlMessage->addChild('logo', $company->logo);
 
         $address = $xmlMessage->addChild('address');
         $address->addChild('country', $this->convertToUtf8($company->country));
