@@ -65,17 +65,12 @@
         }
 
         .event-card .buttons-container {
-            margin-top: 15px;
-            position: relative;
-            bottom: 20px;
-            left: 20px;
-            margin-top: auto; 
             position: absolute;
-            bottom: 0;
+            bottom: 10px;
             left: 0;
             display: flex;
-            flex-direction: column;
-            justify-content: flex-start; 
+            flex-direction: row; 
+            align-items: flex-end; 
         }
 
         .event-card .btn {
