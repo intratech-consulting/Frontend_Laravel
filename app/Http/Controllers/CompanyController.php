@@ -38,6 +38,11 @@ class CompanyController extends Controller
         }
     }
 
+    private function convertToUtf8($value)
+    {
+        return mb_convert_encoding($value, 'UTF-8', 'auto');
+    }
+
     public function create_company(Request $request)
     {
 
