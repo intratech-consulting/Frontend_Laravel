@@ -25,8 +25,7 @@
             padding: 20px;
             margin-bottom: 20px;
             position: relative;
-            display: flex;
-            flex-direction: column;
+           
         }
 
         .event-card img {
@@ -65,13 +64,10 @@
         }
 
         .event-card .buttons-container {
-            position: absolute;
-            bottom: 10px;
+            margin-top: 15px;
+            position: relative;
+            bottom: 20px;
             left: 20px;
-            display: flex;
-            flex-direction: row; 
-            align-items: flex-end; 
-            margin-top: 20px;
         }
 
         .event-card .btn {
@@ -100,7 +96,7 @@
         .guest-message {
         color: red;
         font-weight: bold;
-        margin-top: 10px;
+        
         }
 
     .guest-message a {
@@ -143,11 +139,9 @@
                         <img src="assets/img/check-square.svg" alt="tick" class="list-icon">
                         <p class="list-text">{{$events->available_seats}} Beschikbare plaatsen</p>
                     </div>
-
-                    <div class="details-container"> 
                     <p class="amount-text">Gehost door {{$events->users->first_name}} van {{$events->companies->name}}</p> 
                     <p class="amount-text">Datum: {{$events->date}}, Tijd: {{$events->start_time}} - {{$events->end_time}}</p>
-                    </div>  
+                   
                     
                     
                     
