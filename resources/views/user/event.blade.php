@@ -59,6 +59,7 @@
         .event-card .amount-text {
             margin-top: 10px;
             color: #888;
+            padding-bottom: 10px;
         }
 
         .event-card .buttons-container {
