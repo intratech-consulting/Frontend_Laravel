@@ -59,9 +59,11 @@ class CompanyController extends Controller
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
             $logoPath = $logo->store('logos', 'public'); // This line stores the file
+            $XMLLogo = $companyData['logo'];
         }
         else {
             $logoPath = null;
+            $XMLLogo = null;
         }
 
         $company = Company::create([
@@ -125,7 +127,7 @@ class CompanyController extends Controller
         $xmlCompany->addChild('name', $companyData['name']);
         $xmlCompany->addChild('email', $companyData['email']);
         $xmlCompany->addChild('telephone', $companyData['telephone']);
-        $xmlCompany->addChild('logo', $companyData['logo']);
+        $xmlCompany->addChild('logo', $XMLLogo);
 
         $address = $xmlCompany->addChild('address');
         $address->addChild('country', $companyData['country']);
@@ -181,7 +183,7 @@ class CompanyController extends Controller
             if ($company->logo) {
                 Storage::disk('public')->delete($company->logo);
             }
-            
+
             $logo = $request->file('logo');
             $logoPath = $logo->store('logos', 'public');
             $company->logo = $logoPath;
