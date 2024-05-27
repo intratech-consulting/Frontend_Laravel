@@ -157,7 +157,6 @@ class CompanyController extends Controller
     public function editProfile()
     {
         $company = Auth::guard('company')->user();
-        dd($company);
         return view('profile.edit', compact('company'));
     }
 
