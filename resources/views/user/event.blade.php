@@ -143,10 +143,13 @@
                         <img src="assets/img/check-square.svg" alt="tick" class="list-icon">
                         <p class="list-text">{{$events->available_seats}} Beschikbare plaatsen</p>
                     </div>
+
+                    <div class="details-container"> 
                     <p class="amount-text">Gehost door {{$events->users->first_name}} van {{$events->companies->name}}</p> 
                     <p class="amount-text">Datum: {{$events->date}}, Tijd: {{$events->start_time}} - {{$events->end_time}}</p>
-                
-                
+                    </div>  
+                    
+                    
                     
                     
                     <div class="buttons-container">
