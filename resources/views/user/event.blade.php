@@ -25,6 +25,8 @@
             padding: 20px;
             margin-bottom: 20px;
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
         .event-card img {
@@ -67,6 +69,9 @@
             position: relative;
             bottom: 20px;
             left: 20px;
+            margin-top: auto; 
+            display: flex;
+            flex-direction: column;
         }
 
         .event-card .btn {
