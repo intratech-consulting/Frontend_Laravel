@@ -425,7 +425,7 @@ class CompanyController extends Controller
 
         // Attempt to logout the company and delete the company record
         try {
-            Auth::guard('company')->logout();
+            Auth::guard('web')->logout();
             $company->delete();
 
             $request->session()->invalidate();
