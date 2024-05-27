@@ -116,7 +116,7 @@
                     
                     <div class="buttons-container">
                         <a href="{{ url('event_details' , $events->id) }}" class="btn btn-ghost">Meer weergeven</a>
-                        <form action="/events/register" method="POST">
+                        <form action="{{ route('events.register') }}" method="POST">
                             @csrf 
                             <input type="hidden" name="event_id" value="{{$events->id}}"> 
                             <button type="submit" class="btn btn-fill">Registreren</button>

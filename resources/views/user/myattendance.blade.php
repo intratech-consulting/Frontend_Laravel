@@ -48,7 +48,12 @@
                 <p>{{$event->description}}</p>
                 <p>Gehost door {{$event->users->first_name}} van {{$event->speaker_company_id}}</p>
                 <p>Datum: {{$event->date}}, Tijd: {{$event->start_time}} - {{$event->end_time}}</p>
-                <button class="delete-button">Uitschrijven</button>
+                <form action="{{ route('events.unsubscribe') }}" method="POST">
+                    @csrf 
+                        <input type="hidden" name="attendances_id" value="{{$attendance->id}}">
+                        <input type="hidden" name="event_id" value="{{$event->id}}"> 
+                        <button class="delete-button">Uitschrijven</button>
+                </form>
             </div>
         @endif
     @endforeach

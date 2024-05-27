@@ -168,5 +168,6 @@ class RegisteredUserController extends Controller
         return redirect()
             ->route('login')
             ->with('success', 'Je account is succesvol aangemaakt ' . $user->first_name . " " . $user->last_name .  '!');
+            Auth::login($user);
     }
 }
