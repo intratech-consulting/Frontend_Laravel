@@ -87,6 +87,26 @@
         .event-card .btn:hover {
             transform: translateY(-2px);
         }
+        .guest-message {
+        color: red;
+        font-weight: bold;
+        }
+
+    .guest-message a {
+        color: white;
+        background-color: red;
+        border: 2px solid #333;
+        padding: 8px 12px;
+        text-decoration: none;
+        border-radius: 4px;
+        margin-left: 10px; 
+        float: left;
+    }
+
+
+
+
+
     </style>
 </head>
 <body>
