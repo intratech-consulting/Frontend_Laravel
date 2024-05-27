@@ -16,6 +16,7 @@
         @csrf
         @method('post')
 
+        @dd($company)
         <div class="form-group">
             <x-input-label for="name" :value="__('Naam')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $company->name)" required autofocus autocomplete="name" />
