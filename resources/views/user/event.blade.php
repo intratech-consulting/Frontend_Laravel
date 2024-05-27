@@ -24,6 +24,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 20px;
             margin-bottom: 20px;
+            position: relative;
         }
 
         .event-card img {
@@ -62,6 +63,9 @@
 
         .event-card .buttons-container {
             margin-top: 15px;
+            position: relative;
+            bottom: 20px;
+            left: 20px;
         }
 
         .event-card .btn {
