@@ -70,8 +70,12 @@
             bottom: 20px;
             left: 20px;
             margin-top: auto; 
+            position: absolute;
+            bottom: 0;
+            left: 0;
             display: flex;
             flex-direction: column;
+            justify-content: flex-start; 
         }
 
         .event-card .btn {
@@ -100,6 +104,7 @@
         .guest-message {
         color: red;
         font-weight: bold;
+        margin-top: 10px;
         }
 
     .guest-message a {
