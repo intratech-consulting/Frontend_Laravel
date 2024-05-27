@@ -390,7 +390,7 @@ class CompanyController extends Controller
         // Create XML message for company deletion
         $xmlMessage = new \SimpleXMLElement('<company/>');
         $xmlMessage->addChild('routing_key', 'company.frontend');
-        $xmlMessage->addChild('crud_operation', 'update');
+        $xmlMessage->addChild('crud_operation', 'delete');
         $xmlMessage->addChild('id', $masterUuid);
         $xmlMessage->addChild('name', $this->convertToUtf8($company->name));
         $xmlMessage->addChild('email', $this->convertToUtf8($company->email));
