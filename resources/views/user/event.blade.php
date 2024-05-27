@@ -101,6 +101,10 @@
         border-radius: 4px;
         margin-left: 10px; 
         float: left;
+        transition: transform 0.2s;
+    }
+    .guest-message a:hover {
+    transform: translateY(-2px); 
     }
 
 
@@ -145,8 +149,8 @@
                         @endauth
                         @guest
                         <p class="guest-message">
-                            <a href="{{ route('login') }}">log in</a> 
-                            to register for this event.
+                            <a href="{{ route('login') }}">log in to register</a> 
+                            
                         </p>
                         @endguest
 
