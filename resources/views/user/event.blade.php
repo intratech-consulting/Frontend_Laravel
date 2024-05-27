@@ -67,10 +67,11 @@
         .event-card .buttons-container {
             position: absolute;
             bottom: 10px;
-            left: 0;
+            left: 20px;
             display: flex;
             flex-direction: row; 
             align-items: flex-end; 
+            margin-top: 20px;
         }
 
         .event-card .btn {
