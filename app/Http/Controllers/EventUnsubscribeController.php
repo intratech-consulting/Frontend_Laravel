@@ -72,6 +72,6 @@ class EventUnsubscribeController extends Controller
         // verwijder attendance
         $attendance->delete();
 
-        return redirect()->back()->with('remove', 'Je bent succesvol uitgeschreven voor het event ' . $event->title . "!");
+        return redirect()->back()->with('success', 'Je bent succesvol uitgeschreven voor het event ' . $event->title . "!");
     }
 }
