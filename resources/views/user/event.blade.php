@@ -116,11 +116,16 @@
                     
                     <div class="buttons-container">
                         <a href="{{ url('event_details' , $events->id) }}" class="btn btn-ghost">Meer weergeven</a>
+                        @auth('web')
                         <form action="{{ route('events.register') }}" method="POST">
                             @csrf 
                             <input type="hidden" name="event_id" value="{{$events->id}}"> 
                             <button type="submit" class="btn btn-fill">Registreren</button>
                         </form>
+                        @endauth
+                        @guest
+                        <p>You need to <a href="{{ route('login') }}">log in</a> to register for this event.</p>
+                        @endguest
 
                     </div>
                 </div>
