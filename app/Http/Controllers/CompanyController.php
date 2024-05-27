@@ -438,17 +438,15 @@ class CompanyController extends Controller
             \Log::error('Error sending message to RabbitMQ: ' . $e->getMessage());
         }
 
-        // Attempt to delete the company record first
+        // Deleting the company record and logging out
         try {
+            // Attempt to delete the company record
             $company->delete();
-            \Log::info('Company deleted successfully: ' . $company->id);
 
-            // Attempt to logout the company
-            Auth::guard('company')->logout();
+            // Log out the company using the logout method
+            $this->logout($request);
 
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-
+            // Redirect to the login page with a success message
             return redirect()->route('login')->with('success', 'Company deleted and logged out successfully');
         } catch (\Exception $e) {
             \Log::error('Error deleting company: ' . $e->getMessage());
