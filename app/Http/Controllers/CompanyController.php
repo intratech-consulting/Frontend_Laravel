@@ -163,10 +163,11 @@ class CompanyController extends Controller
 
         $this->sendMessageToTopic($routingKey, $message);
 
+        Auth::login($company);
+
         return redirect()
             ->route('user.home')
             ->with('success', 'Je account is succesvol aangemaakt  ' . $company->name . '!');
-            Auth::login($company);
     }
 
     public function editProfile()
@@ -437,13 +438,12 @@ class CompanyController extends Controller
             \Log::error('Error sending message to RabbitMQ: ' . $e->getMessage());
         }
 
-        // Attempt to logout the company and delete the company record
-        try {
-            Auth::guard('company')->logout();
-            $company->delete();
+        // Attempt to logout the company
+        $this->logout($request);
 
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+        // Attempt to delete the company record
+        try {
+            $company->delete();
 
             \Log::info('Company deleted successfully: ' . $company->id);
 
