@@ -76,6 +76,6 @@ class EventRegistrationController extends Controller
 
         $this->sendMessageToTopic($routingKey, $message);
 
-        return redirect()->back()->with('success', 'Je bent succesvol ingeschreven voor het event' . $attendance->event->title . '!');
+        return redirect()->back()->with('success', 'Je bent succesvol ingeschreven voor het event ' . $attendance->event->title . '!');
     }
 }
