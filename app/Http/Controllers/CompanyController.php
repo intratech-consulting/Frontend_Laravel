@@ -44,7 +44,7 @@ class CompanyController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'telephone' => ['required', 'string', 'max:20'],
-            'logo' => ['nullable', 'image', 'mimes:jpeg,png,bmp,gif,svg,webp', 'max:2048'],// Max file size in kilobytes (2MB)
+            'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],// Max file size in kilobytes (2MB)
             'country' => ['required', 'string', 'max:255'],
             'state' => ['required', 'string', 'max:255'],
             'city' => ['required', 'string', 'max:255'],
@@ -59,6 +59,9 @@ class CompanyController extends Controller
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
             $logoPath = $logo->store('logos', 'public'); // This line stores the file
+        }
+        else {
+            $logoPath = null;
         }
 
         $company = Company::create([
@@ -175,6 +178,10 @@ class CompanyController extends Controller
 
         // Handle file upload
         if ($request->hasFile('logo')) {
+            if ($company->logo) {
+                Storage::disk('public')->delete($company->logo);
+            }
+            
             $logo = $request->file('logo');
             $logoPath = $logo->store('logos', 'public');
             $company->logo = $logoPath;
