@@ -61,6 +61,8 @@ Route::middleware('web')->group(function () {
         Route::post('/company-profile/update', [CompanyController::class, 'updateProfile'])->name('company-profile.update');
     });
 
+    Route::post('/company/logout', [CompanyController::class, 'logout'])->name('company.logout');
+
     // Header Routes
     Route::get('/home', [headerController::class, 'home']);
     Route::get('/about', [headerController::class, 'about']);
@@ -71,11 +73,6 @@ Route::middleware('web')->group(function () {
     Route::post('/logout', function () {
         if (Auth::guard('web')->check()) {
             Auth::guard('web')->logout();
-        }
-    
-        if (Auth::guard('company')->check()) {
-            Auth::guard('company')->logout();
-            Session::flush();
         }
     
         request()->session()->invalidate();

@@ -15,6 +15,17 @@ use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
+
+    public function logout(Request $request)
+    {
+        Auth::guard('company')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('user.home')->with('success', 'Logged out successfully');
+    }
+
      protected $rabbitMQService;
 
 

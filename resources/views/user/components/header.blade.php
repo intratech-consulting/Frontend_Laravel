@@ -161,6 +161,10 @@
             <div class="user-actions">
               <a href="{{ url('/mijnReservaties') }}">Mijn reservaties</a>
               <a href="{{ url('/profile') }}">Profile</a>
+              <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="logout-button">Logout</button>
+              </form>
             </div>
           </li>
         @endauth
@@ -170,19 +174,16 @@
             <div class="user-actions">
               <a href="{{ url('/company-profile') }}">Company Profile</a>
               <a href="{{ url('/register-speaker') }}">Register Employee</a>
-
+              <form method="POST" action="{{ route('company.logout') }}">
+                @csrf
+                <button type="submit" class="logout-button">Logout</button>
+              </form>
             </div>
           </li>
         @endauth
-        @if (Auth::guard('web')->check() || Auth::guard('company')->check())
-          <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="logout-button">Logout</button>
-          </form>
         @else
           <li class="connect"><a href="{{ route('login') }}">Inloggen</a></li>
           <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
-        @endif
       @endif
     </ul>
   </nav>
