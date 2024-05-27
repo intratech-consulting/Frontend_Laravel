@@ -144,7 +144,10 @@
                         </form>
                         @endauth
                         @guest
-                        <p>You need to <a href="{{ route('login') }}">log in</a> to register for this event.</p>
+                        <p class="guest-message">
+                            <a href="{{ route('login') }}">log in</a> 
+                            to register for this event.
+                        </p>
                         @endguest
 
                     </div>
