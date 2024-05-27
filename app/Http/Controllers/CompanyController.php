@@ -9,6 +9,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 
 
 
@@ -59,11 +60,10 @@ class CompanyController extends Controller
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
             $logoPath = $logo->store('logos', 'public'); // This line stores the file
-            $XMLLogo = $companyData['logo'];
         }
         else {
             $logoPath = null;
-            $XMLLogo = null;
+            $logo = null;
         }
 
         $company = Company::create([
@@ -127,7 +127,7 @@ class CompanyController extends Controller
         $xmlCompany->addChild('name', $companyData['name']);
         $xmlCompany->addChild('email', $companyData['email']);
         $xmlCompany->addChild('telephone', $companyData['telephone']);
-        $xmlCompany->addChild('logo', $XMLLogo);
+        $xmlCompany->addChild('logo', $logo);
 
         $address = $xmlCompany->addChild('address');
         $address->addChild('country', $companyData['country']);
@@ -168,7 +168,7 @@ class CompanyController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'telephone' => 'required|string|max:20',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:2048',
             'country' => 'required|string|max:100',
             'state' => 'required|string|max:100',
             'city' => 'required|string|max:100',
@@ -187,6 +187,16 @@ class CompanyController extends Controller
             $logo = $request->file('logo');
             $logoPath = $logo->store('logos', 'public');
             $company->logo = $logoPath;
+        }
+        else {
+            // If request doesn't have a logo, check if company has a logo
+            if ($company->logo) {
+                // If company has a logo, retrieve the file with the logo path
+                $logo = Storage::disk('public')->get($company->logo);
+            }
+            else{
+                $logo = null;
+            }
         }
 
         $company->update($request->all());
@@ -253,7 +263,7 @@ class CompanyController extends Controller
                 $xmlMessage->addChild('name', $company->name);
                 $xmlMessage->addChild('email', $company->email);
                 $xmlMessage->addChild('telephone', $company->telephone);
-                $xmlMessage->addChild('logo', $company->logo);
+                $xmlMessage->addChild('logo', $logo);
 
                 $address = $xmlMessage->addChild('address');
                 $address->addChild('country', $company->country);
