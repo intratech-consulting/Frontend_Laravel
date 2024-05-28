@@ -40,8 +40,7 @@ class RegisteredUserController extends Controller
 
             return response()->json(['message' => 'Message sent successfully'], 200);
         } catch (\Exception $e) {
-            $this->rabbitMQService->sendLogEntryToTopic('send_user_to_queue', 'User not Sent : ' . $e->getMessage(),
-                true);
+            $this->rabbitMQService->sendLogEntryToTopic('send_user_to_queue', 'User not Sent : ' . $e->getMessage(), true);
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
