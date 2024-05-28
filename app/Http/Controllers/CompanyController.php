@@ -211,11 +211,11 @@ class CompanyController extends Controller
         // Handle file upload
         if ($request->hasFile('logo')) {
             if ($company->logo) {
-                Storage::disk('public')->delete('storage/' . $company->logo);
+                Storage::disk('public')->delete($company->logo);
             }
 
-            $logo = $request->file('logo');
-            $logoPath = $logo->store('logos', 'public');
+            $logoPath = $request->file('logo')->store('logos', 'public');
+            dd($logoPath);
             $company->logo = $logoPath;
         }
 
