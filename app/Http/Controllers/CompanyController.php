@@ -218,7 +218,14 @@ class CompanyController extends Controller
             $company->logo = $logoPath;
         }
 
-        $company->update($request->all());
+        // Update the other attributes from the request
+        $company->update($request->except('logo'));
+
+        // If a new logo was uploaded, save the model again to store the new logo path
+        if ($request->hasFile('logo')) {
+            $company->save();
+        }
+        
 
         try {
             // Retrieve the authenticated company
