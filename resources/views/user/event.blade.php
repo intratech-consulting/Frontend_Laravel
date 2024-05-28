@@ -137,6 +137,11 @@
         border-radius: 3px;
     }
 
+    .button-container div,
+    .button-container form {
+        display: inline-block;
+    }
+
     .button-container button:first-child {
         margin-right: 30px;
     }
