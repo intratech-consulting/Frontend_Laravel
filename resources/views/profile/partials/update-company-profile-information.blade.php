@@ -15,7 +15,7 @@
     <form method="post" action="{{ route('company-profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('post')
-        
+
         <div class="form-group">
             <x-input-label for="name" :value="__('Naam')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $company->name)" required autofocus autocomplete="name" />
@@ -42,15 +42,15 @@
         </div>
 
         <div class="form-group">
-            <x-input-label for="country" :value="__('Land')" />
-            <x-text-input id="country" name="country" type="text" class="mt-1 block w-full" :value="old('country', $company->country)" required autocomplete="country" />
-            <x-input-error class="mt-2" :messages="$errors->get('country')" />
+            <x-input-label for="street" :value="__('Straat')" />
+            <x-text-input id="street" name="street" type="text" class="mt-1 block w-full" :value="old('street', $company->street)" required autocomplete="street" />
+            <x-input-error class="mt-2" :messages="$errors->get('street')" />
         </div>
 
         <div class="form-group">
-            <x-input-label for="state" :value="__('Staat')" />
-            <x-text-input id="state" name="state" type="text" class="mt-1 block w-full" :value="old('state', $company->state)" required autocomplete="state" />
-            <x-input-error class="mt-2" :messages="$errors->get('state')" />
+            <x-input-label for="house_number" :value="__('Huisnummer')" />
+            <x-text-input id="house_number" name="house_number" type="text" class="mt-1 block w-full" :value="old('house_number', $company->house_number)" required autocomplete="house_number" />
+            <x-input-error class="mt-2" :messages="$errors->get('house_number')" />
         </div>
 
         <div class="form-group">
@@ -64,17 +64,17 @@
             <x-text-input id="zip" name="zip" type="text" class="mt-1 block w-full" :value="old('zip', $company->zip)" required autocomplete="zip" />
             <x-input-error class="mt-2" :messages="$errors->get('zip')" />
         </div>
-
+        
         <div class="form-group">
-            <x-input-label for="street" :value="__('Straat')" />
-            <x-text-input id="street" name="street" type="text" class="mt-1 block w-full" :value="old('street', $company->street)" required autocomplete="street" />
-            <x-input-error class="mt-2" :messages="$errors->get('street')" />
+            <x-input-label for="state" :value="__('Provincie')" />
+            <x-text-input id="state" name="state" type="text" class="mt-1 block w-full" :value="old('state', $company->state)" required autocomplete="state" />
+            <x-input-error class="mt-2" :messages="$errors->get('state')" />
         </div>
 
         <div class="form-group">
-            <x-input-label for="house_number" :value="__('Huisnummer')" />
-            <x-text-input id="house_number" name="house_number" type="text" class="mt-1 block w-full" :value="old('house_number', $company->house_number)" required autocomplete="house_number" />
-            <x-input-error class="mt-2" :messages="$errors->get('house_number')" />
+            <x-input-label for="country" :value="__('Land')" />
+            <x-text-input id="country" name="country" type="text" class="mt-1 block w-full" :value="old('country', $company->country)" required autocomplete="country" />
+            <x-input-error class="mt-2" :messages="$errors->get('country')" />
         </div>
 
         <div class="form-group">
