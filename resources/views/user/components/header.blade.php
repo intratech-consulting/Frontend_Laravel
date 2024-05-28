@@ -89,10 +89,6 @@
       border-radius: 3px;
     }
 
-    .nav a:hover {
-      background-color: #25b4b1;
-      color: #fff;
-    }
 
     .connect {
       background-color: #e30613;
@@ -149,6 +145,16 @@
       color: #fff;
       text-decoration: none;
       font-weight: 500;
+    }
+
+    .nav a:hover {
+        background-color: #25b4b1;
+        color: #fff;
+    }
+
+    .nav button:hover {
+        background-color: #25b4b1;
+        color: #fff;
     }
   </style>
 </head>
