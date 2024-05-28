@@ -180,8 +180,8 @@ class RegisteredUserController extends Controller
         //send log
         $this->rabbitMQService->sendLogEntryToTopic('create user', 'Error: [User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ') failed to created successfully] -> ' . $e->getMessage(), true);
 
-        // Handle the exception
-        throw new \Exception('failed', 'User is niet succesvol aangemaakt!' . $e->getMessage());
+        return Redirect::back()->withErrors('failed', 'Je account is niet succesvol aangemaakt ' . $user->first_name . " " . $user->last_name .  '!');
+
         }
     }
 }

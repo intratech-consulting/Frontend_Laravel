@@ -179,8 +179,8 @@ class CompanyController extends Controller
         //send log
         $this->rabbitMQService->sendLogEntryToTopic('create company', 'Error: [Company (name: ' . $companyData['name'] . 'created unsuccessfully] -> ' . $e->getMessage(), true);
 
-        // Handle the exception
-        throw new \Exception('failed', 'Je bedrijf is niet succesvol aangemaakt ' . $companyData['name'] . '!' . $e->getMessage());
+        return Redirect::back()->withErrors('failed', 'Je bedrijf ' . $company->name . ' is niet succesvol aangemaakt!');
+
         }
     }
 
