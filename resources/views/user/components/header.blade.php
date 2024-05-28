@@ -152,7 +152,7 @@
 <header class="header">
 
   <div class="logo-container">
-    <a href="{{ url('/') }}"><img src="https://login.ehb.be/themes/ehb/images/logo-ehb-small.svg" alt="Logo" class="logo"></a>
+    <a href="{{ url('home') }}"><img src="https://login.ehb.be/themes/ehb/images/logo-ehb-small.svg" alt="Logo" class="logo"></a>
     <a href="{{ url('home') }}" class="home"><h2>Hackathon Desiderius</h2></a>
   </div>
 
