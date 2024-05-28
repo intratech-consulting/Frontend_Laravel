@@ -9,6 +9,7 @@ from datetime import datetime
 import bcrypt
 
 GENERAL_IP=
+MYSQL_IP=
 
 def create_user(user_data):
     try:

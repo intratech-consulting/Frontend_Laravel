@@ -50,7 +50,8 @@ jobs:
           sed -i 's/APP_DEBUG=.*/APP_DEBUG=${{ secrets.APP_DEBUG }}/' .env
           sed -i 's/APP_ENV=.*/APP_ENV=${{ secrets.APP_ENV }}/' .env
           sed -i 's/server_name .*/server_name ${{ secrets.SSH_HOST }};' ./docker/nginx/sites/laravel.conf
-          sed -i '0,/GENERAL_IP.*/s//GENERAL_IP= "${{ secrets.SSH_HOST }}"/' ./docker/consumer/consumer.py
+          sed -i '0,/GENERAL_IP.*/s//GENERAL_IP = "${{ secrets.SSH_HOST }}"/' ./docker/consumer/consumer.py
+          sed -i '0,/MYSQL_IP.*/s//MYSQL_IP = ${{ secrets.SSH_HOST }}/' ./docker/consumer/consumer.py
           docker compose up --build -d
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/TestServer/frontend/Frontend_Laravel/storage
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/TestServer/frontend/Frontend_Laravel/public
