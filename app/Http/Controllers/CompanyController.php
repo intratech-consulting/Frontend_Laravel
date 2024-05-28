@@ -174,7 +174,7 @@ class CompanyController extends Controller
             'house_number' => 'required|string|max:10',
             'invoice' => 'required|string|max:34',
         ]);
-        
+
         $logoPath = null;
 
         // Handle file upload
@@ -185,6 +185,8 @@ class CompanyController extends Controller
 
             $logoPath = $request->file('logo')->store('logos', 'public');
         }
+
+        dd($logoPath);
 
         $company->update([
             'name' => $request->name,
