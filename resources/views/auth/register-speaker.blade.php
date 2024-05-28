@@ -79,12 +79,12 @@
 @include('user.components.header')
 
 <div class="registration-card">
-    <h2>Speaker/Werknemer Registreren</h2>
+    <h2>Spreker/Werknemer Registreren</h2>
 
-    <form method="POST" action="{{ route('register_speaker') }}">
+    <form method="POST" action="{{ route('register') }}">
         @csrf
 
-<div class="form-group">
+        <div class="form-group">
             <label for="user_role">Rol</label>
             <select id="user_role" name="user_role">
                 <option value="Employee">Werknemer</option>
@@ -108,23 +108,23 @@
         </div>
 
         <div class="form-group">
+            <label for="birthday">Geboortedatum</label>
+            <input id="birthday" type="date" name="birthday" value="{{ old('birthday') }}">
+        </div>
+
+        <div class="form-group">
             <label for="telephone">Telefoon</label>
             <input id="telephone" type="text" name="telephone" value="{{ old('telephone') }}">
         </div>
 
         <div class="form-group">
-            <label for="birthday">Verjaardag</label>
-            <input id="birthday" type="date" name="birthday" value="{{ old('birthday') }}">
+            <label for="street">Straat</label>
+            <input id="street" type="text" name="street" value="{{ old('street') }}">
         </div>
 
         <div class="form-group">
-            <label for="country">Land</label>
-            <input id="country" type="text" name="country" value="{{ old('country') }}">
-        </div>
-
-        <div class="form-group">
-            <label for="state">Staat</label>
-            <input id="state" type="text" name="state" value="{{ old('state') }}">
+            <label for="house_number">Huisnummer</label>
+            <input id="house_number" type="text" name="house_number" value="{{ old('house_number') }}">
         </div>
 
         <div class="form-group">
@@ -138,13 +138,13 @@
         </div>
 
         <div class="form-group">
-            <label for="street">Straat</label>
-            <input id="street" type="text" name="street" value="{{ old('street') }}">
+            <label for="state">Provincie</label>
+            <input id="state" type="text" name="state" value="{{ old('state') }}">
         </div>
 
         <div class="form-group">
-            <label for="house_number">Huisnummer</label>
-            <input id="house_number" type="text" name="house_number" value="{{ old('house_number') }}">
+            <label for="country">Land</label>
+            <input id="country" type="text" name="country" value="{{ old('country') }}">
         </div>
 
         <div class="form-group">

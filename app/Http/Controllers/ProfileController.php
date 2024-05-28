@@ -176,7 +176,7 @@ class ProfileController extends Controller
             $this->rabbitMQService->sendLogEntryToTopic('update user', 'User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ' updated successfully', false);
 
             // Redirect back to the profile edit page with a success message
-            return Redirect::route('profile.update')->with('status', 'profile-updated');
+            return Redirect::route('profile.edit')->with('status', 'profile-updated');
         } catch (\Exception $e) {
             //send log
             $this->rabbitMQService->sendLogEntryToTopic('update user', 'Error: [User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ' updated unsuccessfully] -> ' . $e->getMessage(), true);

@@ -68,7 +68,7 @@ class CompanyController extends Controller
             'zip' => ['required', 'string', 'max:20'],
             'street' => ['required', 'string', 'max:255'],
             'house_number' => ['required', 'string', 'max:20'],
-            'type' => ['required', 'string', 'max:255'],
+            'sponsor' => ['nullable', 'boolean'],
             'invoice' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -94,7 +94,7 @@ class CompanyController extends Controller
             'zip' => $companyData['zip'],
             'street' => $companyData['street'],
             'house_number' => $companyData['house_number'],
-            'type' => $companyData['type'],
+            'sponsor' => $companyData['sponsor'] ?? false,
             'invoice' => $companyData['invoice'],
             'password' => Hash::make($companyData['password']),
         ]);
@@ -152,7 +152,7 @@ class CompanyController extends Controller
         $address->addChild('street', $this->convertToUtf8($companyData['street']));
         $address->addChild('house_number', $this->convertToUtf8($companyData['house_number']));
 
-        $xmlCompany->addChild('type', $this->convertToUtf8($companyData['type']));
+        $xmlCompany->addChild('sponsor', $this->convertToUtf8($companyData['sponsor']));
         $xmlCompany->addChild('invoice', $this->convertToUtf8($companyData['invoice']));
 
 
@@ -208,28 +208,24 @@ class CompanyController extends Controller
             'invoice' => 'required|string|max:34',
         ]);
 
+
         // Handle file upload
         if ($request->hasFile('logo')) {
             if ($company->logo) {
                 Storage::disk('public')->delete($company->logo);
             }
 
-            $logo = $request->file('logo');
-            $logoPath = $logo->store('logos', 'public');
+            $logoPath = $request->file('logo')->store('logos', 'public');
             $company->logo = $logoPath;
         }
-        else {
-            // If request doesn't have a logo, check if company has a logo
-            if ($company->logo) {
-                // If company has a logo, retrieve the file with the logo path
-                $logo = Storage::disk('public')->get($company->logo);
-            }
-            else{
-                $logo = null;
-            }
-        }
 
-        $company->update($request->all());
+        // Update the other attributes from the request
+        $company->update($request->except('logo'));
+
+        // If a new logo was uploaded, save the model again to store the new logo path
+        if ($request->hasFile('logo')) {
+            $company->save();
+        }
 
         try {
             // Retrieve the authenticated company
@@ -426,7 +422,7 @@ class CompanyController extends Controller
         $address->addChild('street', $this->convertToUtf8($company->street));
         $address->addChild('house_number', $this->convertToUtf8($company->house_number));
 
-        $xmlMessage->addChild('type', $this->convertToUtf8($company->type));
+        $xmlCompany->addChild('sponsor', $this->convertToUtf8($company->sponsor));
         $xmlMessage->addChild('invoice', $this->convertToUtf8($company->invoice));
         $xmlMessage->addChild('source', 'frontend');
         $xmlMessage->addChild('company_id', $this->convertToUtf8($company->company_id));

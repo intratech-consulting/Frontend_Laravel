@@ -135,13 +135,9 @@
         </div>
 
         <div class="form-group">
-            <label for="type">Type</label>
-            <select id="type" name="type" required>
-                <option value="customer">Klant</option>
-                <option value="sponsor">Sponsor</option>
-                <option value="speaker">Spreker</option>
-                <option value="">Andere</option>
-            </select>
+            <label for="sponsor">Sponsor</label>
+            <input id="sponsor" name="sponsor" type="checkbox" value="1" {{ old('sponsor') ? 'checked' : '' }}>
+            <small class="error-message">{{ $errors->first('sponsor') }}</small>
         </div>
 
         <div class="form-group">

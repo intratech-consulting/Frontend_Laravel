@@ -25,7 +25,7 @@
             padding: 20px;
             margin-bottom: 20px;
             position: relative;
-           
+
         }
 
         .event-card img {
@@ -96,7 +96,7 @@
         .guest-message {
         color: red;
         font-weight: bold;
-        
+
         }
 
     .guest-message a {
@@ -106,12 +106,44 @@
         padding: 8px 12px;
         text-decoration: none;
         border-radius: 4px;
-        margin-left: 10px; 
+        margin-left: 10px;
         float: left;
         transition: transform 0.2s;
     }
     .guest-message a:hover {
-    transform: translateY(-2px); 
+    transform: translateY(-2px);
+    }
+
+    .button {
+        all: unset;
+        background-color: #e30613;
+        border-radius: 3px;
+        padding: 8px 12px;
+        cursor: pointer;
+        border: none;
+        color: white;
+    }
+
+    button:hover {
+        background-color: #25b4b1;
+        color: #fff;
+    }
+
+    a{
+        color: #fff;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 8px 12px;
+        border-radius: 3px;
+    }
+
+    .button-container div,
+    .button-container form {
+        display: inline-block;
+    }
+
+    .button-container button:first-child {
+        margin-right: 30px;
     }
 
 
@@ -139,30 +171,30 @@
                         <img src="assets/img/check-square.svg" alt="tick" class="list-icon">
                         <p class="list-text">{{$events->available_seats}} Beschikbare plaatsen</p>
                     </div>
-                    <p class="amount-text">Gehost door {{$events->users->first_name}} van {{$events->companies->name}}</p> 
+                    <p class="amount-text">Gehost door {{$events->users->first_name}} van {{$events->companies->name}}</p>
                     <p class="amount-text">Datum: {{$events->date}}, Tijd: {{$events->start_time}} - {{$events->end_time}}</p>
-                   
-                    
-                    
-                    
-                    
-                    <div class="buttons-container">
-                        <a href="{{ url('event_details' , $events->id) }}" class="btn btn-ghost">Meer weergeven</a>
-                        @auth('web')
-                        <form action="{{ route('events.register') }}" method="POST">
-                            @csrf 
-                            <input type="hidden" name="event_id" value="{{$events->id}}"> 
-                            <button type="submit" class="btn btn-fill">Registreren</button>
-                        </form>
-                        @endauth
-                        @guest
-                        <p class="guest-message">
-                            <a href="{{ route('login') }}">log in to register</a> 
-                            
-                        </p>
-                        @endguest
 
+
+
+
+
+                    <div class="buttons-container">
+                        <div class="button-container">
+                            <button type="button" class="button" onclick="window.location.href='{{ url('event_details' , $events->id) }}'">Meer weergeven</button>
+                            @auth('web')
+                                <form action="{{ route('events.register') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="event_id" value="{{$events->id}}">
+                                    <button type="submit" class="button">Registreren</button>
+                                </form>
+                            @elseauth('company')
+                            @else
+                                <button type="button" class="button" onclick="window.location.href='{{ route('login') }}'">log in to register</button>
+                            @endauth
+                        </div>
                     </div>
+
+
                 </div>
             </div>
         @endforeach
