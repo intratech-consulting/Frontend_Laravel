@@ -145,35 +145,48 @@
 <body>
 
 <header class="header">
+
   <div class="logo-container">
     <a href="{{ url('/') }}"><img src="https://login.ehb.be/themes/ehb/images/logo-ehb-small.svg" alt="Logo" class="logo"></a>
     <a href="{{ url('home') }}" class="home"><h2>Hackathon Desiderius</h2></a>
   </div>
+
+
   <nav>
     <ul class="nav">
       <li><a href="{{ url('events') }}">Evenementen</a></li>
-      <li><a href="{{ url('planning') }}">Planning</a></li>
-      <li><a href="{{ url('about') }}">Over ons</a></li>
-      @if(Route::has('login'))
-        @auth('web')
-          <li class="user-menu">
-            <span class="user-name">{{ Auth::guard('web')->user()->name }}</span>
-            <div class="user-actions">
-              <a href="{{ url('/mijnReservaties') }}">Mijn reservaties</a>
-              <a href="{{ url('/profile') }}">Profile</a>
-            </div>
-          </li>
-        @endauth
-        @auth('company')
-          <li class="user-menu">
-            <span class="user-name">{{ Auth::guard('company')->user()->name }}</span>
-            <div class="user-actions">
-              <a href="{{ url('/company-profile') }}">Company Profile</a>
-              <a href="{{ url('/register-speaker') }}">Register Employee</a>
 
-            </div>
-          </li>
-        @endauth
+      <li><a href="{{ url('planning') }}">Planning</a></li>
+
+      @if(Route::has('login'))
+{{--          Voor Gasten, Sprekers en Werknemers--}}
+            @auth('web')
+                <li class="user-menu">
+                    <span class="user-name">{{ Auth::guard('web')->user()->name }}</span>
+                    <div class="user-actions">
+                        <a href="{{ url('/mijnReservaties') }}">Mijn reservaties</a>
+                        <a href="{{ url('/profile') }}">Profiel</a>
+                    </div>
+                </li>
+            @endauth
+
+{{--          Voor Bedrijven--}}
+            @auth('company')
+                <li class="user-menu">
+                    <div class="user-actions">
+                        <a href="{{ url('/company-profile') }}">Profiel</a>
+                        <a href="{{ url('/register-speaker') }}">Registreer Werknemers</a>
+                    </div>
+                </li>
+            @endauth
+
+      @endif
+
+
+      <li><a href="{{ url('about') }}">Over ons</a></li>
+
+        
+      @if(Route::has('login'))
         @if (Auth::guard('web')->check() || Auth::guard('company')->check())
           <form method="POST" action="{{ route('logout') }}">
             @csrf
