@@ -75,7 +75,7 @@ class CompanyController extends Controller
 
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
-            $logoPath = $logo->store('logos', 'public'); // This line stores the file
+            $logoPath = $logo->store('storage/logos', 'public'); // This line stores the file
         }
         else {
             $logoPath = null;
@@ -215,7 +215,7 @@ class CompanyController extends Controller
             }
 
             $logo = $request->file('logo');
-            $logoPath = $logo->store('logos', 'public');
+            $logoPath = $logo->store('storage/logos', 'public');
             $company->logo = $logoPath;
         }
         else {
