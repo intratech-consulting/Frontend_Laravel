@@ -64,7 +64,7 @@
             <x-text-input id="zip" name="zip" type="text" class="mt-1 block w-full" :value="old('zip', $company->zip)" required autocomplete="zip" />
             <x-input-error class="mt-2" :messages="$errors->get('zip')" />
         </div>
-        
+
         <div class="form-group">
             <x-input-label for="state" :value="__('Provincie')" />
             <x-text-input id="state" name="state" type="text" class="mt-1 block w-full" :value="old('state', $company->state)" required autocomplete="state" />
