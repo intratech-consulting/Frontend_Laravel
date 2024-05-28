@@ -173,7 +173,6 @@
                 </li>
             @elseauth('company')
                 <li class="user-menu">
-                    <span class="user-name">{{ Auth::guard('company')->user()->name }}</span>
                     <div class="user-actions">
                         <a href="{{ url('/company-profile') }}">Profiel</a>
                         <a href="{{ url('/register-speaker') }}">Registreer Werknemers</a>
