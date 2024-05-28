@@ -75,7 +75,7 @@ Route::middleware('web')->group(function () {
         if (Auth::guard('web')->check()) {
             Auth::guard('web')->logout();
         }
-    
+
         request()->session()->invalidate();
         request()->session()->regenerateToken();
         return redirect('/');
@@ -110,8 +110,8 @@ Route::middleware('web')->group(function () {
     Route::post('/send-message-to-topics_company', [CompanyController::class, 'sendMessageToTopic'])->name('sendMessageToTopic_company');
 
     // Role register
-    Route::get('/register-speaker', [RoleRegisterController::class, 'register_speaker']);
-    Route::get('/register_company', [RoleRegisterController::class, 'register_company']);
+    Route::get('/register-speaker', [RoleRegisterController::class, 'register_speaker'])->name('register_speaker');
+    Route::get('/register_company', [RoleRegisterController::class, 'register_company'])->name('register_company');
 
     // Footer Routes
     Route::get('/privacy', [footerController::class, 'privacy']);
