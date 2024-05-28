@@ -84,7 +84,7 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
-<div class="form-group">
+        <div class="form-group">
             <label for="user_role">Rol</label>
             <select id="user_role" name="user_role">
                 <option value="Employee">Werknemer</option>
