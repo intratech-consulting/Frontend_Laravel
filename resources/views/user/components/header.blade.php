@@ -90,12 +90,6 @@
     }
 
 
-    .connect {
-      background-color: #e30613;
-      border-radius: 3px;
-      padding: 8px 12px;
-    }
-
 
     .connect {
         all: unset;

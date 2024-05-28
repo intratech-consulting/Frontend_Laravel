@@ -114,6 +114,29 @@
     transform: translateY(-2px);
     }
 
+    .button {
+        all: unset;
+        background-color: #e30613;
+        border-radius: 3px;
+        padding: 8px 12px;
+        cursor: pointer;
+        border: none;
+        color: white;
+    }
+
+    button:hover {
+        background-color: #25b4b1;
+        color: #fff;
+    }
+
+    a{
+        color: #fff;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 8px 12px;
+        border-radius: 3px;
+    }
+
 
 
 
@@ -152,9 +175,8 @@
                             <form action="{{ route('events.register') }}" method="POST">
                                 @csrf
                                 <input type="hidden" name="event_id" value="{{$events->id}}">
-                                <button type="submit" class="btn btn-fill">Registreren</button>
+                                <button type="submit" class="button">Registreren</button>
                             </form>
-                        @endauth
                         @elseauth('company')
                         @else
                             <p class="guest-message">
