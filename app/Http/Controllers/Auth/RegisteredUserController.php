@@ -32,11 +32,10 @@ class RegisteredUserController extends Controller
         $firstName = $xml->first_name->__toString();
         $lastName = $xml->last_name->__toString();
 
-        try{
+        try {
             // Send message to the amq.topic exchange using RabbitMQSendService
             $this->rabbitMQService->sendMessageToTopic($routingKey, $message);
-            $this->rabbitMQService->sendLogEntryToTopic('send_user_to_queue', 'User with UUIID: ' . $userId . ' and Name: ' .
-                $firstName . ' ' . $lastName . ' Sent Successfully to User_Queue', false);
+            $this->rabbitMQService->sendLogEntryToTopic('send_user_to_queue', 'User with UUID: ' . $userId . ' and Name: ' . $firstName . ' ' . $lastName . ' Sent Successfully to User_Queue', false);
 
             return response()->json(['message' => 'Message sent successfully'], 200);
         } catch (\Exception $e) {
@@ -44,6 +43,7 @@ class RegisteredUserController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
     public function create(): View
     {
         return view('auth.register');
@@ -56,133 +56,129 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        try{
-        $userData = $request->validate([
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255'],
-            'telephone' => ['required', 'string', 'max:20'],
-            'birthday' => ['required', 'date'],
-            'country' => ['required', 'string', 'max:255'],
-            'state' => ['required', 'string', 'max:255'],
-            'city' => ['required', 'string', 'max:255'],
-            'zip' => ['required', 'string', 'max:20'],
-            'street' => ['required', 'string', 'max:255'],
-            'house_number' => ['required', 'string', 'max:20'],
-            'invoice' => ['required'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'company_email' => ['nullable', 'string', 'email', 'max:255'],
-            'company_id' => ['nullable', 'integer'],
-            'user_role' => ['required', 'string', Rule::in(['individual', 'employee', 'speaker'])],
-        ]);
-
-        $user = User::create([
-            'first_name' => $userData['first_name'],
-            'last_name' => $userData['last_name'],
-            'email' => $userData['email'],
-            'password' => Hash::make($userData['password']),
-            'telephone' => $userData['telephone'],
-            'birthday' => $userData['birthday'],
-            'country' => $userData['country'],
-            'state' => $userData['state'],
-            'city' => $userData['city'],
-            'zip' => $userData['zip'],
-            'street' => $userData['street'],
-            'house_number' => $userData['house_number'],
-            'invoice' => $userData['invoice'],
-            'user_role' => $userData['user_role'],
-            'company_email' => isset($userData['company_email']) ? $userData['company_email'] : null,
-            'company_id' => isset($userData['company_id']) ? $userData['company_id'] : null,
-        ]);
-
-        \Log::info('User after create: ' . print_r($user->toArray(), true));
-
-        $masterUuid = null;
-
-        // Create a new Guzzle HTTP client
-        $client = new \GuzzleHttp\Client();
-
-        // Define the data for the request
-        $data = [
-            'Service' => 'frontend',
-            'ServiceId' => $user->id, // Assuming $userId is the ID of the newly created user
-        ];
-
         try {
-            $response = $client->post('http://' . env('GENERAL_IP') . ':6000/createMasterUuid', [
-                'json' => $data
+            $userData = $request->validate([
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255'],
+                'telephone' => ['required', 'string', 'max:20'],
+                'birthday' => ['required', 'date'],
+                'country' => ['required', 'string', 'max:255'],
+                'state' => ['required', 'string', 'max:255'],
+                'city' => ['required', 'string', 'max:255'],
+                'zip' => ['required', 'string', 'max:20'],
+                'street' => ['required', 'string', 'max:255'],
+                'house_number' => ['required', 'string', 'max:20'],
+                'invoice' => ['required'],
+                'password' => ['required', 'string', 'min:8', 'confirmed'],
+                'company_email' => ['nullable', 'string', 'email', 'max:255'],
+                'company_id' => ['nullable', 'integer'],
+                'user_role' => ['required', 'string', Rule::in(['individual', 'employee', 'speaker'])],
             ]);
 
-            // Get the response body
-            $body = $response->getBody();
+            $user = User::create([
+                'first_name' => $userData['first_name'],
+                'last_name' => $userData['last_name'],
+                'email' => $userData['email'],
+                'password' => Hash::make($userData['password']),
+                'telephone' => $userData['telephone'],
+                'birthday' => $userData['birthday'],
+                'country' => $userData['country'],
+                'state' => $userData['state'],
+                'city' => $userData['city'],
+                'zip' => $userData['zip'],
+                'street' => $userData['street'],
+                'house_number' => $userData['house_number'],
+                'invoice' => $userData['invoice'],
+                'user_role' => $userData['user_role'],
+                'company_email' => isset($userData['company_email']) ? $userData['company_email'] : null,
+                'company_id' => isset($userData['company_id']) ? $userData['company_id'] : null,
+            ]);
 
-            \Log::info('UUID Response Body: ' . $body);
+            \Log::info('User after create: ' . print_r($user->toArray(), true));
 
-            // Decode the JSON response
-            $json = json_decode($body, true);
+            $masterUuid = null;
 
-            // Get the MASTERUUID from the response
-            $masterUuid = $json['MasterUuid'];
+            // Create a new Guzzle HTTP client
+            $client = new \GuzzleHttp\Client();
 
-            // Now you can use $masterUuid for whatever you need
-        } catch (\GuzzleHttp\Exception\RequestException $e) {
-            //Send logs to ControlRoom
-            $this->rabbitMQService->sendLogEntryToTopic('make_UUID', 'Error: ' . $e->getMessage(), true);
+            // Define the data for the request
+            $data = [
+                'Service' => 'frontend',
+                'ServiceId' => $user->id, // Assuming $userId is the ID of the newly created user
+            ];
 
-            // Handle the exception
-            throw new \Exception('Failed to retrieve masterUuid: ' . $e->getMessage());
-        }
+            try {
+                $response = $client->post('http://' . env('GENERAL_IP') . ':6000/createMasterUuid', [
+                    'json' => $data
+                ]);
 
+                // Get the response body
+                $body = $response->getBody();
 
-        $xmlMessage = new \SimpleXMLElement('<user/>');
-        $xmlMessage->addChild('routing_key', 'user.frontend');
-        $xmlMessage->addChild('crud_operation', 'create');
-        $xmlMessage->addChild('id', $masterUuid);
-        $xmlMessage->addChild('first_name', $userData['first_name']);
-        $xmlMessage->addChild('last_name', $userData['last_name']);
-        $xmlMessage->addChild('email', $userData['email']);
-        $xmlMessage->addChild('telephone', $userData['telephone']);
-        $xmlMessage->addChild('birthday', $userData['birthday']);
+                \Log::info('UUID Response Body: ' . $body);
 
-        $address = $xmlMessage->addChild('address');
-        $address->addChild('country', $userData['country']);
-        $address->addChild('state', $userData['state']);
-        $address->addChild('city', $userData['city']);
-        $address->addChild('zip', $userData['zip']);
-        $address->addChild('street', $userData['street']);
-        $address->addChild('house_number', $userData['house_number']);
+                // Decode the JSON response
+                $json = json_decode($body, true);
 
-        $xmlMessage->addChild('company_email', isset($userData['company_email']) ? $userData['company_email'] : '');
-        $xmlMessage->addChild('company_id', isset($userData['company_id']) ? $userData['company_id'] : '');
-        $xmlMessage->addChild('source', 'frontend');
-        $xmlMessage->addChild('user_role', $userData['user_role']);
-        $xmlMessage->addChild('invoice', $userData['invoice']);
-        $xmlMessage->addChild('calendar_link', '');
+                // Get the MASTERUUID from the response
+                $masterUuid = $json['MasterUuid'];
 
-        // Convert XML to string
-        $message = $xmlMessage->asXML();
+                // Now you can use $masterUuid for whatever you need
+            } catch (\GuzzleHttp\Exception\RequestException $e) {
+                // Send logs to ControlRoom
+                $this->rabbitMQService->sendLogEntryToTopic('make_UUID', 'Error: ' . $e->getMessage(), true);
 
-        // Send message to RabbitMQ
-        $routingKey = 'user.frontend';
+                // Handle the exception
+                throw new \Exception('Failed to retrieve masterUuid: ' . $e->getMessage());
+            }
 
-        $this->sendMessageToTopic($routingKey, $message);
+            $xmlMessage = new \SimpleXMLElement('<user/>');
+            $xmlMessage->addChild('routing_key', 'user.frontend');
+            $xmlMessage->addChild('crud_operation', 'create');
+            $xmlMessage->addChild('id', $masterUuid);
+            $xmlMessage->addChild('first_name', $userData['first_name']);
+            $xmlMessage->addChild('last_name', $userData['last_name']);
+            $xmlMessage->addChild('email', $userData['email']);
+            $xmlMessage->addChild('telephone', $userData['telephone']);
+            $xmlMessage->addChild('birthday', $userData['birthday']);
 
-        //send log
-        $this->rabbitMQService->sendLogEntryToTopic('create user', 'User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ') created successfully ', false);
+            $address = $xmlMessage->addChild('address');
+            $address->addChild('country', $userData['country']);
+            $address->addChild('state', $userData['state']);
+            $address->addChild('city', $userData['city']);
+            $address->addChild('zip', $userData['zip']);
+            $address->addChild('street', $userData['street']);
+            $address->addChild('house_number', $userData['house_number']);
 
-        return redirect()
-            ->route('login')
-            ->with('success', 'Je account is succesvol aangemaakt ' . $user->first_name . " " . $user->last_name .  '!');
+            $xmlMessage->addChild('company_email', isset($userData['company_email']) ? $userData['company_email'] : '');
+            $xmlMessage->addChild('company_id', isset($userData['company_id']) ? $userData['company_id'] : '');
+            $xmlMessage->addChild('source', 'frontend');
+            $xmlMessage->addChild('user_role', $userData['user_role']);
+            $xmlMessage->addChild('invoice', $userData['invoice']);
+            $xmlMessage->addChild('calendar_link', '');
+
+            // Convert XML to string
+            $message = $xmlMessage->asXML();
+
+            // Send message to RabbitMQ
+            $routingKey = 'user.frontend';
+
+            $this->sendMessageToTopic($routingKey, $message);
+
+            // Send log
+            $this->rabbitMQService->sendLogEntryToTopic('create user', 'User (masterUuid: ' . $masterUuid . ', name: ' . $user->first_name . ' ' . $user->last_name . ') created successfully', false);
+
             Auth::login($user);
 
-        }
-        catch(\Exception $e)
-        {
-            // send log
-            $this->rabbitMQService->sendLogEntryToTopic('create user', 'Error: [User (masterUuid: ' . $masterUuid . ', name: ' . $user->first_name . " " . $user->last_name . ') failed to be created successfully] -> ' . $e->getMessage(), true);
+            return redirect()
+                ->route('login')
+                ->with('success', 'Je account is succesvol aangemaakt ' . $user->first_name . ' ' . $user->last_name . '!');
+        } catch (\Exception $e) {
+            // Send log
+            $this->rabbitMQService->sendLogEntryToTopic('create user', 'Error: [User (masterUuid: ' . ($masterUuid ?? 'N/A') . ', name: ' . $userData['first_name'] . ' ' . $userData['last_name'] . ') failed to create successfully] -> ' . $e->getMessage(), true);
 
-            return Redirect::back()->withErrors(['error' => 'Je account is niet succesvol aangemaakt ' . $user->first_name . " " . $user->last_name . '! ' . $e->getMessage()]);
+            return redirect()->back()->withErrors(['failed' => 'Je account is niet succesvol aangemaakt ' . $userData['first_name'] . ' ' . $userData['last_name'] . '!']);
         }
-
     }
 }
