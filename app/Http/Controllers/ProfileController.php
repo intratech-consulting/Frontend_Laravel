@@ -50,6 +50,7 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
+        
         \Log::info('Update method called');
 
         $request->validate([
@@ -171,9 +172,15 @@ class ProfileController extends Controller
                 throw new \Exception('Error sending message to RabbitMQ: ' . $e->getMessage());
             }
 
+            //send log
+            $this->rabbitMQService->sendLogEntryToTopic('update user', 'User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ' updated successfully', false);
+
             // Redirect back to the profile edit page with a success message
             return Redirect::route('profile.edit');
         } catch (\Exception $e) {
+            //send log
+            $this->rabbitMQService->sendLogEntryToTopic('update user', 'Error: [User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ' updated unsuccessfully] -> ' . $e->getMessage(), true);
+
             // Handle any exceptions and redirect back with an error message
             return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);
         }
@@ -185,6 +192,7 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request)
     {
+        try{
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
@@ -286,7 +294,20 @@ class ProfileController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
+        //send log
+        $this->rabbitMQService->sendLogEntryToTopic('delete user', 'User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ' deleted successfully', false);
+
         return view('user.home');
+        }
+        catch (\Exception $e) {
+            \Log::error('Error deleting company: ' . $e->getMessage());
+
+            //send log
+            $this->rabbitMQService->sendLogEntryToTopic('delete user', 'Error: [User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ' deleted unsuccessfully] -> ' . $e->getMessage(), true);
+
+            return Redirect::back()->withErrors(['error' => 'An error occurred while deleting the user. Please try again later.']);
+        }
+
     }
 
 }

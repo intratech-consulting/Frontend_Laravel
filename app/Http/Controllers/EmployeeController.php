@@ -28,7 +28,7 @@ class EmployeeController extends Controller
 
     public function register(Request $request)
     {
-
+        try{
         $userData = $request->validate([
 
             'first_name' => ['required', 'string', 'max:255'],
@@ -128,9 +128,21 @@ class EmployeeController extends Controller
 
         event(new Registered($user));
 
-       Auth::login($user);
+        Auth::login($user);
 
-       return view('user.home');
+        //send log
+        $this->rabbitMQService->sendLogEntryToTopic('create employee', 'User (masterUuidid: ' . $masterUuid .  ', name: ' . $userData['first_name'] . " " . $userData['last_name'] . ' created successfully ', false);
+
+        return view('user.home');
+        }
+        catch(\Exception $e)
+        {
+        //send log
+        $this->rabbitMQService->sendLogEntryToTopic('create employee', 'Error: [User (name: ' . $user->first_name . " " . $user->last_name . ' created unsuccessfully: ] -> ' . $e->getMessage(), true);
+
+        // Handle the exception
+        throw new \Exception('failed', 'Employee niet succesvol aangemaakt!' . $e->getMessage());
+        }
     }
 
     public function test(Request $request)

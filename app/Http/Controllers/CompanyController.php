@@ -56,7 +56,7 @@ class CompanyController extends Controller
 
     public function create_company(Request $request)
     {
-
+        try{
         $companyData = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
@@ -165,9 +165,21 @@ class CompanyController extends Controller
 
         Auth::login($company);
 
+        //send log
+        $this->rabbitMQService->sendLogEntryToTopic('create company', 'Company (masterUuid: ' . $masterUuid .  ', name: ' . $companyData['name'] . 'created successfully', false);
+
         return redirect()
             ->route('user.home')
-            ->with('success', 'Je account is succesvol aangemaakt  ' . $company->name . '!');
+            ->with('success', 'Je bedrijf is succesvol aangemaakt  ' . $company->name . '!');
+        }
+        catch(\Exception $e)
+        {
+        //send log
+        $this->rabbitMQService->sendLogEntryToTopic('create company', 'Error: [Company (name: ' . $companyData['name'] . 'created unsuccessfully] -> ' . $e->getMessage(), true);
+
+        // Handle the exception
+        throw new \Exception('failed', 'Je bedrijf is niet succesvol aangemaakt ' . $companyData['name'] . '!' . $e->getMessage());
+        }
     }
 
     public function editProfile()
@@ -332,10 +344,17 @@ class CompanyController extends Controller
                 throw new \Exception('Error sending message to RabbitMQ: ' . $e->getMessage());
             }
 
+            //send log
+            $this->rabbitMQService->sendLogEntryToTopic('update company', 'Company (masterUuid: ' . $masterUuid .  ', name: ' . $company->name . ' updated successfully', false);
+
             // Redirect back to the profile edit page with a success message
             return Redirect::route('company-profile.edit')->with('success', 'Profile updated successfully');
         } catch (\Exception $e) {
             \Log::error('Error updating profile: ' . $e->getMessage()); // Log the error
+
+            //send log
+            $this->rabbitMQService->sendLogEntryToTopic('update company', 'Error: [Company (masterUuid: ' . $masterUuid .  ', name: ' . $company->name . ' updated unsuccessfully] -> ' . $e->getMessage(), true);
+
             // Handle any exceptions and redirect back with an error message
             return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);
         }
@@ -446,10 +465,17 @@ class CompanyController extends Controller
             // Log out the company using the logout method
             $this->logout($request);
 
+            //send log
+            $this->rabbitMQService->sendLogEntryToTopic('delete company', 'Company (masterUuid: ' . $masterUuid .  ', name: ' . $company->name . ' deleted successfully', false);
+
             // Redirect to the login page with a success message
             return redirect()->route('login')->with('success', 'Company deleted and logged out successfully');
         } catch (\Exception $e) {
             \Log::error('Error deleting company: ' . $e->getMessage());
+
+            //send log
+            $this->rabbitMQService->sendLogEntryToTopic('delete company', 'Error: [Company (masterUuid: ' . $masterUuid .  ', name: ' . $company->name . ' deleted unsuccessfully] -> ' . $e->getMessage(), true);
+
             return Redirect::back()->withErrors(['error' => 'An error occurred while deleting the company. Please try again later.']);
         }
     }

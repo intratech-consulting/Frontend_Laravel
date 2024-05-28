@@ -74,16 +74,17 @@ class EventUnsubscribeController extends Controller
         $attendance->delete();
 
         //send log
-        $this->rabbitMQService->sendLogEntryToTopic('unsubscribe', 'User unsubscribed successfully from event', false);
+        $this->rabbitMQService->sendLogEntryToTopic('unsubscribe', 'User (id: ' . $user->id .  ', name: ' . $user->first_name . " " . $user->last_name . 'unsubscribed successfully from event: ' . $event->title, false);
 
         return redirect()->back()->with('success', 'Je bent succesvol uitgeschreven voor het event ' . $event->title . "!");
         }
         catch(\Exception $e)
         {
-            //send log
-        $this->rabbitMQService->sendLogEntryToTopic('unsubscribe', 'Error: ' . $e->getMessage(), true);
+        //send log
+        $this->rabbitMQService->sendLogEntryToTopic('unsubscribe', 'Error: [User (id: ' . $user->id .  ', name: ' . $user->first_name . " " . $user->last_name . 'unsubscribed unsuccessfully from event: ' . $event->title . '] -> ' . $e->getMessage(), true);
 
-        return redirect()->back()->with('failed', 'Je bent niet succesvol uitgeschreven voor het event ' . $event->title . "!");
+        // Handle the exception
+        throw new \Exception('failed', 'Je bent niet succesvol uitgeschreven voor het event ' . $event->title . '!' . $e->getMessage());
         }
     }
 }
