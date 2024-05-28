@@ -94,19 +94,27 @@
       color: #fff;
     }
 
-    .connect a {
+    .connect {
       background-color: #e30613;
       border-radius: 3px;
       padding: 8px 12px;
     }
 
     .logout-button {
-      background-color: #e30613;
-      color: #fff;
-      font-weight: 500;
-      padding: 8px 12px;
-      border-radius: 3px;
-      cursor: pointer;
+      /*background-color: #e30613;*/
+      /*color: #fff;*/
+      /*font-weight: 500;*/
+      /*padding: 8px 12px;*/
+      /*border-radius: 3px;*/
+      /*cursor: pointer;*/
+    }
+
+    .connect {
+        all:revert;
+        background-color: #e30613;
+        border-radius: 3px;
+        padding: 8px 12px;
+        cursor: pointer;
     }
 
     .logout-button:hover {
