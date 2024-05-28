@@ -29,7 +29,7 @@ class Company extends Authenticatable
         'zip',
         'street',
         'house_number',
-        'type',
+        'sponsor',
         'invoice',
         'password',
     ];
@@ -50,6 +50,7 @@ class Company extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
+        'sponsor' => 'boolean',
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
