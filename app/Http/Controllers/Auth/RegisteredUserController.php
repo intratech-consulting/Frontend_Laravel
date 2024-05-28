@@ -97,6 +97,8 @@ class RegisteredUserController extends Controller
 
         \Log::info('User after create: ' . print_r($user->toArray(), true));
 
+        $masterUuid = null;
+
         // Create a new Guzzle HTTP client
         $client = new \GuzzleHttp\Client();
 
