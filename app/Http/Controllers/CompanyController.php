@@ -87,7 +87,7 @@ class CompanyController extends Controller
                 'zip' => $companyData['zip'],
                 'street' => $companyData['street'],
                 'house_number' => $companyData['house_number'],
-                'sponsor' => $companyData['sponsor'] ?? false,
+                'sponsor' => $request->has('sponsor'),
                 'invoice' => $companyData['invoice'],
                 'password' => Hash::make($companyData['password']),
             ]);
@@ -131,7 +131,7 @@ class CompanyController extends Controller
             $address->addChild('street', $this->convertToUtf8($companyData['street']));
             $address->addChild('house_number', $this->convertToUtf8($companyData['house_number']));
 
-            $xmlCompany->addChild('sponsor', isset($companyData['sponsor']) ? 'true' : 'false');
+            $xmlCompany->addChild('sponsor', $request->has('sponsor') ? 'true' : 'false');
             $xmlCompany->addChild('invoice', $this->convertToUtf8($companyData['invoice']));
 
             $message = $xmlCompany->asXML();
