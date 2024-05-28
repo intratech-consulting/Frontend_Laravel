@@ -40,8 +40,7 @@ class RegisteredUserController extends Controller
 
             return response()->json(['message' => 'Message sent successfully'], 200);
         } catch (\Exception $e) {
-            $this->rabbitMQService->sendLogEntryToTopic('send_user_to_queue', 'User not Sent : ' . $e->getMessage(),
-                true);
+            $this->rabbitMQService->sendLogEntryToTopic('send_user_to_queue', 'User not Sent : ' . $e->getMessage(), true);
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -179,11 +178,11 @@ class RegisteredUserController extends Controller
         }
         catch(\Exception $e)
         {
-        //send log
-        $this->rabbitMQService->sendLogEntryToTopic('create user', 'Error: [User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ') failed to created successfully] -> ' . $e->getMessage(), true);
+            // send log
+            $this->rabbitMQService->sendLogEntryToTopic('create user', 'Error: [User (masterUuid: ' . $masterUuid . ', name: ' . $user->first_name . " " . $user->last_name . ') failed to be created successfully] -> ' . $e->getMessage(), true);
 
-        return Redirect::back()->withErrors('failed', 'Je account is niet succesvol aangemaakt ' . $user->first_name . " " . $user->last_name .  '!');
-
+            return Redirect::back()->withErrors(['error' => 'Je account is niet succesvol aangemaakt ' . $user->first_name . " " . $user->last_name . '! ' . $e->getMessage()]);
         }
+
     }
 }
