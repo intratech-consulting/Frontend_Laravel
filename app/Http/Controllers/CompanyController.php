@@ -198,7 +198,6 @@ class CompanyController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'telephone' => 'required|string|max:20',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:2048',
             'country' => 'required|string|max:100',
             'state' => 'required|string|max:100',
             'city' => 'required|string|max:100',
@@ -208,22 +207,24 @@ class CompanyController extends Controller
             'invoice' => 'required|string|max:34',
         ]);
 
+        // Update the other attributes from the request
+        $company->update($request->all());
 
         // Handle file upload
         if ($request->hasFile('logo')) {
+            // Validate the logo separately
+            $request->validate([
+                'logo' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:2048',
+            ]);
+
             if ($company->logo) {
                 Storage::disk('public')->delete($company->logo);
             }
 
             $logoPath = $request->file('logo')->store('logos', 'public');
             $company->logo = $logoPath;
-        }
 
-        // Update the other attributes from the request
-        $company->update($request->except('logo'));
-
-        // If a new logo was uploaded, save the model again to store the new logo path
-        if ($request->hasFile('logo')) {
+            // If a new logo was uploaded, save the model again to store the new logo path
             $company->save();
         }
 
