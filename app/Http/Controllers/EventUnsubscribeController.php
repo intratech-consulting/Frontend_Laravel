@@ -43,7 +43,7 @@ class EventUnsubscribeController extends Controller
 
     public function unsubscribe(Request $request)
     {
-
+        try{
         $user = Auth::user();
         $attendanceId = $request->input('attendances_id');
         $eventId = $request->input('event_id');
@@ -72,9 +72,18 @@ class EventUnsubscribeController extends Controller
 
         // verwijder attendance
         $attendance->delete();
+
         //send log
         $this->rabbitMQService->sendLogEntryToTopic('unsubscribe', 'User unsubscribed successfully from event', false);
 
         return redirect()->back()->with('success', 'Je bent succesvol uitgeschreven voor het event ' . $event->title . "!");
+        }
+        catch(\Exception $e)
+        {
+            //send log
+        $this->rabbitMQService->sendLogEntryToTopic('unsubscribe', 'Error: ' . $e->getMessage(), true);
+
+        return redirect()->back()->with('failed', 'Je bent niet succesvol uitgeschreven voor het event ' . $event->title . "!");
+        }
     }
 }

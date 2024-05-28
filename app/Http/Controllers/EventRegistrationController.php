@@ -42,6 +42,7 @@ class EventRegistrationController extends Controller
 
     public function register(Request $request)
     {
+        try{
         $user = Auth::user();
         $eventId = $request->input('event_id');
 
@@ -80,5 +81,14 @@ class EventRegistrationController extends Controller
         $this->rabbitMQService->sendLogEntryToTopic('subscribe', 'User subscribed successfully to event', false);
 
         return redirect()->back()->with('success', 'Je bent succesvol ingeschreven voor het event ' . $attendance->event->title . '!');
+
+        }
+        catch(\Exception $e)
+        {
+        //send log
+        $this->rabbitMQService->sendLogEntryToTopic('subscribe', 'Error: ' . $e->getMessage(), true);
+
+        return redirect()->back()->with('failed', 'Je bent niet succesvol ingeschreven voor het event ' . $attendance->event->title . '!');
+        }
     }
 }
