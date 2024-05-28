@@ -396,7 +396,7 @@ class CompanyController extends Controller
         $address->addChild('street', $this->convertToUtf8($company->street));
         $address->addChild('house_number', $this->convertToUtf8($company->house_number));
 
-        $xmlCompany->addChild('sponsor', $this->convertToUtf8($company->sponsor));
+        $xmlMessage->addChild('sponsor', $this->convertToUtf8($company->sponsor));
         $xmlMessage->addChild('invoice', $this->convertToUtf8($company->invoice));
         $xmlMessage->addChild('source', 'frontend');
         $xmlMessage->addChild('company_id', $this->convertToUtf8($company->company_id));
