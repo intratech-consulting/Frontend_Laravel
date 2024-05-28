@@ -154,51 +154,41 @@
 
   <nav>
     <ul class="nav">
-      <li><a href="{{ url('events') }}">Evenementen</a></li>
-
-      <li><a href="{{ url('planning') }}">Planning</a></li>
-
-      @if(Route::has('login'))
-{{--          Voor Gasten, Sprekers en Werknemers--}}
+        <li><a href="{{ url('events') }}">Evenementen</a></li>
+        <li><a href="{{ url('planning') }}">Planning</a></li>
+        <li><a href="{{ url('about') }}">Over ons</a></li>
+        @if (Route::has('login'))
             @auth('web')
                 <li class="user-menu">
                     <span class="user-name">{{ Auth::guard('web')->user()->name }}</span>
                     <div class="user-actions">
                         <a href="{{ url('/mijnReservaties') }}">Mijn reservaties</a>
-                        <a href="{{ url('/profile') }}">Profiel</a>
+                        <a href="{{ url('/profile') }}">Profile</a>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="logout-button">Logout</button>
+                        </form>
                     </div>
                 </li>
-            @endauth
-
-{{--          Voor Bedrijven--}}
-            @auth('company')
+            @elseauth('company')
                 <li class="user-menu">
+                    <span class="user-name">{{ Auth::guard('company')->user()->name }}</span>
                     <div class="user-actions">
-                        <a href="{{ url('/company-profile') }}">Profiel</a>
-                        <a href="{{ url('/register-speaker') }}">Registreer Werknemers</a>
+                        <a href="{{ url('/company-profile') }}">Company Profile</a>
+                        <a href="{{ url('/register-speaker') }}">Register Employee</a>
+                        <form method="POST" action="{{ route('company.logout') }}">
+                            @csrf
+                            <button type="submit" class="logout-button">Logout</button>
+                        </form>
                     </div>
                 </li>
+            @else
+                <li class="connect"><a href="{{ route('login') }}">Inloggen</a></li>
+                <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
             @endauth
-
-      @endif
-
-
-      <li><a href="{{ url('about') }}">Over ons</a></li>
-
-        
-      @if(Route::has('login'))
-        @if (Auth::guard('web')->check() || Auth::guard('company')->check())
-          <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="logout-button">Logout</button>
-          </form>
-        @else
-          <li class="connect"><a href="{{ route('login') }}">Inloggen</a></li>
-          <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
         @endif
-      @endif
     </ul>
-  </nav>
+</nav>
 </header>
 
 <div class="flex-grow ml-56 p-8">

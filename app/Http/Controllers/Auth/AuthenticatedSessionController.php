@@ -56,9 +56,6 @@ class AuthenticatedSessionController extends Controller
             $request->session()->forget('company_logged_in');
         }
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
         return redirect('/');
     }
 

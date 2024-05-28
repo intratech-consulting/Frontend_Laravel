@@ -15,6 +15,17 @@ use Illuminate\Support\Facades\Storage;
 
 class CompanyController extends Controller
 {
+
+    public function logout(Request $request)
+    {
+        Auth::guard('company')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('user.home');
+    }
+
      protected $rabbitMQService;
 
 
@@ -36,6 +47,11 @@ class CompanyController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+    private function convertToUtf8($value)
+    {
+        return mb_convert_encoding($value, 'UTF-8', 'auto');
     }
 
     public function create_company(Request $request)
@@ -122,23 +138,22 @@ class CompanyController extends Controller
         $xmlCompany = new \SimpleXMLElement('<company/>');
         $xmlCompany->addChild('routing_key', 'company.frontend');
         $xmlCompany->addChild('crud_operation', 'create');
-
-        $xmlCompany->addChild('id', $masterUuid); // give masterUuid as id
-        $xmlCompany->addChild('name', $companyData['name']);
-        $xmlCompany->addChild('email', $companyData['email']);
-        $xmlCompany->addChild('telephone', $companyData['telephone']);
+        $xmlCompany->addChild('id', $masterUuid);
+        $xmlCompany->addChild('name', $this->convertToUtf8($companyData['name']));
+        $xmlCompany->addChild('email', $this->convertToUtf8($companyData['email']));
+        $xmlCompany->addChild('telephone', $this->convertToUtf8($companyData['telephone']));
         $xmlCompany->addChild('logo', $logo);
 
         $address = $xmlCompany->addChild('address');
-        $address->addChild('country', $companyData['country']);
-        $address->addChild('state', $companyData['state']);
-        $address->addChild('city', $companyData['city']);
-        $address->addChild('zip', $companyData['zip']);
-        $address->addChild('street', $companyData['street']);
-        $address->addChild('house_number', $companyData['house_number']);
+        $address->addChild('country', $this->convertToUtf8($companyData['country']));
+        $address->addChild('state', $this->convertToUtf8($companyData['state']));
+        $address->addChild('city', $this->convertToUtf8($companyData['city']));
+        $address->addChild('zip', $this->convertToUtf8($companyData['zip']));
+        $address->addChild('street', $this->convertToUtf8($companyData['street']));
+        $address->addChild('house_number', $this->convertToUtf8($companyData['house_number']));
 
-        $xmlCompany->addChild('type', $companyData['type']);
-        $xmlCompany->addChild('invoice', $companyData['invoice']);
+        $xmlCompany->addChild('type', $this->convertToUtf8($companyData['type']));
+        $xmlCompany->addChild('invoice', $this->convertToUtf8($companyData['invoice']));
 
 
         // Convert XML to string
@@ -148,10 +163,11 @@ class CompanyController extends Controller
 
         $this->sendMessageToTopic($routingKey, $message);
 
+        Auth::login($company);
+
         return redirect()
             ->route('user.home')
             ->with('success', 'Je account is succesvol aangemaakt  ' . $company->name . '!');
-            Auth::login($company);
     }
 
     public function editProfile()
@@ -260,22 +276,22 @@ class CompanyController extends Controller
                 $xmlMessage->addChild('routing_key', 'company.frontend');
                 $xmlMessage->addChild('crud_operation', 'update');
                 $xmlMessage->addChild('id', $masterUuid);
-                $xmlMessage->addChild('name', $company->name);
-                $xmlMessage->addChild('email', $company->email);
-                $xmlMessage->addChild('telephone', $company->telephone);
-                $xmlMessage->addChild('logo', $logo);
+                $xmlMessage->addChild('name', $this->convertToUtf8($company->name));
+                $xmlMessage->addChild('email', $this->convertToUtf8($company->email));
+                $xmlMessage->addChild('telephone', $this->convertToUtf8($company->telephone));
+                $xmlMessage->addChild('logo', $company->logo);
 
                 $address = $xmlMessage->addChild('address');
-                $address->addChild('country', $company->country);
-                $address->addChild('state', $company->state);
-                $address->addChild('city', $company->city);
-                $address->addChild('zip', $company->zip);
-                $address->addChild('street', $company->street);
-                $address->addChild('house_number', $company->house_number);
+                $address->addChild('country', $this->convertToUtf8($company->country));
+                $address->addChild('state', $this->convertToUtf8($company->state));
+                $address->addChild('city', $this->convertToUtf8($company->city));
+                $address->addChild('zip', $this->convertToUtf8($company->zip));
+                $address->addChild('street', $this->convertToUtf8($company->street));
+                $address->addChild('house_number', $this->convertToUtf8($company->house_number));
 
-                $xmlMessage->addChild('invoice', $company->invoice);
+                $xmlMessage->addChild('invoice', $this->convertToUtf8($company->invoice));
                 $xmlMessage->addChild('source', 'frontend');
-                $xmlMessage->addChild('company_id', $company->company_id);
+                $xmlMessage->addChild('company_id', $this->convertToUtf8($company->company_id));
                 $xmlMessage->addChild('calendar_link', '');
 
                 // Convert XML to string
@@ -292,7 +308,7 @@ class CompanyController extends Controller
                 $data_update = [
                     'MASTERUUID' => $masterUuid,
                     'Service' => 'frontend',
-                    'NewServiceId' => $company->company_id,
+                    'NewServiceId' => $company->id,
                 ];
 
                 $response = $client->post('http://' . env('GENERAL_IP') . ':6000/updateServiceId', [
@@ -376,23 +392,23 @@ class CompanyController extends Controller
         $xmlMessage->addChild('routing_key', 'company.frontend');
         $xmlMessage->addChild('crud_operation', 'delete');
         $xmlMessage->addChild('id', $masterUuid);
-        $xmlMessage->addChild('name', $company->name);
-        $xmlMessage->addChild('email', $company->email);
-        $xmlMessage->addChild('telephone', $company->telephone);
+        $xmlMessage->addChild('name', $this->convertToUtf8($company->name));
+        $xmlMessage->addChild('email', $this->convertToUtf8($company->email));
+        $xmlMessage->addChild('telephone', $this->convertToUtf8($company->telephone));
         $xmlMessage->addChild('logo', $company->logo);
 
         $address = $xmlMessage->addChild('address');
-        $address->addChild('country', $company->country);
-        $address->addChild('state', $company->state);
-        $address->addChild('city', $company->city);
-        $address->addChild('zip', $company->zip);
-        $address->addChild('street', $company->street);
-        $address->addChild('house_number', $company->house_number);
+        $address->addChild('country', $this->convertToUtf8($company->country));
+        $address->addChild('state', $this->convertToUtf8($company->state));
+        $address->addChild('city', $this->convertToUtf8($company->city));
+        $address->addChild('zip', $this->convertToUtf8($company->zip));
+        $address->addChild('street', $this->convertToUtf8($company->street));
+        $address->addChild('house_number', $this->convertToUtf8($company->house_number));
 
-        $xmlMessage->addChild('type', $company->type);
-        $xmlMessage->addChild('invoice', $company->invoice);
+        $xmlMessage->addChild('type', $this->convertToUtf8($company->type));
+        $xmlMessage->addChild('invoice', $this->convertToUtf8($company->invoice));
         $xmlMessage->addChild('source', 'frontend');
-        $xmlMessage->addChild('company_id', $company->company_id);
+        $xmlMessage->addChild('company_id', $this->convertToUtf8($company->company_id));
         $xmlMessage->addChild('calendar_link', '');
 
         try {
@@ -422,17 +438,16 @@ class CompanyController extends Controller
             \Log::error('Error sending message to RabbitMQ: ' . $e->getMessage());
         }
 
-        // Attempt to logout the company and delete the company record
+        // Deleting the company record and logging out
         try {
-            Auth::guard('company')->logout();
+            // Attempt to delete the company record
             $company->delete();
 
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+            // Log out the company using the logout method
+            $this->logout($request);
 
-            \Log::info('Company deleted successfully: ' . $company->id);
-
-            return redirect()->route('user.home')->with('success', 'Company deleted successfully');
+            // Redirect to the login page with a success message
+            return redirect()->route('login')->with('success', 'Company deleted and logged out successfully');
         } catch (\Exception $e) {
             \Log::error('Error deleting company: ' . $e->getMessage());
             return Redirect::back()->withErrors(['error' => 'An error occurred while deleting the company. Please try again later.']);
