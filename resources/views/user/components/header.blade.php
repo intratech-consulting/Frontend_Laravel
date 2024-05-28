@@ -189,7 +189,7 @@
                 </li>
             @else
                 <li><button type="button" class="connect" onclick="window.location.href='{{ route('login') }}'">Inloggen</button></li>
-                <li><button type="button" class="connect" onclick="window.location.href='{{ route('register') }}'">Registreren</button></li>
+                <li><button type="button" class="connect" onclick="window.location.href='{{ url('registration') }}'">Registreren</button></li>
             @endauth
         @endif
     </ul>
