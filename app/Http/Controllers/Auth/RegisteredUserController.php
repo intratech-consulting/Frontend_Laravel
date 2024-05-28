@@ -57,6 +57,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        try{
         $userData = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -96,6 +97,8 @@ class RegisteredUserController extends Controller
         ]);
 
         \Log::info('User after create: ' . print_r($user->toArray(), true));
+
+        $masterUuid = null;
 
         // Create a new Guzzle HTTP client
         $client = new \GuzzleHttp\Client();
@@ -165,8 +168,22 @@ class RegisteredUserController extends Controller
 
         $this->sendMessageToTopic($routingKey, $message);
 
+        //send log
+        $this->rabbitMQService->sendLogEntryToTopic('create user', 'User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ') created successfully ', false);
+
         return redirect()
-            ->route('register')
-            ->with('success', 'Uw account is succesvol aangemaakt, welkom ' . $user->first_name . " " . $user->last_name .  '!');
+            ->route('login')
+            ->with('success', 'Je account is succesvol aangemaakt ' . $user->first_name . " " . $user->last_name .  '!');
+            Auth::login($user);
+
+        }
+        catch(\Exception $e)
+        {
+        //send log
+        $this->rabbitMQService->sendLogEntryToTopic('create user', 'Error: [User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ') failed to created successfully] -> ' . $e->getMessage(), true);
+
+        return Redirect::back()->withErrors('failed', 'Je account is niet succesvol aangemaakt ' . $user->first_name . " " . $user->last_name .  '!');
+
+        }
     }
 }

@@ -105,13 +105,13 @@
         </div>
 
         <div class="form-group">
-            <label for="country">Land</label>
-            <input id="country" type="text" name="country" value="{{ old('country') }}" required>
+            <label for="street">Straat</label>
+            <input id="street" type="text" name="street" value="{{ old('street') }}" required>
         </div>
 
         <div class="form-group">
-            <label for="state">Staat</label>
-            <input id="state" type="text" name="state" value="{{ old('state') }}" required>
+            <label for="house_number">Huisnummer</label>
+            <input id="house_number" type="text" name="house_number" value="{{ old('house_number') }}" required>
         </div>
 
         <div class="form-group">
@@ -125,23 +125,19 @@
         </div>
 
         <div class="form-group">
-            <label for="street">Straat</label>
-            <input id="street" type="text" name="street" value="{{ old('street') }}" required>
+            <label for="state">Provincie</label>
+            <input id="state" type="text" name="state" value="{{ old('state') }}" required>
         </div>
 
         <div class="form-group">
-            <label for="house_number">Huisnummer</label>
-            <input id="house_number" type="text" name="house_number" value="{{ old('house_number') }}" required>
+            <label for="country">Land</label>
+            <input id="country" type="text" name="country" value="{{ old('country') }}" required>
         </div>
 
         <div class="form-group">
-            <label for="type">Type</label>
-            <select id="type" name="type" required>
-                <option value="customer">Klant</option>
-                <option value="sponsor">Sponsor</option>
-                <option value="speaker">Spreker</option>
-                <option value="">Andere</option>
-            </select>
+            <label for="sponsor">Sponsor</label>
+            <input id="sponsor" name="sponsor" type="checkbox" value="1" {{ old('sponsor') ? 'checked' : '' }}>
+            <small class="error-message">{{ $errors->first('sponsor') }}</small>
         </div>
 
         <div class="form-group">

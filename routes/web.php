@@ -12,7 +12,8 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CreateEventController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\Auth\CompanyAuthController;
+use App\Http\Controllers\EventRegistrationController;
+use App\Http\Controllers\EventUnsubscribeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,11 +49,20 @@ Route::middleware('web')->group(function () {
         })->name('user.home');
     });
 
+
     Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
+
+    Route::middleware(['auth:company'])->group(function () {
+        Route::get('/company-profile', [CompanyController::class, 'editProfile'])->name('company-profile.edit');
+        Route::post('/company-profile/update', [CompanyController::class, 'updateProfile'])->name('company-profile.update');
+        Route::delete('/company-profile/destroy', [CompanyController::class, 'destroy'])->name('company.destroy');
+    });
+
+    Route::post('/company/logout', [CompanyController::class, 'logout'])->name('company.logout');
 
     // Header Routes
     Route::get('/home', [headerController::class, 'home']);
@@ -65,12 +75,7 @@ Route::middleware('web')->group(function () {
         if (Auth::guard('web')->check()) {
             Auth::guard('web')->logout();
         }
-    
-        if (Auth::guard('company')->check()) {
-            Auth::guard('company')->logout();
-            Session::flush();
-        }
-    
+
         request()->session()->invalidate();
         request()->session()->regenerateToken();
         return redirect('/');
@@ -85,11 +90,18 @@ Route::middleware('web')->group(function () {
     Route::match(['get', 'post'], '/create_event', [EventController::class, 'test'])->name('test_event');
     Route::post('/create_event', [EventController::class, 'create_event'])->name('create_event');
 
+    //register events
+    Route::post('/events/register', [EventRegistrationController::class, 'register'])->name('events.register');
+
+    //unsubscribe events
+    Route::post('/events/unsubscribe', [EventUnsubscribeController::class, 'unsubscribe'])->name('events.unsubscribe');
+
     // Register to event
-    Route::post('/events/register', [EventController::class, 'registerToEvent']);
+    //Route::post('/events/register', [EventController::class, 'registerToEvent']);
 
     // Event details
     Route::get('/event_details/{id}', [EventController::class, 'eventDetails']);
+
 
     // Company creation
     Route::get('/make_company', [headerController::class, 'show_company']);
@@ -98,8 +110,8 @@ Route::middleware('web')->group(function () {
     Route::post('/send-message-to-topics_company', [CompanyController::class, 'sendMessageToTopic'])->name('sendMessageToTopic_company');
 
     // Role register
-    Route::get('/register_speaker', [RoleRegisterController::class, 'register_speaker']);
-    Route::get('/register_company', [RoleRegisterController::class, 'register_company']);
+    Route::get('/register-speaker', [RoleRegisterController::class, 'register_speaker'])->name('register_speaker');
+    Route::get('/register_company', [RoleRegisterController::class, 'register_company'])->name('register_company');
 
     // Footer Routes
     Route::get('/privacy', [footerController::class, 'privacy']);

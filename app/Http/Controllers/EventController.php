@@ -46,7 +46,7 @@ class EventController extends Controller
     public function eventDetails($id)
     {
         $event = Event::find($id);
-        return view('user.event-details', compact('eventdetails'));
+        return view('user.event-details', compact('event'));
     }
 
 
@@ -83,7 +83,7 @@ class EventController extends Controller
        
         $eventData = $request->validate([
 
-   'date' => ['required'],
+    'date' => ['required'],
     'start_time' => ['required'],
     'end_time' => ['required'],
     'location' => ['required'],
@@ -111,29 +111,29 @@ class EventController extends Controller
 
 */
 
+    try{
+        //generate event id 
+        $eventid = mt_rand(100000, 999999);
 
-        
 
+        $xmlEvent = new \SimpleXMLElement('<event/>');
 
+        $xmlEvent->addChild('routing_key', 'user.crm');
+        $xmlEvent->addChild('crud_operation', 'create');
+        $xmlEvent->addChild('id', $eventid);
+        $xmlEvent->addChild('date', $eventData['date']);
+        $xmlEvent->addChild('start_time', $eventData['start_time']);
+        $xmlEvent->addChild('end_time', $eventData['end_time']);
+        $xmlEvent->addChild('location', $eventData['location']);
 
-$xmlEvent = new \SimpleXMLElement('<event/>');
+        // Add speaker data as a child element
+        $speaker = $xmlEvent->addChild('speaker');
+        $speaker->addChild('user_id', $eventData['speaker_user_id']);
+        $speaker->addChild('company_id', $eventData['speaker_company_id']);
 
-$xmlEvent->addChild('routing_key', 'user.crm');
-    $xmlEvent->addChild('crud_operation', 'create');
-    $xmlEvent->addChild('id', mt_rand(100000, 999999)); // Generate a random ID
-    $xmlEvent->addChild('date', $eventData['date']);
-    $xmlEvent->addChild('start_time', $eventData['start_time']);
-    $xmlEvent->addChild('end_time', $eventData['end_time']);
-    $xmlEvent->addChild('location', $eventData['location']);
-
-    // Add speaker data as a child element
-    $speaker = $xmlEvent->addChild('speaker');
-    $speaker->addChild('user_id', $eventData['speaker_user_id']);
-    $speaker->addChild('company_id', $eventData['speaker_company_id']);
-
-    $xmlEvent->addChild('max_registrations', $eventData['max_registrations']);
-    $xmlEvent->addChild('available_seats', $eventData['available_seats']);
-    $xmlEvent->addChild('description', $eventData['description']);
+        $xmlEvent->addChild('max_registrations', $eventData['max_registrations']);
+        $xmlEvent->addChild('available_seats', $eventData['available_seats']);
+        $xmlEvent->addChild('description', $eventData['description']);
 
         // Convert XML to string
         $message = $xmlEvent->asXML();
@@ -144,9 +144,21 @@ $xmlEvent->addChild('routing_key', 'user.crm');
 
         //event(new Registered($user));
 
-       // Auth::login($user);
+        // Auth::login($user);
 
-       return redirect()->back();
+        //send log
+        $this->rabbitMQService->sendLogEntryToTopic('create event', 'event (id: ' . $eventid . ' successfully created', false);
+
+        return redirect()->back()->with('success', 'nieuw event aangemaakt' . $eventid . "!");
+
+        }
+        catch(\Exception $e)
+        {
+            //send log
+            $this->rabbitMQService->sendLogEntryToTopic('create event', 'Error: [event (id: ' . $eventid . ' unsuccessfully created] -> ' . $e->getMessage(), true);
+
+            return Redirect::back()->withErrors('failed', 'Je event ' . $eventid . ' is niet succesvol aangemaakt!');
+        }
     }
 
     public function test(Request $request)

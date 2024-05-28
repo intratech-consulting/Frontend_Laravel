@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Carbon\Carbon;
+use App\Models\Attendance;
 
 
 
@@ -105,7 +106,15 @@ public function show_events()
 
 public function mijnReservaties()
     {
-   return view('user.myattendance');
+
+
+        $user = Auth::user();
+        $attendances = Attendance::where('user_id', $user->id)->get();
+        $eventIds = $attendances->pluck('event_id')->unique();
+        $events = Event::whereIn('id', $eventIds)->with('users')->get();
+
+        return view('user.myattendance', compact('user', 'attendances', 'events'));
+    
     }
 
 

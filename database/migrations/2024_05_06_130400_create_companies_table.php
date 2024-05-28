@@ -26,7 +26,7 @@ class CreateCompaniesTable extends Migration
             $table->string('zip')->nullable();
             $table->string('street')->nullable();
             $table->string('house_number')->nullable();
-            $table->string('type');
+            $table->boolean('sponsor')->default(false);
             $table->string('invoice');
             $table->string('password');
             $table->timestamps();
