@@ -170,7 +170,7 @@
 
 
                     <div class="buttons-container">
-                        <a href="{{ url('event_details' , $events->id) }}" class="btn btn-ghost">Meer weergeven</a>
+                        <button type="button" class="button" onclick="window.location.href='{{ url('event_details' , $events->id) }}'">Meer weergeven</button>
                         @auth('web')
                             <form action="{{ route('events.register') }}" method="POST">
                                 @csrf
@@ -180,8 +180,7 @@
                         @elseauth('company')
                         @else
                             <p class="guest-message">
-                                <a href="{{ route('login') }}">log in to register</a>
-
+                                <button type="button" class="button" onclick="window.location.href='{{ route('login') }}'">log in to register</button>
                             </p>
                         @endauth
 
