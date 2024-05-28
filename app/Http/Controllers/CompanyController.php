@@ -208,7 +208,7 @@ class CompanyController extends Controller
         ]);
 
         // Update the other attributes from the request
-        $company->update($request->all());
+        $company->update($request->except('logo'));
 
         // Handle file upload
         if ($request->hasFile('logo')) {
