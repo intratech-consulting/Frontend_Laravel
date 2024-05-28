@@ -161,39 +161,10 @@ class CompanyController extends Controller
     {
         $company = Auth::guard('company')->user();
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255',
-            'telephone' => 'required|string|max:20',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,svg,webp|max:2048',
-            'country' => 'required|string|max:100',
-            'state' => 'required|string|max:100',
-            'city' => 'required|string|max:100',
-            'zip' => 'required|string|max:10',
-            'street' => 'required|string|max:100',
-            'house_number' => 'required|string|max:10',
-            'invoice' => 'required|string|max:34',
-        ]);
-
-        $logoPath = null;
-
-        \Log::info('Before storing file: ' . $logoPath);
-
-        if ($request->hasFile('logo')) {
-            if ($company->logo) {
-                Storage::disk('public')->delete($company->logo);
-            }
-
-            $logoPath = $request->file('logo')->store('logos', 'public');
-        }
-
-        \Log::info('After storing file: ' . $logoPath);
-
-        $company->update([
+        $companyData = [
             'name' => $request->name,
             'email' => $request->email,
             'telephone' => $request->telephone,
-            'logo' => $logoPath,
             'country' => $request->country,
             'state' => $request->state,
             'city' => $request->city,
@@ -201,7 +172,18 @@ class CompanyController extends Controller
             'street' => $request->street,
             'house_number' => $request->house_number,
             'invoice' => $request->invoice,
-        ]);
+        ];
+
+        if ($request->hasFile('logo')) {
+            if ($company->logo) {
+                Storage::disk('public')->delete($company->logo);
+            }
+
+            $logoPath = $request->file('logo')->store('logos', 'public');
+            $companyData['logo'] = $logoPath;
+        }
+
+        $company->update($companyData);
 
         try {
             // Retrieve the authenticated company
