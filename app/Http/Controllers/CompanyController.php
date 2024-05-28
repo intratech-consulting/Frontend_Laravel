@@ -208,6 +208,7 @@ class CompanyController extends Controller
             'invoice' => 'required|string|max:34',
         ]);
 
+        $logoPath = null;
 
         // Handle file upload
         if ($request->hasFile('logo')) {
@@ -216,7 +217,6 @@ class CompanyController extends Controller
             }
 
             $logoPath = $request->file('logo')->store('logos', 'public');
-            dd($logoPath);
         }
 
         $company->update([
