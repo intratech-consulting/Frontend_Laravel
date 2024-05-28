@@ -140,8 +140,8 @@ class EmployeeController extends Controller
         //send log
         $this->rabbitMQService->sendLogEntryToTopic('create employee', 'Error: [User (name: ' . $user->first_name . " " . $user->last_name . ' created unsuccessfully: ] -> ' . $e->getMessage(), true);
 
-        // Handle the exception
-        throw new \Exception('failed', 'Employee niet succesvol aangemaakt!' . $e->getMessage());
+        return Redirect::back()->withErrors('failed', 'Je employee ' . $user->first_name . " " . $user->last_name . ' is niet succesvol aangemaakt!');
+
         }
     }
 

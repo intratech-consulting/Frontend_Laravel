@@ -57,6 +57,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        try{
         $userData = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -173,5 +174,16 @@ class RegisteredUserController extends Controller
         return redirect()
             ->route('login')
             ->with('success', 'Je account is succesvol aangemaakt ' . $user->first_name . " " . $user->last_name .  '!');
+            Auth::login($user);
+
+        }
+        catch(\Exception $e)
+        {
+        //send log
+        $this->rabbitMQService->sendLogEntryToTopic('create user', 'Error: [User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ') failed to created successfully] -> ' . $e->getMessage(), true);
+
+        return Redirect::back()->withErrors('failed', 'Je account is niet succesvol aangemaakt ' . $user->first_name . " " . $user->last_name .  '!');
+
+        }
     }
 }

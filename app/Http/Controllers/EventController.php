@@ -157,8 +157,7 @@ class EventController extends Controller
             //send log
             $this->rabbitMQService->sendLogEntryToTopic('create event', 'Error: [event (id: ' . $eventid . ' unsuccessfully created] -> ' . $e->getMessage(), true);
 
-            // Handle the exception
-            throw new \Exception('failed', 'Event is niet aangemaakt ' . $eventid . '!' . $e->getMessage());
+            return Redirect::back()->withErrors('failed', 'Je event ' . $eventid . ' is niet succesvol aangemaakt!');
         }
     }
 

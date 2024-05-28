@@ -88,8 +88,7 @@ class EventRegistrationController extends Controller
         //send log
         $this->rabbitMQService->sendLogEntryToTopic('subscribe', 'Error: [User (id: ' . $user->id .  ', name: ' . $user->first_name .  " " . $user->last_name . ' unsubscribed unsuccessfully from event: ' . $attendance->event->title . '] -> ' . $e->getMessage(), true);
 
-        // Handle the exception
-        throw new \Exception('failed', 'Je bent niet succesvol ingeschreven voor het event ' . $attendance->event->title . '!' . $e->getMessage());
+        return redirect()->back()->with('failed', 'Je bent niet succesvol ingeschreven voor het event ' . $attendance->event->title . '!');
         }
     }
 }
