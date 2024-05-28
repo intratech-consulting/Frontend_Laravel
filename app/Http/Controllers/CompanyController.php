@@ -68,7 +68,6 @@ class CompanyController extends Controller
                 'zip' => ['required', 'string', 'max:20'],
                 'street' => ['required', 'string', 'max:255'],
                 'house_number' => ['required', 'string', 'max:20'],
-                'sponsor' => ['nullable', 'boolean'],
                 'invoice' => ['required', 'string', 'max:255'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ]);
@@ -87,7 +86,7 @@ class CompanyController extends Controller
                 'zip' => $companyData['zip'],
                 'street' => $companyData['street'],
                 'house_number' => $companyData['house_number'],
-                'sponsor' => $request->has('sponsor'),
+                'sponsor' => $request->has('sponsor') ? true : false,
                 'invoice' => $companyData['invoice'],
                 'password' => Hash::make($companyData['password']),
             ]);
@@ -175,7 +174,7 @@ class CompanyController extends Controller
             'house_number' => 'required|string|max:10',
             'invoice' => 'required|string|max:34',
         ]);
-
+        
         $logoPath = null;
 
         // Handle file upload
@@ -185,23 +184,21 @@ class CompanyController extends Controller
             }
 
             $logoPath = $request->file('logo')->store('logos', 'public');
-            $company->logo = $logoPath; // Update the logo path in the model
         }
 
-        // Update the other attributes
-        $company->name = $request->name;
-        $company->email = $request->email;
-        $company->telephone = $request->telephone;
-        $company->country = $request->country;
-        $company->state = $request->state;
-        $company->city = $request->city;
-        $company->zip = $request->zip;
-        $company->street = $request->street;
-        $company->house_number = $request->house_number;
-        $company->invoice = $request->invoice;
-
-        // Save the updated model
-        $company->save();
+        $company->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'telephone' => $request->telephone,
+            'logo' => $logoPath,
+            'country' => $request->country,
+            'state' => $request->state,
+            'city' => $request->city,
+            'zip' => $request->zip,
+            'street' => $request->street,
+            'house_number' => $request->house_number,
+            'invoice' => $request->invoice,
+        ]);
 
         try {
             // Retrieve the authenticated company
