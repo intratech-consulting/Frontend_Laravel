@@ -5,16 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $event->name }}</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        html, body {
+            height: 100%;
             margin: 0;
             padding: 0;
+            font-family: Arial, sans-serif;
             background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
         }
 
         .container {
-            margin: 0 auto;
-            max-width: 800px;
+            flex: 1;
+            margin: 20px 80px 20px 80px;
+            max-width: 1200px;
             padding: 20px;
             background-color: #fff;
             border-radius: 10px;
@@ -69,7 +73,7 @@
 <div class="container">
     <div class="event-header">
         <h1>{{ $event->name }}</h1>
-        <p>Gehost door {{ $event->users->first_name }} van {{ $event->companies->name }}</p>
+        <p>Gehost door:  {{ $event->users->first_name }} van {{ $event->companies->name }}</p>
     </div>
     <div class="event-details">
         <img src="#" alt="Event Image">

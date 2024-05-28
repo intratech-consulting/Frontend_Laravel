@@ -163,6 +163,8 @@ class CompanyController extends Controller
 
         $this->sendMessageToTopic($routingKey, $message);
 
+        event(new Registered($company));
+
         Auth::login($company);
 
         //send log
