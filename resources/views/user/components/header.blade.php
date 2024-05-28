@@ -165,7 +165,6 @@
                     <div class="user-actions">
                         <a href="{{ url('/mijnReservaties') }}">Mijn reservaties</a>
                         <a href="{{ url('/profile') }}">Profiel</a>
-                        <li><a href="{{ url('about') }}">Over ons</a></li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="logout-button">Uitloggen</button>
@@ -178,7 +177,6 @@
                     <div class="user-actions">
                         <a href="{{ url('/company-profile') }}">Profiel</a>
                         <a href="{{ url('/register-speaker') }}">Registreer Werknemers</a>
-                        <li><a href="{{ url('about') }}">Over ons</a></li>
                         <form method="POST" action="{{ route('company.logout') }}">
                             @csrf
                             <button type="submit" class="logout-button">Uitloggen</button>
@@ -186,7 +184,6 @@
                     </div>
                 </li>
             @else
-                <li><a href="{{ url('about') }}">Over ons</a></li>
                 <li class="connect"><a href="{{ route('login') }}">Inloggen</a></li>
                 <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
             @endauth

@@ -43,6 +43,8 @@
 
 <footer class="footer">
   <div class="footer-content">
+      <a href="{{ url('about') }}">Over ons</a>
+
     <span>&copy; Erasmushogeschool Brussel 2024</span>
 
     <a href="{{url('privacy')}}">Privacy</a>
