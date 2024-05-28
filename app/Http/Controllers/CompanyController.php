@@ -68,7 +68,7 @@ class CompanyController extends Controller
             'zip' => ['required', 'string', 'max:20'],
             'street' => ['required', 'string', 'max:255'],
             'house_number' => ['required', 'string', 'max:20'],
-            'type' => ['required', 'string', 'max:255'],
+            'sponsor' => ['nullable', 'boolean'],
             'invoice' => ['required', 'string', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
@@ -94,7 +94,7 @@ class CompanyController extends Controller
             'zip' => $companyData['zip'],
             'street' => $companyData['street'],
             'house_number' => $companyData['house_number'],
-            'type' => $companyData['type'],
+            'sponsor' => $companyData['sponsor'] ?? false,
             'invoice' => $companyData['invoice'],
             'password' => Hash::make($companyData['password']),
         ]);
@@ -152,7 +152,7 @@ class CompanyController extends Controller
         $address->addChild('street', $this->convertToUtf8($companyData['street']));
         $address->addChild('house_number', $this->convertToUtf8($companyData['house_number']));
 
-        $xmlCompany->addChild('type', $this->convertToUtf8($companyData['type']));
+        $xmlCompany->addChild('sponsor', $this->convertToUtf8($companyData['sponsor']));
         $xmlCompany->addChild('invoice', $this->convertToUtf8($companyData['invoice']));
 
 
@@ -426,7 +426,7 @@ class CompanyController extends Controller
         $address->addChild('street', $this->convertToUtf8($company->street));
         $address->addChild('house_number', $this->convertToUtf8($company->house_number));
 
-        $xmlMessage->addChild('type', $this->convertToUtf8($company->type));
+        $xmlCompany->addChild('sponsor', $this->convertToUtf8($company->sponsor));
         $xmlMessage->addChild('invoice', $this->convertToUtf8($company->invoice));
         $xmlMessage->addChild('source', 'frontend');
         $xmlMessage->addChild('company_id', $this->convertToUtf8($company->company_id));
