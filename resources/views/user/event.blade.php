@@ -137,9 +137,8 @@
         border-radius: 3px;
     }
 
-    .button-container {
-        display: flex;
-        justify-content: space-between;
+    .button-container button:first-child {
+        margin-right: 30px;
     }
 
 
