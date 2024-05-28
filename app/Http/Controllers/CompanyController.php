@@ -175,6 +175,7 @@ class CompanyController extends Controller
             'house_number' => 'required|string|max:10',
             'invoice' => 'required|string|max:34',
         ]);
+        
         $logoPath = null;
 
         // Handle file upload
