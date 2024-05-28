@@ -176,7 +176,7 @@ class RegisteredUserController extends Controller
                 ->with('success', 'Je account is succesvol aangemaakt ' . $user->first_name . ' ' . $user->last_name . '!');
         } catch (\Exception $e) {
             // Send log
-            $this->rabbitMQService->sendLogEntryToTopic('create user', 'Error: [User (masterUuid: ' . ($masterUuid ?? 'N/A') . ', name: ' . $userData['first_name'] . ' ' . $userData['last_name'] . ') failed to create successfully] -> ' . $e->getMessage(), true);
+            $this->rabbitMQService->sendLogEntryToTopic('create user', 'Error: [User (masterUuid: ' . $masterUuid . ', name: ' . $userData['first_name'] . ' ' . $userData['last_name'] . ') failed to create successfully] -> ' . $e->getMessage(), true);
 
             return redirect()->back()->withErrors(['failed' => 'Je account is niet succesvol aangemaakt ' . $userData['first_name'] . ' ' . $userData['last_name'] . '!']);
         }
