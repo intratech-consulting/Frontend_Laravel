@@ -96,14 +96,6 @@
       padding: 8px 12px;
     }
 
-    .logout-button {
-      /*background-color: #e30613;*/
-      /*color: #fff;*/
-      /*font-weight: 500;*/
-      /*padding: 8px 12px;*/
-      /*border-radius: 3px;*/
-      /*cursor: pointer;*/
-    }
 
     .connect {
         all: unset;
@@ -115,9 +107,6 @@
         color: white;
     }
 
-    .logout-button:hover {
-      background-color: #b5040a;
-    }
 
     .user-menu {
       display: flex;
@@ -183,7 +172,7 @@
                         <li><a href="{{ url('/profile') }}">Profiel</a></li>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" class="logout-button connect">Uitloggen</button>
+                            <button type="submit" class="connect">Uitloggen</button>
                         </form>
                     </div>
                 </li>
@@ -191,16 +180,16 @@
                 <li class="user-menu">
                     <div class="user-actions">
                         <li><a href="{{ url('/company-profile') }}">Profiel</a></li>
-                        <li class="connect"><a href="{{ url('/register-speaker') }}">Registreer Werknemers</a> </li>
+                        <li><button type="button" class="connect" onclick="window.location.href='{{ route('register_speaker') }}'">Registreer Werknemers</button></li>
                         <form method="POST" action="{{ route('company.logout') }}">
                             @csrf
-                            <button type="submit" class="logout-button connect">Uitloggen</button>
+                            <button type="submit" class="connect">Uitloggen</button>
                         </form>
                     </div>
                 </li>
             @else
-                <li class="connect"><a href="{{ route('login') }}">Inloggen</a></li>
-                <li class="connect"><a href="{{ url('registration') }}">Registreren</a></li>
+                <li><button type="button" class="connect" onclick="window.location.href='{{ route('login') }}'">Inloggen</button></li>
+                <li><button type="button" class="connect" onclick="window.location.href='{{ route('register') }}'">Registreren</button></li>
             @endauth
         @endif
     </ul>
