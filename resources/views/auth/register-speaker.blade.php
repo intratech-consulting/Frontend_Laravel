@@ -79,7 +79,7 @@
 @include('user.components.header')
 
 <div class="registration-card">
-    <h2>Speaker/Werknemer Registreren</h2>
+    <h2>Spreker/Werknemer Registreren</h2>
 
     <form method="POST" action="{{ route('register_speaker') }}">
         @csrf
