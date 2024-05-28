@@ -124,6 +124,8 @@ class RegisteredUserController extends Controller
                 // Get the MASTERUUID from the response
                 $masterUuid = $json['MasterUuid'];
 
+                \Log::info('masterUuid: ' . $masterUuid);
+
                 // Now you can use $masterUuid for whatever you need
             } catch (\GuzzleHttp\Exception\RequestException $e) {
                 // Send logs to ControlRoom
@@ -165,6 +167,8 @@ class RegisteredUserController extends Controller
             $routingKey = 'user.frontend';
 
             $this->sendMessageToTopic($routingKey, $message);
+
+            \Log::info('masterUuid: ' . $masterUuid);
 
             // Send log
             $this->rabbitMQService->sendLogEntryToTopic('create user', 'User (masterUuid: ' . $masterUuid . ', name: ' . $user->first_name . ' ' . $user->last_name . ') created successfully', false);
