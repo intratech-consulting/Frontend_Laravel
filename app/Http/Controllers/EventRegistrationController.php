@@ -76,6 +76,9 @@ class EventRegistrationController extends Controller
 
         $this->sendMessageToTopic($routingKey, $message);
 
+        //send log
+        $this->rabbitMQService->sendLogEntryToTopic('subscribe', 'User subscribed successfully to event', false);
+
         return redirect()->back()->with('success', 'Je bent succesvol ingeschreven voor het event ' . $attendance->event->title . '!');
     }
 }
