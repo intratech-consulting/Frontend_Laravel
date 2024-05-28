@@ -36,7 +36,7 @@
 
         <div class="form-group">
             <x-input-label for="logo" :value="__('Logo')" />
-            <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->logo }}" class="object-cover rounded-full mb-2" style="width: 200px; height: 200px;">
+            <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->logo }}" class="object-cover rounded-full mb-2" style="width: 200px; height: 200px;"> <br>
             <input id="logo" name="logo" type="file" class="mt-1 block w-full" />
             <x-input-error class="mt-2" :messages="$errors->get('logo')" />
         </div>
