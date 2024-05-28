@@ -110,11 +110,13 @@
     }
 
     .connect {
-        all:revert;
+        all: unset;
         background-color: #e30613;
         border-radius: 3px;
         padding: 8px 12px;
         cursor: pointer;
+        border: none;
+        color: white;
     }
 
     .logout-button:hover {
