@@ -218,16 +218,6 @@ class CompanyController extends Controller
             $logoPath = $logo->store('logos', 'public');
             $company->logo = $logoPath;
         }
-        else {
-            // If request doesn't have a logo, check if company has a logo
-            if ($company->logo) {
-                // If company has a logo, retrieve the file with the logo path
-                $logo = Storage::disk('public')->get($company->logo);
-            }
-            else{
-                $logo = null;
-            }
-        }
 
         $company->update($request->all());
 
