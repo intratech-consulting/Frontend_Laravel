@@ -17,7 +17,7 @@
 
         .container {
             flex: 1;
-            margin: 20px auto;
+            margin: 20px 80px 20px 80px;
             max-width: 1200px;
             padding: 20px;
             background-color: #fff;
