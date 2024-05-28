@@ -215,7 +215,6 @@ class CompanyController extends Controller
             }
 
             $logoPath = $request->file('logo')->store('logos', 'public');
-            dd($logoPath);
             $company->logo = $logoPath;
         }
 
