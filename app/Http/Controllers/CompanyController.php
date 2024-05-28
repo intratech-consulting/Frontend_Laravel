@@ -87,7 +87,7 @@ class CompanyController extends Controller
                 'zip' => $companyData['zip'],
                 'street' => $companyData['street'],
                 'house_number' => $companyData['house_number'],
-                'sponsor' => $companyData['sponsor'] ?? false,
+                'sponsor' => $request->has('sponsor'),
                 'invoice' => $companyData['invoice'],
                 'password' => Hash::make($companyData['password']),
             ]);
@@ -131,7 +131,7 @@ class CompanyController extends Controller
             $address->addChild('street', $this->convertToUtf8($companyData['street']));
             $address->addChild('house_number', $this->convertToUtf8($companyData['house_number']));
 
-            $xmlCompany->addChild('sponsor', isset($companyData['sponsor']) ? 'true' : 'false');
+            $xmlCompany->addChild('sponsor', $request->has('sponsor') ? 'true' : 'false');
             $xmlCompany->addChild('invoice', $this->convertToUtf8($companyData['invoice']));
 
             $message = $xmlCompany->asXML();
@@ -175,7 +175,7 @@ class CompanyController extends Controller
             'house_number' => 'required|string|max:10',
             'invoice' => 'required|string|max:34',
         ]);
-        
+
         $logoPath = null;
 
         // Handle file upload
@@ -185,21 +185,23 @@ class CompanyController extends Controller
             }
 
             $logoPath = $request->file('logo')->store('logos', 'public');
+            $company->logo = $logoPath; // Update the logo path in the model
         }
 
-        $company->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'telephone' => $request->telephone,
-            'logo' => $logoPath,
-            'country' => $request->country,
-            'state' => $request->state,
-            'city' => $request->city,
-            'zip' => $request->zip,
-            'street' => $request->street,
-            'house_number' => $request->house_number,
-            'invoice' => $request->invoice,
-        ]);
+        // Update the other attributes
+        $company->name = $request->name;
+        $company->email = $request->email;
+        $company->telephone = $request->telephone;
+        $company->country = $request->country;
+        $company->state = $request->state;
+        $company->city = $request->city;
+        $company->zip = $request->zip;
+        $company->street = $request->street;
+        $company->house_number = $request->house_number;
+        $company->invoice = $request->invoice;
+
+        // Save the updated model
+        $company->save();
 
         try {
             // Retrieve the authenticated company
