@@ -56,133 +56,101 @@ class CompanyController extends Controller
 
     public function create_company(Request $request)
     {
-        try{
-        $companyData = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255'],
-            'telephone' => ['required', 'string', 'max:20'],
-            'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],// Max file size in kilobytes (2MB)
-            'country' => ['required', 'string', 'max:255'],
-            'state' => ['required', 'string', 'max:255'],
-            'city' => ['required', 'string', 'max:255'],
-            'zip' => ['required', 'string', 'max:20'],
-            'street' => ['required', 'string', 'max:255'],
-            'house_number' => ['required', 'string', 'max:20'],
-            'sponsor' => ['nullable', 'boolean'],
-            'invoice' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-
-        if ($request->hasFile('logo')) {
-            $logo = $request->file('logo');
-            $logoPath = $logo->store('logos', 'public'); // This line stores the file
-        }
-        else {
-            $logoPath = null;
-            $logo = null;
-        }
-
-        $company = Company::create([
-            'user_role' => 'company',
-            'name' => $companyData['name'],
-            'email' => $companyData['email'],
-            'telephone' => $companyData['telephone'],
-            'logo' => $logoPath,
-            'country' => $companyData['country'],
-            'state' => $companyData['state'],
-            'city' => $companyData['city'],
-            'zip' => $companyData['zip'],
-            'street' => $companyData['street'],
-            'house_number' => $companyData['house_number'],
-            'sponsor' => $companyData['sponsor'] ?? false,
-            'invoice' => $companyData['invoice'],
-            'password' => Hash::make($companyData['password']),
-        ]);
-
-        $masterUuid = null;
-
-        // Create a new Guzzle HTTP client
-        $client = new \GuzzleHttp\Client();
-
-        // Define the data for the request
-        $data = [
-            'Service' => 'frontend',
-            'ServiceId' => $company->id, // Assuming $company->id is the ID of the newly created company
-        ];
-
         try {
-            $response = $client->post('http://' . env('GENERAL_IP') . ':6000/createMasterUuid', [
-                'json' => $data
+            $companyData = $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255'],
+                'telephone' => ['required', 'string', 'max:20'],
+                'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
+                'country' => ['required', 'string', 'max:255'],
+                'state' => ['required', 'string', 'max:255'],
+                'city' => ['required', 'string', 'max:255'],
+                'zip' => ['required', 'string', 'max:20'],
+                'street' => ['required', 'string', 'max:255'],
+                'house_number' => ['required', 'string', 'max:20'],
+                'sponsor' => ['nullable', 'boolean'],
+                'invoice' => ['required', 'string', 'max:255'],
+                'password' => ['required', 'string', 'min:8', 'confirmed'],
             ]);
 
-            // Get the response body
-            $body = $response->getBody();
+            $logoPath = $request->hasFile('logo') ? $request->file('logo')->store('logos', 'public') : null;
 
-            \Log::info('UUID Response Body: ' . $body);
+            $company = Company::create([
+                'user_role' => 'company',
+                'name' => $companyData['name'],
+                'email' => $companyData['email'],
+                'telephone' => $companyData['telephone'],
+                'logo' => $logoPath,
+                'country' => $companyData['country'],
+                'state' => $companyData['state'],
+                'city' => $companyData['city'],
+                'zip' => $companyData['zip'],
+                'street' => $companyData['street'],
+                'house_number' => $companyData['house_number'],
+                'sponsor' => $companyData['sponsor'] ?? false,
+                'invoice' => $companyData['invoice'],
+                'password' => Hash::make($companyData['password']),
+            ]);
 
-            // Decode the JSON response
-            $json = json_decode($body, true);
+            // Create a new Guzzle HTTP client
+            $client = new \GuzzleHttp\Client();
+            $data = [
+                'Service' => 'frontend',
+                'ServiceId' => $company->id,
+            ];
 
-            // Get the MASTERUUID from the response
-            $masterUuid = $json['MasterUuid'];
+            try {
+                $response = $client->post('http://' . env('GENERAL_IP') . ':6000/createMasterUuid', ['json' => $data]);
+                $body = $response->getBody();
+                \Log::info('UUID Response Body: ' . $body);
+                $json = json_decode($body, true);
+                $masterUuid = $json['MasterUuid'];
+            } catch (\GuzzleHttp\Exception\RequestException $e) {
+                $this->rabbitMQService->sendLogEntryToTopic('make_UUID', 'Error: ' . $e->getMessage(), true);
+                throw new \Exception('Failed to retrieve masterUuid: ' . $e->getMessage());
+            }
 
-            // Now you can use $masterUuid for whatever you need
-        } catch (\GuzzleHttp\Exception\RequestException $e) {
-            //Send logs to ControlRoom
-            $this->rabbitMQService->sendLogEntryToTopic('make_UUID', 'Error: ' . $e->getMessage(), true);
+            if (!isset($masterUuid)) {
+                throw new \Exception('Master UUID is not set. Message will not be sent to RabbitMQ.');
+            }
 
-            // Handle the exception
-            throw new \Exception('Failed to retrieve masterUuid: ' . $e->getMessage());
-        };
+            $xmlCompany = new \SimpleXMLElement('<company/>');
+            $xmlCompany->addChild('routing_key', 'company.frontend');
+            $xmlCompany->addChild('crud_operation', 'create');
+            $xmlCompany->addChild('id', $masterUuid);
+            $xmlCompany->addChild('name', $this->convertToUtf8($companyData['name']));
+            $xmlCompany->addChild('email', $this->convertToUtf8($companyData['email']));
+            $xmlCompany->addChild('telephone', $this->convertToUtf8($companyData['telephone']));
+            $xmlCompany->addChild('logo', $logoPath ?? '');
 
-        $xmlCompany = new \SimpleXMLElement('<company/>');
-        $xmlCompany->addChild('routing_key', 'company.frontend');
-        $xmlCompany->addChild('crud_operation', 'create');
-        $xmlCompany->addChild('id', $masterUuid);
-        $xmlCompany->addChild('name', $this->convertToUtf8($companyData['name']));
-        $xmlCompany->addChild('email', $this->convertToUtf8($companyData['email']));
-        $xmlCompany->addChild('telephone', $this->convertToUtf8($companyData['telephone']));
-        $xmlCompany->addChild('logo', $logo);
+            $address = $xmlCompany->addChild('address');
+            $address->addChild('country', $this->convertToUtf8($companyData['country']));
+            $address->addChild('state', $this->convertToUtf8($companyData['state']));
+            $address->addChild('city', $this->convertToUtf8($companyData['city']));
+            $address->addChild('zip', $this->convertToUtf8($companyData['zip']));
+            $address->addChild('street', $this->convertToUtf8($companyData['street']));
+            $address->addChild('house_number', $this->convertToUtf8($companyData['house_number']));
 
-        $address = $xmlCompany->addChild('address');
-        $address->addChild('country', $this->convertToUtf8($companyData['country']));
-        $address->addChild('state', $this->convertToUtf8($companyData['state']));
-        $address->addChild('city', $this->convertToUtf8($companyData['city']));
-        $address->addChild('zip', $this->convertToUtf8($companyData['zip']));
-        $address->addChild('street', $this->convertToUtf8($companyData['street']));
-        $address->addChild('house_number', $this->convertToUtf8($companyData['house_number']));
+            $xmlCompany->addChild('sponsor', isset($companyData['sponsor']) ? 'true' : 'false');
+            $xmlCompany->addChild('invoice', $this->convertToUtf8($companyData['invoice']));
 
-        $xmlCompany->addChild('sponsor', $this->convertToUtf8($companyData['sponsor']));
-        $xmlCompany->addChild('invoice', $this->convertToUtf8($companyData['invoice']));
+            $message = $xmlCompany->asXML();
+            $routingKey = 'company.frontend';
 
+            $this->sendMessageToTopic($routingKey, $message);
 
-        // Convert XML to string
-        $message = $xmlCompany->asXML();
-        // Send message to RabbitMQ
-        $routingKey = 'company.frontend';
+            event(new Registered($company));
+            Auth::login($company);
 
-        $this->sendMessageToTopic($routingKey, $message);
+            $this->rabbitMQService->sendLogEntryToTopic('create company', 'Company (masterUuid: ' . $masterUuid . ', name: ' . $companyData['name'] . ') created successfully', false);
 
-        event(new Registered($company));
-
-        Auth::login($company);
-
-        //send log
-        $this->rabbitMQService->sendLogEntryToTopic('create company', 'Company (masterUuid: ' . $masterUuid .  ', name: ' . $companyData['name'] . 'created successfully', false);
-
-        return redirect()
-            ->route('user.home')
-            ->with('success', 'Je bedrijf is succesvol aangemaakt  ' . $company->name . '!');
-        }
-        catch(\Exception $e)
-        {
-        //send log
-        $this->rabbitMQService->sendLogEntryToTopic('create company', 'Error: [Company (name: ' . $companyData['name'] . 'created unsuccessfully] -> ' . $e->getMessage(), true);
-
-        // Handle the exception
-        throw new \Exception('failed', 'Je bedrijf is niet succesvol aangemaakt ' . $companyData['name'] . '!' . $e->getMessage());
+            return redirect()->route('user.home')->with('success', 'Je bedrijf is succesvol aangemaakt ' . $company->name . '!');
+        } catch (\Exception $e) {
+            $this->rabbitMQService->sendLogEntryToTopic('create company', 'Error: [Company (name: ' . $companyData['name'] . ') created unsuccessfully] -> ' . $e->getMessage(), true);
+            return Redirect::back()->withErrors('failed', 'Je bedrijf ' . $company->name . ' is niet succesvol aangemaakt!');
         }
     }
+
 
     public function editProfile()
     {
@@ -207,7 +175,6 @@ class CompanyController extends Controller
             'house_number' => 'required|string|max:10',
             'invoice' => 'required|string|max:34',
         ]);
-
         $logoPath = null;
 
         // Handle file upload
