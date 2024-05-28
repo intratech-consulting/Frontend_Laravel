@@ -27,8 +27,13 @@
       margin: 0 auto; /* Center the copyright text */
     }
 
-    .footer-content a {
+    #privacy_footer {
       margin-right: 40px;
+      color: #fff;
+    }
+
+    #about_footer {
+      margin-left: 40px;
       color: #fff;
     }
 
@@ -43,11 +48,11 @@
 
 <footer class="footer">
   <div class="footer-content">
-      <a href="{{ url('about') }}">Over ons</a>
+      <a id="about_footer" href="{{ url('about') }}">Over ons</a>
 
     <span>&copy; Erasmushogeschool Brussel 2024</span>
 
-    <a href="{{url('privacy')}}">Privacy</a>
+    <a id="privacy_footer" href="{{url('privacy')}}">Privacy</a>
   </div>
 </footer>
 
