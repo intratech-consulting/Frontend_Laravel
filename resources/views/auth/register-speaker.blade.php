@@ -81,7 +81,7 @@
 <div class="registration-card">
     <h2>Spreker/Werknemer Registreren</h2>
 
-    <form method="POST" action="{{ route('register_test') }}">
+    <form method="POST" action="{{ route('register_speaker') }}">
         @csrf
 
 <div class="form-group">
