@@ -32,17 +32,18 @@ class EventUnsubscribeController extends Controller
         try {
             // stuur message naar rabbitMQ
             $this->rabbitMQService->sendMessageToTopic($routingKey, $message);
-            $this->rabbitMQService->sendLogEntryToTopic('send_event_to_queue', 'Event registration message sent successfully', false);
+            $this->rabbitMQService->sendLogEntryToTopic('send_event_to_queue', 'Event unsubscribe message sent successfully', false);
 
             return response()->json(['message' => 'Message sent successfully'], 200);
         } catch (\Exception $e) {
-            $this->rabbitMQService->sendLogEntryToTopic('send_event_to_queue', 'Event registration message not sent: ' . $e->getMessage(), true);
+            $this->rabbitMQService->sendLogEntryToTopic('send_event_to_queue', 'Event unsubscribe message not sent: ' . $e->getMessage(), true);
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
     public function unsubscribe(Request $request)
     {
+
         $user = Auth::user();
         $attendanceId = $request->input('attendances_id');
         $eventId = $request->input('event_id');
@@ -71,6 +72,8 @@ class EventUnsubscribeController extends Controller
 
         // verwijder attendance
         $attendance->delete();
+        //send log
+        $this->rabbitMQService->sendLogEntryToTopic('unsubscribe', 'User unsubscribed successfully from event', false);
 
         return redirect()->back()->with('success', 'Je bent succesvol uitgeschreven voor het event ' . $event->title . "!");
     }
