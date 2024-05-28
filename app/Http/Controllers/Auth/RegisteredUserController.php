@@ -124,6 +124,8 @@ class RegisteredUserController extends Controller
                 // Get the MASTERUUID from the response
                 $masterUuid = $json['MasterUuid'];
 
+                \Log::info('masterUuid: ' . $masterUuid);
+
                 // Now you can use $masterUuid for whatever you need
             } catch (\GuzzleHttp\Exception\RequestException $e) {
                 // Send logs to ControlRoom
@@ -166,6 +168,8 @@ class RegisteredUserController extends Controller
 
             $this->sendMessageToTopic($routingKey, $message);
 
+            \Log::info('masterUuid: ' . $masterUuid);
+
             // Send log
             $this->rabbitMQService->sendLogEntryToTopic('create user', 'User (masterUuid: ' . $masterUuid . ', name: ' . $user->first_name . ' ' . $user->last_name . ') created successfully', false);
 
@@ -176,7 +180,7 @@ class RegisteredUserController extends Controller
                 ->with('success', 'Je account is succesvol aangemaakt ' . $user->first_name . ' ' . $user->last_name . '!');
         } catch (\Exception $e) {
             // Send log
-            $this->rabbitMQService->sendLogEntryToTopic('create user', 'Error: [User (masterUuid: ' . ($masterUuid ?? 'N/A') . ', name: ' . $userData['first_name'] . ' ' . $userData['last_name'] . ') failed to create successfully] -> ' . $e->getMessage(), true);
+            $this->rabbitMQService->sendLogEntryToTopic('create user', 'Error: [User (masterUuid: ' . $masterUuid . ', name: ' . $userData['first_name'] . ' ' . $userData['last_name'] . ') failed to create successfully] -> ' . $e->getMessage(), true);
 
             return redirect()->back()->withErrors(['failed' => 'Je account is niet succesvol aangemaakt ' . $userData['first_name'] . ' ' . $userData['last_name'] . '!']);
         }
