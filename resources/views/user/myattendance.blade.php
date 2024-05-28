@@ -21,14 +21,20 @@
             border: 1px solid #ddd;
             border-radius: 8px;
         }
-        
-        .delete-button {
-            padding: 5px 10px;
+
+        .button {
+            all: unset;
             background-color: #e30613;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
+            border-radius: 3px;
+            padding: 8px 12px;
             cursor: pointer;
+            border: none;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #25b4b1;
+            color: #fff;
         }
 </style>
 </head>
@@ -49,10 +55,10 @@
                 <p>Gehost door {{$event->users->first_name}} van {{$event->speaker_company_id}}</p>
                 <p>Datum: {{$event->date}}, Tijd: {{$event->start_time}} - {{$event->end_time}}</p>
                 <form action="{{ route('events.unsubscribe') }}" method="POST">
-                    @csrf 
+                    @csrf
                         <input type="hidden" name="attendances_id" value="{{$attendance->id}}">
-                        <input type="hidden" name="event_id" value="{{$event->id}}"> 
-                        <button class="delete-button">Uitschrijven</button>
+                        <input type="hidden" name="event_id" value="{{$event->id}}">
+                        <button class="button">Uitschrijven</button>
                 </form>
             </div>
         @endif

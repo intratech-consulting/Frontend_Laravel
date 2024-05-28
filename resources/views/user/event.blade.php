@@ -137,6 +137,11 @@
         border-radius: 3px;
     }
 
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
 
 
 
@@ -170,21 +175,22 @@
 
 
                     <div class="buttons-container">
-                        <button type="button" class="button" onclick="window.location.href='{{ url('event_details' , $events->id) }}'">Meer weergeven</button>
-                        @auth('web')
-                            <form action="{{ route('events.register') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="event_id" value="{{$events->id}}">
-                                <button type="submit" class="button">Registreren</button>
-                            </form>
-                        @elseauth('company')
-                        @else
-                            <p class="guest-message">
+                        <div class="button-container">
+                            <button type="button" class="button" onclick="window.location.href='{{ url('event_details' , $events->id) }}'">Meer weergeven</button>
+                            @auth('web')
+                                <form action="{{ route('events.register') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="event_id" value="{{$events->id}}">
+                                    <button type="submit" class="button">Registreren</button>
+                                </form>
+                            @elseauth('company')
+                            @else
                                 <button type="button" class="button" onclick="window.location.href='{{ route('login') }}'">log in to register</button>
-                            </p>
-                        @endauth
-
+                            @endauth
+                        </div>
                     </div>
+
+
                 </div>
             </div>
         @endforeach
