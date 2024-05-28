@@ -208,7 +208,6 @@ class CompanyController extends Controller
             'invoice' => 'required|string|max:34',
         ]);
 
-        $company->update($request->except('logo'));
 
         // Handle file upload
         if ($request->hasFile('logo')) {
@@ -218,9 +217,16 @@ class CompanyController extends Controller
 
             $logoPath = $request->file('logo')->store('logos', 'public');
             $company->logo = $logoPath;
+        }
+
+        // Update the other attributes from the request
+        $company->update($request->except('logo'));
+
+        // If a new logo was uploaded, save the model again to store the new logo path
+        if ($request->hasFile('logo')) {
             $company->save();
         }
-        
+
         try {
             // Retrieve the authenticated company
             $company = Auth::guard('company')->user();
