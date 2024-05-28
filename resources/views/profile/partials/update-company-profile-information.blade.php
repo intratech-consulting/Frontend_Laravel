@@ -16,6 +16,8 @@
         @csrf
         @method('post')
 
+        <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->logo }}" class="object-cover rounded-full mb-2" style="width: 200px; height: 200px;"> <br>
+
         <div class="form-group">
             <x-input-label for="name" :value="__('Naam')" />
             <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $company->name)" required autofocus autocomplete="name" />
@@ -32,13 +34,6 @@
             <x-input-label for="telephone" :value="__('Telefoon')" />
             <x-text-input id="telephone" name="telephone" type="text" class="mt-1 block w-full" :value="old('telephone', $company->telephone)" required autocomplete="telephone" />
             <x-input-error class="mt-2" :messages="$errors->get('telephone')" />
-        </div>
-
-        <div class="form-group">
-            <x-input-label for="logo" :value="__('Logo')" />
-            <img src="{{ asset('storage/' . $company->logo) }}" alt="{{ $company->logo }}" class="object-cover rounded-full mb-2" style="width: 200px; height: 200px;"> <br>
-            <input id="logo" name="logo" type="file" class="mt-1 block w-full" />
-            <x-input-error class="mt-2" :messages="$errors->get('logo')" />
         </div>
 
         <div class="form-group">

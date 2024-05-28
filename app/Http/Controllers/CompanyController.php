@@ -174,15 +174,6 @@ class CompanyController extends Controller
             'invoice' => $request->invoice,
         ];
 
-        if ($request->hasFile('logo')) {
-            if ($company->logo) {
-                Storage::disk('public')->delete($company->logo);
-            }
-
-            $logoPath = $request->file('logo')->store('logos', 'public');
-            $companyData['logo'] = $logoPath;
-        }
-
         $company->update($companyData);
 
         try {
