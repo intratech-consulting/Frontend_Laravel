@@ -177,7 +177,8 @@ class CompanyController extends Controller
 
         $logoPath = null;
 
-        // Handle file upload
+        \Log::info('Before storing file: ' . $logoPath);
+
         if ($request->hasFile('logo')) {
             if ($company->logo) {
                 Storage::disk('public')->delete($company->logo);
@@ -186,7 +187,7 @@ class CompanyController extends Controller
             $logoPath = $request->file('logo')->store('logos', 'public');
         }
 
-        dd($logoPath);
+        \Log::info('After storing file: ' . $logoPath);
 
         $company->update([
             'name' => $request->name,
