@@ -55,10 +55,10 @@ jobs:
           sed -i '0,/GENERAL_IP.*/s//GENERAL_IP = "${{ secrets.SSH_HOST }}"/' ./docker/consumer/consumer.py
           sed -i '0,/GENERAL_IP.*/s//GENERAL_IP = "${{ secrets.SSH_HOST }}"/' heartbeat.py
           docker compose up --build -d
+          docker exec -it frontend_laravel-php-fpm-1 bash -c "cd laravel/current && composer install && composer update && npm install"
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/production/frontend/Frontend_Laravel/storage
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/production/frontend/Frontend_Laravel/public
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod -R 775 /home/***/production/frontend/Frontend_Laravel/storage
           echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod -R 775 /home/***/production/frontend/Frontend_Laravel/public
-          docker exec -it frontend_laravel-php-fpm-1 bash -c "cd laravel/current && composer install && composer update && npm install"
           nohup npm run dev > /dev/null 2>&1 &
           ENDSSH
