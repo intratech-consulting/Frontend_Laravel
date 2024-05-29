@@ -171,7 +171,7 @@ return [
 
     'custom' => [
         'email' => [
-            'unique_across_tables' => 'The :attribute has already been taken.',
+            'unique_across_tables' => 'This email address has already been taken.',
         ],
     ],
 

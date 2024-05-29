@@ -60,6 +60,12 @@ class EmployeeController extends Controller
         try {
             $company = Auth::user(); // Assuming the company is logged in and this action is protected by auth middleware
 
+            if (!$company) {
+                // Company is not logged in, handle the situation accordingly
+                \Log::error('No company logged in during user registration');
+                return redirect()->back()->withErrors(['failed' => 'No company logged in during user registration']);
+            }
+
             $user = User::create([
                 'first_name' => $userData['first_name'],
                 'last_name' => $userData['last_name'],

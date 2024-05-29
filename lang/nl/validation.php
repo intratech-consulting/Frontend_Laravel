@@ -170,7 +170,7 @@ return [
 
     'custom' => [
         'email' => [
-            'unique_across_tables' => 'Het :attribute is al in gebruik.',
+            'unique_across_tables' => 'Het emailadres is al in gebruik.',
         ],
     ],
 
