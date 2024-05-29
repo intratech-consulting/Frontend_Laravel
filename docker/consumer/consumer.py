@@ -231,7 +231,7 @@ def create_company(company_data):
 
         hashed_password = hashed_password.replace('$2b$', '$2y$', 1)
 
-        persoonlijkId = get_next_persoonlijk_id()
+        persoonlijkId = get_next_persoonlijk_id_company()
 
 
         sql = """INSERT INTO companies (id, name, email, telephone, logo, country, state, city, zip, street, house_number, type, invoice, user_role, password, created_at, updated_at)
@@ -423,7 +423,7 @@ def create_event(event_data):
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        persoonlijkId = get_next_persoonlijk_id()
+        persoonlijkId = get_next_persoonlijk_id_event()
 
         event_values = (
             persoonlijkId,
@@ -734,16 +734,41 @@ def process_event(root):
 
 def get_next_persoonlijk_id():
     try:
-        mysql_cursor.execute("SELECT MAX(persoonlijk_id) FROM users")
+        mysql_cursor.execute("SELECT MAX(id) FROM users")
         result = mysql_cursor.fetchone()[0]
         if result is not None:
             return result + 1
         else:
-            return 2000  # Start from 2000 if no users exist yet
+            return 2000  # Start from 2 000 if no users exist yet
     except mysql.connector.Error as error:
         print("Failed to get next persoonlijkId:", error)
         return None
 
+
+def get_next_persoonlijk_id_company():
+    try:
+        mysql_cursor.execute("SELECT MAX(id) FROM companies")
+        result = mysql_cursor.fetchone()[0]
+        if result is not None:
+            return result + 1
+        else:
+            return 200000  # Start from 200 000 if no company exist yet
+    except mysql.connector.Error as error:
+        print("Failed to get next persoonlijkId:", error)
+        return None
+
+
+def get_next_persoonlijk_id_event():
+    try:
+        mysql_cursor.execute("SELECT MAX(id) FROM events")
+        result = mysql_cursor.fetchone()[0]
+        if result is not None:
+            return result + 1
+        else:
+            return 20000  # Start from 20 000 if no event exist yet
+    except mysql.connector.Error as error:
+        print("Failed to get next persoonlijkId:", error)
+        return None
 
 
 
