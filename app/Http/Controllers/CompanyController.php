@@ -59,7 +59,7 @@ class CompanyController extends Controller
 
     public function create_company(Request $request)
     {
-        try {
+        
             Validator::extend('unique_across_tables', function ($attribute, $value, $parameters, $validator) {
                 $companiesCount = DB::table('companies')->where('email', $value)->count();
                 $usersCount = DB::table('users')->where('email', $value)->count();
@@ -81,7 +81,8 @@ class CompanyController extends Controller
                 'invoice' => ['required', 'string', 'max:255'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ]);
-
+            
+            try {
             $logoPath = $request->hasFile('logo') ? $request->file('logo')->store('logos', 'public') : null;
 
             $company = Company::create([
@@ -156,7 +157,7 @@ class CompanyController extends Controller
             return redirect()->route('user.home')->with('success', 'Je bedrijf is succesvol aangemaakt ' . $company->name . '!');
         } catch (\Exception $e) {
             $this->rabbitMQService->sendLogEntryToTopic('create company', 'Error: [Company (name: ' . $companyData['name'] . ') created unsuccessfully] -> ' . $e->getMessage(), true);
-            return Redirect::back()->withErrors('failed', 'Je bedrijf ' . $company->name . ' is niet succesvol aangemaakt!');
+            return Redirect::back()->withErrors('failed', 'Je bedrijf  is niet succesvol aangemaakt!');
         }
     }
 
