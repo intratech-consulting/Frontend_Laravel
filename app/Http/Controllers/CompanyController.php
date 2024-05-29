@@ -59,7 +59,7 @@ class CompanyController extends Controller
 
     public function create_company(Request $request)
     {
-        
+
             Validator::extend('unique_across_tables', function ($attribute, $value, $parameters, $validator) {
                 $companiesCount = DB::table('companies')->where('email', $value)->count();
                 $usersCount = DB::table('users')->where('email', $value)->count();
@@ -81,7 +81,7 @@ class CompanyController extends Controller
                 'invoice' => ['required', 'string', 'max:255'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ]);
-            
+
             try {
             $logoPath = $request->hasFile('logo') ? $request->file('logo')->store('logos', 'public') : null;
 
@@ -148,9 +148,6 @@ class CompanyController extends Controller
             $routingKey = 'company.frontend';
 
             $this->sendMessageToTopic($routingKey, $message);
-
-            event(new Registered($company));
-            Auth::login($company);
 
             $this->rabbitMQService->sendLogEntryToTopic('create company', 'Company (masterUuid: ' . $masterUuid . ', name: ' . $companyData['name'] . ') created successfully', false);
 
