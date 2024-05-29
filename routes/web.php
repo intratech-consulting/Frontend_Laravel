@@ -110,7 +110,7 @@ Route::middleware('web')->group(function () {
     Route::post('/send-message-to-topics_company', [CompanyController::class, 'sendMessageToTopic'])->name('sendMessageToTopic_company');
 
     Route::get('/register-employee', [EmployeeController::class, 'showRegistrationForm'])->name('employee.RegistrationForm');
-    Route::post('/register', [EmployeeController::class, 'register'])->name('employee.register');
+    Route::post('/employee/register', [EmployeeController::class, 'register'])->name('employee.register');
 
     // Role register
     Route::get('/register-speaker', [RoleRegisterController::class, 'register_speaker'])->name('register_speaker');
