@@ -182,8 +182,6 @@ class RegisteredUserController extends Controller
             // Send log
             $this->rabbitMQService->sendLogEntryToTopic('create user', 'User (id: ' . $user->id . ', name: ' . $user->first_name . ' ' . $user->last_name . ') created successfully', false);
 
-            Auth::login($user);
-
             return redirect()
                 ->route('login')
                 ->with('success', 'Je account is succesvol aangemaakt ' . $user->first_name . ' ' . $user->last_name . '!');
