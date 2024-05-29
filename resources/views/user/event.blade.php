@@ -160,15 +160,13 @@
         @foreach($event as $events)
             <div class="col col-4">
                 <div class="event-card">
-                    <img src="#" alt="Event Image">
+                    <img src="https://images.unsplash.com/photo-1560439514-4e9645039924?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Event Image">
                     <h3>Event at {{$events->location}}</h3>
                     <p>{{$events->description}}</p> <!-- to be in details-->
                     <div class="details-container">
-                        <img src="assets/img/check-square.svg" alt="tick" class="list-icon">
                         <p class="list-text">{{$events->max_registrations}} Registraties</p>
                     </div>
                     <div class="details-container">
-                        <img src="assets/img/check-square.svg" alt="tick" class="list-icon">
                         <p class="list-text">{{$events->available_seats}} Beschikbare plaatsen</p>
                     </div>
                     <p class="amount-text">Gehost door {{$events->users->first_name}} van {{$events->companies->name}}</p>
@@ -180,7 +178,6 @@
 
                     <div class="buttons-container">
                         <div class="button-container">
-                            <button type="button" class="button" onclick="window.location.href='{{ url('event_details' , $events->id) }}'">Meer weergeven</button>
                             @auth('web')
                                 <form action="{{ route('events.register') }}" method="POST">
                                     @csrf

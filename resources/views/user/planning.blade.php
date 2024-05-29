@@ -44,7 +44,7 @@
 
 <div class="container">
 <center>
-<iframe src="{{ $calendar_link }}" title="Styled Calendar" class="styled-calendar-container" style="width: 80%; border: none;" data-cy="calendar-embed-iframe"></iframe>
+<iframe src="{{ $calendar_link }}" title="Styled Calendar" class="styled-calendar-container" style="width: 80vw; border: none;" data-cy="calendar-embed-iframe"></iframe>
 <!--<script async type="module" src="https://embed.styledcalendar.com/assets/parent-window.js"></script>-->
     </center>
 
