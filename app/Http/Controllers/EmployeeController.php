@@ -105,13 +105,17 @@ class EmployeeController extends Controller
                 'ServiceId' => $company->id,
             ];
 
-            $response = $client->post('http://' . env('GENERAL_IP') . ':6000/createMasterUuid', [
+            $response = $client->post('http://' . env('GENERAL_IP') . ':6000/getMasterUuid', [
                 'json' => $dataCompany
             ]);
 
             $body = $response->getBody();
             $json = json_decode($body, true);
-            $companyMasterUuid = $json['MasterUuid'];
+            if (isset($json['UUID'])) {
+                $companyMasterUuid = $json['UUID'];
+            } else {
+                throw new \Exception('UUID not found in response');
+            }
 
             $xmlMessage = new \SimpleXMLElement('<user/>');
             $xmlMessage->addChild('routing_key', 'user.frontend');
