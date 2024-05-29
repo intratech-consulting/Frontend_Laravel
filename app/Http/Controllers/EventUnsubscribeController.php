@@ -43,11 +43,13 @@ class EventUnsubscribeController extends Controller
 
     public function unsubscribe(Request $request)
     {
-        try{
         $user = Auth::user();
         $attendanceId = $request->input('attendances_id');
         $eventId = $request->input('event_id');
         $event = Event::find($eventId);
+
+        try{
+
 
         //zoek attendance
         $attendance = Attendance::where('user_id', $user->id)

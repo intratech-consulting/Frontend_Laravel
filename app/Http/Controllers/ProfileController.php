@@ -70,10 +70,10 @@ class ProfileController extends Controller
             'user_role' => 'string|max:255',
             'invoice' => 'nullable|string|max:255',
         ]);
-
-        try {
             // Retrieve the authenticated user
             $user = $request->user();
+
+            try {
 
             // Store the old email for comparison
             $oldEmail = $user->email;
@@ -173,13 +173,13 @@ class ProfileController extends Controller
             }
 
             //send log
-            $this->rabbitMQService->sendLogEntryToTopic('update user', 'User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ' updated successfully', false);
+            $this->rabbitMQService->sendLogEntryToTopic('update user', 'User (id: ' . $user->id .  ', name: ' . $user->first_name . " " . $user->last_name . ' updated successfully', false);
 
             // Redirect back to the profile edit page with a success message
             return Redirect::route('profile.edit')->with('status', 'profile-updated');
         } catch (\Exception $e) {
             //send log
-            $this->rabbitMQService->sendLogEntryToTopic('update user', 'Error: [User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ' updated unsuccessfully] -> ' . $e->getMessage(), true);
+            $this->rabbitMQService->sendLogEntryToTopic('update user', 'Error: [User (id: ' . $user->id .  ', name: ' . $user->first_name . " " . $user->last_name . ' updated unsuccessfully] -> ' . $e->getMessage(), true);
 
             // Handle any exceptions and redirect back with an error message
             return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);
@@ -192,12 +192,13 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request)
     {
-        try{
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
 
         $user = $request->user();
+
+        try{
 
         // Create a new Guzzle HTTP client
         $client = new \GuzzleHttp\Client();
@@ -295,7 +296,7 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         //send log
-        $this->rabbitMQService->sendLogEntryToTopic('delete user', 'User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ' deleted successfully', false);
+        $this->rabbitMQService->sendLogEntryToTopic('delete user', 'User (id: ' . $user->id .  ', name: ' . $user->first_name . " " . $user->last_name . ' deleted successfully', false);
 
         return view('user.home');
         }
@@ -303,7 +304,7 @@ class ProfileController extends Controller
             \Log::error('Error deleting company: ' . $e->getMessage());
 
             //send log
-            $this->rabbitMQService->sendLogEntryToTopic('delete user', 'Error: [User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ' deleted unsuccessfully] -> ' . $e->getMessage(), true);
+            $this->rabbitMQService->sendLogEntryToTopic('delete user', 'Error: [User (id: ' . $user->id .  ', name: ' . $user->first_name . " " . $user->last_name . ' deleted unsuccessfully] -> ' . $e->getMessage(), true);
 
             return Redirect::back()->withErrors(['error' => 'An error occurred while deleting the user. Please try again later.']);
         }

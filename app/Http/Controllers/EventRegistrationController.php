@@ -42,7 +42,6 @@ class EventRegistrationController extends Controller
 
     public function register(Request $request)
     {
-        try{
         $user = Auth::user();
         $eventId = $request->input('event_id');
 
@@ -60,6 +59,8 @@ class EventRegistrationController extends Controller
             'user_id' => $user->id,
             'event_id' => $eventId,
         ]);
+
+        try{
 
         // Create XML message
         $xmlMessage = new \SimpleXMLElement('<attendance/>');

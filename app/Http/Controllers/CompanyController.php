@@ -176,7 +176,6 @@ class CompanyController extends Controller
 
         $company->update($companyData);
 
-        try {
             // Retrieve the authenticated company
             $company = Auth::guard('company')->user();
 
@@ -184,7 +183,7 @@ class CompanyController extends Controller
 
             // Store the old email for comparison
             $oldEmail = $company->email;
-
+        try{
             // Fill the company model with validated data from the request
             $company->fill($request->all());
             $company->save();
@@ -292,7 +291,7 @@ class CompanyController extends Controller
             }
 
             //send log
-            $this->rabbitMQService->sendLogEntryToTopic('update company', 'Company (masterUuid: ' . $masterUuid .  ', name: ' . $company->name . ' updated successfully', false);
+            $this->rabbitMQService->sendLogEntryToTopic('update company', 'Company (id: ' . $company->id .  ', name: ' . $company->name . ' updated successfully', false);
 
             // Redirect back to the profile edit page with a success message
             return Redirect::route('company-profile.edit')->with('success', 'Profile updated successfully');
@@ -300,7 +299,7 @@ class CompanyController extends Controller
             \Log::error('Error updating profile: ' . $e->getMessage()); // Log the error
 
             //send log
-            $this->rabbitMQService->sendLogEntryToTopic('update company', 'Error: [Company (masterUuid: ' . $masterUuid .  ', name: ' . $company->name . ' updated unsuccessfully] -> ' . $e->getMessage(), true);
+            $this->rabbitMQService->sendLogEntryToTopic('update company', 'Error: [Company (id: ' . $company->id .   ', name: ' . $company->name . ' updated unsuccessfully] -> ' . $e->getMessage(), true);
 
             // Handle any exceptions and redirect back with an error message
             return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);

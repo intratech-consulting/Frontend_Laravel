@@ -56,7 +56,6 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        try {
             $userData = $request->validate([
                 'first_name' => ['required', 'string', 'max:255'],
                 'last_name' => ['required', 'string', 'max:255'],
@@ -94,6 +93,7 @@ class RegisteredUserController extends Controller
                 'company_email' => isset($userData['company_email']) ? $userData['company_email'] : null,
                 'company_id' => isset($userData['company_id']) ? $userData['company_id'] : null,
             ]);
+            try {
 
             \Log::info('User after create: ' . print_r($user->toArray(), true));
 
@@ -171,7 +171,7 @@ class RegisteredUserController extends Controller
             \Log::info('masterUuid: ' . $masterUuid);
 
             // Send log
-            $this->rabbitMQService->sendLogEntryToTopic('create user', 'User (masterUuid: ' . $masterUuid . ', name: ' . $user->first_name . ' ' . $user->last_name . ') created successfully', false);
+            $this->rabbitMQService->sendLogEntryToTopic('create user', 'User (id: ' . $user->id . ', name: ' . $user->first_name . ' ' . $user->last_name . ') created successfully', false);
 
             Auth::login($user);
 
@@ -180,7 +180,7 @@ class RegisteredUserController extends Controller
                 ->with('success', 'Je account is succesvol aangemaakt ' . $user->first_name . ' ' . $user->last_name . '!');
         } catch (\Exception $e) {
             // Send log
-            $this->rabbitMQService->sendLogEntryToTopic('create user', 'Error: [User (masterUuid: ' . $masterUuid . ', name: ' . $userData['first_name'] . ' ' . $userData['last_name'] . ') failed to create successfully] -> ' . $e->getMessage(), true);
+            $this->rabbitMQService->sendLogEntryToTopic('create user', 'Error: [User (id: ' . $user->id . ', name: ' . $userData['first_name'] . ' ' . $userData['last_name'] . ') failed to create successfully] -> ' . $e->getMessage(), true);
 
             return redirect()->back()->withErrors(['failed' => 'Je account is niet succesvol aangemaakt ' . $userData['first_name'] . ' ' . $userData['last_name'] . '!']);
         }
