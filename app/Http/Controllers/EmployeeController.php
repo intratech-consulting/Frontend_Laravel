@@ -58,7 +58,7 @@ class EmployeeController extends Controller
         ]);
 
         try {
-            $company = Auth::user(); // Assuming the company is logged in and this action is protected by auth middleware
+            $company = Auth::guard('company')->user(); // Assuming the company is logged in and this action is protected by auth middleware
 
             if (!$company) {
                 // Company is not logged in, handle the situation accordingly
