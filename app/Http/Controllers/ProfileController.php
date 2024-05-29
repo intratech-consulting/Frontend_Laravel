@@ -93,13 +93,6 @@ class ProfileController extends Controller
 
             try {
 
-//            // Store the old email for comparison
-//            $oldEmail = $user->email;
-//
-//            // Fill the user model with validated data from the request
-//            $user->fill($request->all());
-//            $user->save();
-
             // Create a new Guzzle HTTP client
             $client = new \GuzzleHttp\Client();
 
