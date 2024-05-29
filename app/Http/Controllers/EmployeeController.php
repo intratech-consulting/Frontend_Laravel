@@ -82,6 +82,7 @@ class EmployeeController extends Controller
                 'invoice' => $userData['invoice'],
                 'user_role' => $userData['user_role'],
                 'company_id' => $company->id,
+                'company_email' => $company->email,
             ]);
 
             \Log::info('User created successfully: ' . $user->email);
@@ -135,11 +136,12 @@ class EmployeeController extends Controller
             $address->addChild('street', $userData['street']);
             $address->addChild('house_number', $userData['house_number']);
 
-            $xmlMessage->addChild('user_role', $userData['user_role']);
             $xmlMessage->addChild('company_email', $company->email);
             $xmlMessage->addChild('company_id', $companyMasterUuid);
-            $xmlMessage->addChild('invoice', $userData['invoice']);
             $xmlMessage->addChild('source', 'frontend');
+            $xmlMessage->addChild('user_role', $userData['user_role']);
+            $xmlMessage->addChild('invoice', $userData['invoice']);
+            $xmlMessage->addChild('calendar_link', '');
 
             $message = $xmlMessage->asXML();
             $routingKey = 'user.frontend';
