@@ -42,6 +42,7 @@ jobs:
           ls -l
           docker compose down
           git checkout staging
+          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R group2:group2 .
           git stash
           git pull
           cp -f .env.example .env
