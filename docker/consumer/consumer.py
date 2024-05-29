@@ -425,6 +425,12 @@ def create_event(event_data):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         persoonlijkId = get_next_persoonlijk_id_event()
 
+        speaker_user_id = event_data['speaker']['user_id']
+        speaker_user_event_id = get_event_id_from_master(speaker_user_id)
+
+        speaker_company_id = event_data['speaker']['company_id']
+        speaker_company_event_id = get_event_id_from_master(speaker_company_id)
+
         event_values = (
             persoonlijkId,
             event_data['title'],
@@ -432,8 +438,8 @@ def create_event(event_data):
             event_data['start_time'],
             event_data['end_time'],
             event_data['location'],
-            event_data['speaker']['user_id'],
-            event_data['speaker']['company_id'],
+            speaker_user_event_id,
+            speaker_company_event_id,
             event_data['max_registrations'],
             event_data['available_seats'],
             event_data['description'],
@@ -496,6 +502,14 @@ def update_event(event_data):
 
 
 
+        speaker_user_id = event_data['speaker']['user_id']
+        speaker_user_event_id = get_event_id_from_master(speaker_user_id)
+
+        speaker_company_id = event_data['speaker']['company_id']
+        speaker_company_event_id = get_event_id_from_master(speaker_company_id)
+
+
+
         if event_data.get('date'):
             sql += "date = %s, "
             values.append(event_data['date'])
@@ -511,12 +525,13 @@ def update_event(event_data):
         if event_data.get('location'):
             sql += "location = %s, "
             values.append(event_data['location'])
-        if event_data['speaker'].get('user_id'):
-            sql += "speaker_user_id = %s, "
-            values.append(event_data['speaker']['user_id'])
-        if event_data['speaker'].get('company_id'):
-            sql += "speaker_company_id = %s, "
-            values.append(event_data['speaker']['company_id'])
+            
+        sql += "speaker_user_id = %s, "
+        values.append(speaker_user_event_id)
+    
+        sql += "speaker_company_id = %s, "
+        values.append(speaker_company_event_id)      
+
         if event_data.get('max_registrations'):
             sql += "max_registrations = %s, "
             values.append(event_data['max_registrations'])
@@ -769,6 +784,36 @@ def get_next_persoonlijk_id_event():
     except mysql.connector.Error as error:
         print("Failed to get next persoonlijkId:", error)
         return None
+
+def get_event_id_from_master(id):
+    try:
+        # Construct the URL and payload
+        masterUuid_url = f"http://{GENERAL_IP}:6000/getServiceId"
+        masterUuid_payload = {
+            "MASTERUUID": id,
+            "Service": "frontend",
+        }
+        uid_headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
+        }
+
+        # Send the POST request
+        response = requests.post(masterUuid_url, headers=uid_headers, json=masterUuid_payload)
+        if response.status_code == 200:
+            data = response.json()
+            event_id = data.get("frontend")
+            if event_id:
+                return event_id
+            else:
+                print(f"Event ID not found for ID: {id}")
+        else:
+            print(f"Failed to retrieve event ID for ID: {id}. Status code: {response.status_code}")
+
+    except Exception as e:
+        print(f"Error retrieving event ID for ID: {id}. Error: {e}")
+
+    return None
 
 
 
