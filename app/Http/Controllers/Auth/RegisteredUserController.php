@@ -9,7 +9,9 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
@@ -56,24 +58,31 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-            $userData = $request->validate([
-                'first_name' => ['required', 'string', 'max:255'],
-                'last_name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'email', 'max:255'],
-                'telephone' => ['required', 'string', 'max:20'],
-                'birthday' => ['required', 'date'],
-                'country' => ['required', 'string', 'max:255'],
-                'state' => ['required', 'string', 'max:255'],
-                'city' => ['required', 'string', 'max:255'],
-                'zip' => ['required', 'string', 'max:20'],
-                'street' => ['required', 'string', 'max:255'],
-                'house_number' => ['required', 'string', 'max:20'],
-                'invoice' => ['required'],
-                'password' => ['required', 'string', 'min:8', 'confirmed'],
-                'company_email' => ['nullable', 'string', 'email', 'max:255'],
-                'company_id' => ['nullable', 'integer'],
-                'user_role' => ['required', 'string', Rule::in(['individual', 'employee', 'speaker'])],
-            ]);
+        Validator::extend('unique_across_tables', function ($attribute, $value, $parameters, $validator) {
+            $companiesCount = DB::table('companies')->where('email', $value)->count();
+            $usersCount = DB::table('users')->where('email', $value)->count();
+
+            return $companiesCount + $usersCount === 0;
+        });
+
+        $userData = $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'unique_across_tables', 'string', 'email', 'max:255'],
+            'telephone' => ['required', 'string', 'max:20'],
+            'birthday' => ['required', 'date'],
+            'country' => ['required', 'string', 'max:255'],
+            'state' => ['required', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:255'],
+            'zip' => ['required', 'string', 'max:10'],
+            'street' => ['required', 'string', 'max:255'],
+            'house_number' => ['required', 'string', 'max:10'],
+            'invoice' => ['required'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'company_email' => ['nullable', 'string', 'email', 'max:255'],
+            'company_id' => ['nullable', 'integer'],
+            'user_role' => ['required', 'string', Rule::in(['individual', 'employee', 'speaker'])],
+        ]);
 
             $user = User::create([
                 'first_name' => $userData['first_name'],

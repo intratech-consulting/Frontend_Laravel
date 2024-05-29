@@ -169,8 +169,8 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'email' => [
+            'unique_across_tables' => 'Het :attribute is al in gebruik.',
         ],
     ],
 

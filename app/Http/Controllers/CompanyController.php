@@ -171,8 +171,8 @@ class CompanyController extends Controller
     {
         $company = Auth::guard('company')->user();
 
-        Validator::extend('unique_across_tables', function ($attribute, $value, $parameters, $validator) {
-            $companiesCount = DB::table('companies')->where('email', $value)->count();
+        Validator::extend('unique_across_tables', function ($attribute, $value, $parameters, $validator) use ($company) {
+            $companiesCount = DB::table('companies')->where('email', $value)->where('id', '!=', $company->id)->count();
             $usersCount = DB::table('users')->where('email', $value)->count();
 
             return $companiesCount + $usersCount === 0;
@@ -182,7 +182,6 @@ class CompanyController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'unique_across_tables', 'string', 'email', 'max:255'],
             'telephone' => ['required', 'string', 'max:20'],
-            'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
             'country' => ['required', 'string', 'max:255'],
             'state' => ['required', 'string', 'max:255'],
             'city' => ['required', 'string', 'max:255'],
@@ -190,7 +189,6 @@ class CompanyController extends Controller
             'street' => ['required', 'string', 'max:255'],
             'house_number' => ['required', 'string', 'max:20'],
             'invoice' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
 

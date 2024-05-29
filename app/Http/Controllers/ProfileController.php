@@ -10,8 +10,12 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+
 
 class ProfileController extends Controller
 {
@@ -50,37 +54,51 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
-        
+
         \Log::info('Update method called');
 
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'string|email|max:255' . $request->user()->id,
-            'telephone' => 'nullable|string|max:20',
-            'birthday' => 'nullable|date',
-            'country' => 'nullable|string|max:255',
-            'state' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'zip' => 'nullable|string|max:10',
-            'street' => 'nullable|string|max:255',
-            'house_number' => 'nullable|string|max:10',
-            'company_email' => 'nullable|string|email|max:255',
-            'company_id' => 'nullable|string|max:255',
-            'user_role' => 'string|max:255',
-            'invoice' => 'nullable|string|max:255',
+        Validator::extend('unique_across_tables', function ($attribute, $value, $parameters, $validator) use ($user) {
+            $usersCount = DB::table('users')->where('email', $value)->where('id', '!=', $user->id)->count();
+            $companiesCount = DB::table('companies')->where('email', $value)->count();
+
+            return $usersCount + $companiesCount === 0;
+        });
+
+        $validatedData = $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'unique_across_tables', 'string', 'email', 'max:255'],
+            'telephone' => ['required', 'string', 'max:20'],
+            'birthday' => ['required', 'date'],
+            'country' => ['required', 'string', 'max:255'],
+            'state' => ['required', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:255'],
+            'zip' => ['required', 'string', 'max:10'],
+            'street' => ['required', 'string', 'max:255'],
+            'house_number' => ['required', 'string', 'max:10'],
+            'invoice' => ['required'],
+            'company_email' => ['nullable', 'string', 'email', 'max:255'],
+            'company_id' => ['nullable', 'string', 'max:255'],
+            'user_role' => ['string', 'max:255'],
         ]);
+            // Retrieve the authenticated user
             // Retrieve the authenticated user
             $user = $request->user();
 
+    // Fill the user model with validated data
+            $user->fill($validatedData);
+
+    // Save the user model
+            $user->save();
+
             try {
 
-            // Store the old email for comparison
-            $oldEmail = $user->email;
-
-            // Fill the user model with validated data from the request
-            $user->fill($request->all());
-            $user->save();
+//            // Store the old email for comparison
+//            $oldEmail = $user->email;
+//
+//            // Fill the user model with validated data from the request
+//            $user->fill($request->all());
+//            $user->save();
 
             // Create a new Guzzle HTTP client
             $client = new \GuzzleHttp\Client();
