@@ -23,7 +23,7 @@ def create_user(user_data):
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        persoonlijkId =  1023#int(uuid.uuid4())
+        persoonlijkId = get_next_persoonlijk_id()
 
         user_values = (
             persoonlijkId,
@@ -231,7 +231,7 @@ def create_company(company_data):
 
         hashed_password = hashed_password.replace('$2b$', '$2y$', 1)
 
-        persoonlijkId =  1023#int(uuid.uuid4())
+        persoonlijkId = get_next_persoonlijk_id_company()
 
 
         sql = """INSERT INTO companies (id, name, email, telephone, logo, country, state, city, zip, street, house_number, type, invoice, user_role, password, created_at, updated_at)
@@ -419,14 +419,15 @@ def delete_company(company_id):
 
 def create_event(event_data):
     try:
-        sql = """INSERT INTO events (id, date, start_time, end_time, location, speaker_user_id, speaker_company_id, max_registrations, available_seats, description, created_at, updated_at)
-                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        sql = """INSERT INTO events (id, title, date, start_time, end_time, location, speaker_user_id, speaker_company_id, max_registrations, available_seats, description, created_at, updated_at)
+                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        persoonlijkId =  1023#int(uuid.uuid4())
+        persoonlijkId = get_next_persoonlijk_id_event()
 
         event_values = (
             persoonlijkId,
+            event_data['title'],
             event_data['date'],
             event_data['start_time'],
             event_data['end_time'],
@@ -501,6 +502,9 @@ def update_event(event_data):
         if event_data.get('start_time'):
             sql += "start_time = %s, "
             values.append(event_data['start_time'])
+        if event_data.get('title'):
+            sql += "title = %s, "
+            values.append(event_data['title'])
         if event_data.get('end_time'):
             sql += "end_time = %s, "
             values.append(event_data['end_time'])
@@ -698,6 +702,7 @@ def process_event(root):
         # Extract event data
         event_data = {
             'id': root.find('id').text,
+            'title': root.find('title').text,
             'date': root.find('date').text,
             'start_time': root.find('start_time').text,
             'end_time': root.find('end_time').text,
@@ -726,6 +731,46 @@ def process_event(root):
 
     except Exception as e:
         print("Error processing event data:", e)
+
+def get_next_persoonlijk_id():
+    try:
+        mysql_cursor.execute("SELECT MAX(id) FROM users")
+        result = mysql_cursor.fetchone()[0]
+        if result is not None:
+            return result + 1
+        else:
+            return 2000  # Start from 2 000 if no users exist yet
+    except mysql.connector.Error as error:
+        print("Failed to get next persoonlijkId:", error)
+        return None
+
+
+def get_next_persoonlijk_id_company():
+    try:
+        mysql_cursor.execute("SELECT MAX(id) FROM companies")
+        result = mysql_cursor.fetchone()[0]
+        if result is not None:
+            return result + 1
+        else:
+            return 200000  # Start from 200 000 if no company exist yet
+    except mysql.connector.Error as error:
+        print("Failed to get next persoonlijkId:", error)
+        return None
+
+
+def get_next_persoonlijk_id_event():
+    try:
+        mysql_cursor.execute("SELECT MAX(id) FROM events")
+        result = mysql_cursor.fetchone()[0]
+        if result is not None:
+            return result + 1
+        else:
+            return 20000  # Start from 20 000 if no event exist yet
+    except mysql.connector.Error as error:
+        print("Failed to get next persoonlijkId:", error)
+        return None
+
+
 
 mysql_connection = mysql.connector.connect(
     host=GENERAL_IP,
