@@ -68,7 +68,7 @@
     <div class="registration-card">
         <h2>Spreker/Werknemer Registreren</h2>
 
-        <form method="POST" action="{{ route('employee.RegistrationForm') }}">
+        <form method="POST" action="{{ route('employee.register') }}">
             @csrf
             <div class="form-group">
                 <label for="user_role">Rol</label>
