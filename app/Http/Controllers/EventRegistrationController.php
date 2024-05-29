@@ -45,6 +45,8 @@ class EventRegistrationController extends Controller
         $user = Auth::user();
         $eventId = $request->input('event_id');
 
+        $event = Event::findOrFail($eventId);
+
         // check of user al bestaat
         $existingAttendance = Attendance::where('user_id', $user->id)
                                         ->where('event_id', $eventId)
