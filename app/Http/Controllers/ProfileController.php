@@ -57,6 +57,8 @@ class ProfileController extends Controller
 
         \Log::info('Update method called');
 
+        $user = $request->user();
+
         Validator::extend('unique_across_tables', function ($attribute, $value, $parameters, $validator) use ($user) {
             $usersCount = DB::table('users')->where('email', $value)->where('id', '!=', $user->id)->count();
             $companiesCount = DB::table('companies')->where('email', $value)->count();
