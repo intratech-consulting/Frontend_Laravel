@@ -129,9 +129,8 @@ class EmployeeController extends Controller
 
             $this->rabbitMQService->sendLogEntryToTopic('create user', 'User (masterUuid: ' . $masterUuid . ', name: ' . $user->first_name . ' ' . $user->last_name . ') created successfully', false);
 
-            return redirect()
-                ->route('user.home')
-                ->with('success', 'Je account is succesvol aangemaakt ' . $user->first_name . ' ' . $user->last_name . '!');
+            return redirect()->back()->with('success', 'Je account is succesvol aangemaakt ' . $user->first_name . ' ' . $user->last_name . '!');
+
         } catch (Exception $e) {
             \Log::error('Error during user registration: ' . $e->getMessage());
             $this->rabbitMQService->sendLogEntryToTopic('create user', 'Error: [User (name: ' . $userData['first_name'] . ' ' . $userData['last_name'] . ') failed to create successfully] -> ' . $e->getMessage(), true);
