@@ -56,6 +56,10 @@ class EventUnsubscribeController extends Controller
                                 ->where('event_id', $eventId)
                                 ->first();
 
+        $event->available_seats += 1;
+        $event->save();
+
+
         // Create XML message
         $xmlMessage = new \SimpleXMLElement('<attendance/>');
         $xmlMessage->addChild('routing_key', 'attendance.frontend');

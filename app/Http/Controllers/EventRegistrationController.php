@@ -54,11 +54,18 @@ class EventRegistrationController extends Controller
             return redirect()->back()->with('error', 'Dit event bestaat al.');
         }
 
+        if ($event->available_seats <= 0) {
+            return redirect()->back()->with('error', 'Het maximum aantal inschrijvingen voor dit event is bereikt.');
+        }
+
         // maak een nieuwe attendance
         $attendance = Attendance::create([
             'user_id' => $user->id,
             'event_id' => $eventId,
         ]);
+
+        $event->available_seats -= 1;
+        $event->save();
 
         try{
 
