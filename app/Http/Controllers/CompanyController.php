@@ -81,8 +81,7 @@ class CompanyController extends Controller
                 'invoice' => ['required', 'string', 'max:255'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ]);
-
-            try {
+            
             $logoPath = $request->hasFile('logo') ? $request->file('logo')->store('logos', 'public') : null;
 
             $company = Company::create([
@@ -152,10 +151,7 @@ class CompanyController extends Controller
             $this->rabbitMQService->sendLogEntryToTopic('create company', 'Company (masterUuid: ' . $masterUuid . ', name: ' . $companyData['name'] . ') created successfully', false);
 
             return redirect()->route('user.home')->with('success', 'Je bedrijf is succesvol aangemaakt ' . $company->name . '!');
-        } catch (\Exception $e) {
-            $this->rabbitMQService->sendLogEntryToTopic('create company', 'Error: [Company (name: ' . $companyData['name'] . ') created unsuccessfully] -> ' . $e->getMessage(), true);
-            return Redirect::back()->withErrors('failed', 'Je bedrijf  is niet succesvol aangemaakt!');
-        }
+
     }
 
 
