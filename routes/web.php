@@ -109,6 +109,7 @@ Route::middleware('web')->group(function () {
     // Route::match(['get', 'post'], '/create_company', [CompanyController::class, 'test'])->name('test_company');
     Route::post('/send-message-to-topics_company', [CompanyController::class, 'sendMessageToTopic'])->name('sendMessageToTopic_company');
 
+    Route::get('/auth/register-speaker', [EmployeeController::class, 'showRegistrationForm'])->name('employee.RegistrationForm');
     Route::post('/register', [EmployeeController::class, 'register'])->name('employee.register');
 
     // Role register

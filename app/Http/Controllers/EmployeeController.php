@@ -20,6 +20,11 @@ class EmployeeController extends Controller
         $this->rabbitMQService = $rabbitMQService;
     }
 
+    public function showRegistrationForm()
+    {
+        return view('auth.register-speaker');
+    }
+
     public function sendMessageToTopic($routingKey, $message)
     {
         try {
