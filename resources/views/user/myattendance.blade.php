@@ -44,7 +44,7 @@
 
 <div class="container">
 
-<h1>My Reservations</h1>
+<h1>Mijn reservaties</h1>
     @foreach($attendances as $attendance)
         @php
             $event = $events->firstWhere('id', $attendance->event_id);

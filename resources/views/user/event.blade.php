@@ -187,7 +187,7 @@
                                 </form>
                             @elseauth('company')
                             @else
-                                <button type="button" class="button" onclick="window.location.href='{{ route('login') }}'">log in to register</button>
+                                <button type="button" class="button" onclick="window.location.href='{{ route('login') }}'">log in om te registreren</button>
                             @endauth
                         </div>
                     </div>
