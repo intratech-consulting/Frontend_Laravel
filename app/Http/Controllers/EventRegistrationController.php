@@ -53,7 +53,7 @@ class EventRegistrationController extends Controller
                                         ->first();
 
         if ($existingAttendance) {
-            return redirect()->back()->with('error', 'Je bent voor dit event al ingeschreven.');
+            return redirect()->back()->with('error', 'Je bent al ingeschreven voor dit event.');
         }
 
         if ($event->available_seats <= 0) {
