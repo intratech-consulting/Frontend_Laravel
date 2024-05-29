@@ -100,6 +100,19 @@ class EmployeeController extends Controller
             $json = json_decode($body, true);
             $masterUuid = $json['MasterUuid'];
 
+            $dataCompany = [
+                'Service' => 'frontend',
+                'ServiceId' => $company->id,
+            ];
+
+            $response = $client->post('http://' . env('GENERAL_IP') . ':6000/createMasterUuid', [
+                'json' => $dataCompany
+            ]);
+
+            $body = $response->getBody();
+            $json = json_decode($body, true);
+            $companyMasterUuid = $json['MasterUuid'];
+
             $xmlMessage = new \SimpleXMLElement('<user/>');
             $xmlMessage->addChild('routing_key', 'user.frontend');
             $xmlMessage->addChild('crud_operation', 'create');
@@ -119,7 +132,8 @@ class EmployeeController extends Controller
             $address->addChild('house_number', $userData['house_number']);
 
             $xmlMessage->addChild('user_role', $userData['user_role']);
-            $xmlMessage->addChild('company_id', $company->id);
+            $xmlMessage->addChild('company_email', $company->email);
+            $xmlMessage->addChild('company_id', $companyMasterUuid);
             $xmlMessage->addChild('invoice', $userData['invoice']);
             $xmlMessage->addChild('source', 'frontend');
 
