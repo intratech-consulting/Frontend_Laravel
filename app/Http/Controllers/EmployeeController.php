@@ -82,6 +82,7 @@ class EmployeeController extends Controller
                 'invoice' => $userData['invoice'],
                 'user_role' => $userData['user_role'],
                 'company_id' => $company->id,
+                'company_email' => $company->email,
             ]);
 
             \Log::info('User created successfully: ' . $user->email);
@@ -99,6 +100,23 @@ class EmployeeController extends Controller
             $body = $response->getBody();
             $json = json_decode($body, true);
             $masterUuid = $json['MasterUuid'];
+
+            $dataCompany = [
+                'Service' => 'frontend',
+                'ServiceId' => $company->id,
+            ];
+
+            $response = $client->post('http://' . env('GENERAL_IP') . ':6000/getMasterUuid', [
+                'json' => $dataCompany
+            ]);
+
+            $body = $response->getBody();
+            $json = json_decode($body, true);
+            if (isset($json['UUID'])) {
+                $companyMasterUuid = $json['UUID'];
+            } else {
+                throw new \Exception('UUID not found in response');
+            }
 
             $xmlMessage = new \SimpleXMLElement('<user/>');
             $xmlMessage->addChild('routing_key', 'user.frontend');
@@ -118,10 +136,12 @@ class EmployeeController extends Controller
             $address->addChild('street', $userData['street']);
             $address->addChild('house_number', $userData['house_number']);
 
-            $xmlMessage->addChild('user_role', $userData['user_role']);
-            $xmlMessage->addChild('company_id', $company->id);
-            $xmlMessage->addChild('invoice', $userData['invoice']);
+            $xmlMessage->addChild('company_email', $company->email);
+            $xmlMessage->addChild('company_id', $companyMasterUuid);
             $xmlMessage->addChild('source', 'frontend');
+            $xmlMessage->addChild('user_role', $userData['user_role']);
+            $xmlMessage->addChild('invoice', $userData['invoice']);
+            $xmlMessage->addChild('calendar_link', '');
 
             $message = $xmlMessage->asXML();
             $routingKey = 'user.frontend';
@@ -129,9 +149,8 @@ class EmployeeController extends Controller
 
             $this->rabbitMQService->sendLogEntryToTopic('create user', 'User (masterUuid: ' . $masterUuid . ', name: ' . $user->first_name . ' ' . $user->last_name . ') created successfully', false);
 
-            return redirect()
-                ->route('user.home')
-                ->with('success', 'Je account is succesvol aangemaakt ' . $user->first_name . ' ' . $user->last_name . '!');
+            return redirect()->back()->with('success', 'Je account is succesvol aangemaakt ' . $user->first_name . ' ' . $user->last_name . '!');
+
         } catch (Exception $e) {
             \Log::error('Error during user registration: ' . $e->getMessage());
             $this->rabbitMQService->sendLogEntryToTopic('create user', 'Error: [User (name: ' . $userData['first_name'] . ' ' . $userData['last_name'] . ') failed to create successfully] -> ' . $e->getMessage(), true);
