@@ -137,14 +137,6 @@
         border-radius: 3px;
     }
 
-    .button-container div,
-    .button-container form {
-        display: inline-block;
-    }
-
-    .button-container button:first-child {
-        margin-right: 30px;
-    }
 
 
 
@@ -173,24 +165,16 @@
                     <p class="amount-text">Gehost door {{$events->users->first_name}} van {{$events->companies->name}}</p>
                     <p class="amount-text">Datum: {{$events->date}}, Tijd: {{$events->start_time}} - {{$events->end_time}}</p>
 
-
-
-
-
-                    <div class="buttons-container">
-                        <div class="button-container">
-                            @auth('web')
-                                <form action="{{ route('events.register') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="event_id" value="{{$events->id}}">
-                                    <button type="submit" class="button">Registreren</button>
-                                </form>
-                            @elseauth('company')
-                            @else
-                                <button type="button" class="button" onclick="window.location.href='{{ route('login') }}'">log in om te registreren</button>
-                            @endauth
-                        </div>
-                    </div>
+                    @auth('web')
+                        <form action="{{ route('events.register') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="event_id" value="{{$events->id}}">
+                            <button type="submit" class="button">Inschrijven</button>
+                        </form>
+                    @elseauth('company')
+                    @else
+                        <button type="button" class="button" onclick="window.location.href='{{ route('login') }}'">log in to register</button>
+                    @endauth
 
 
                 </div>
