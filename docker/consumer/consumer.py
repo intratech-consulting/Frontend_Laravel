@@ -419,14 +419,15 @@ def delete_company(company_id):
 
 def create_event(event_data):
     try:
-        sql = """INSERT INTO events (id, date, start_time, end_time, location, speaker_user_id, speaker_company_id, max_registrations, available_seats, description, created_at, updated_at)
-                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        sql = """INSERT INTO events (id, title, date, start_time, end_time, location, speaker_user_id, speaker_company_id, max_registrations, available_seats, description, created_at, updated_at)
+                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         persoonlijkId =  1023#int(uuid.uuid4())
 
         event_values = (
             persoonlijkId,
+            event_data['title'],
             event_data['date'],
             event_data['start_time'],
             event_data['end_time'],
@@ -501,6 +502,9 @@ def update_event(event_data):
         if event_data.get('start_time'):
             sql += "start_time = %s, "
             values.append(event_data['start_time'])
+        if event_data.get('title'):
+            sql += "title = %s, "
+            values.append(event_data['title'])
         if event_data.get('end_time'):
             sql += "end_time = %s, "
             values.append(event_data['end_time'])
@@ -698,6 +702,7 @@ def process_event(root):
         # Extract event data
         event_data = {
             'id': root.find('id').text,
+            'title': root.find('title').text,
             'date': root.find('date').text,
             'start_time': root.find('start_time').text,
             'end_time': root.find('end_time').text,
