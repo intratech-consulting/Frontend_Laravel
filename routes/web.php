@@ -14,6 +14,7 @@ use App\Http\Controllers\CreateEventController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\EventRegistrationController;
 use App\Http\Controllers\EventUnsubscribeController;
+use App\Http\Controllers\EmployeeController;
 
 /*
 |--------------------------------------------------------------------------
