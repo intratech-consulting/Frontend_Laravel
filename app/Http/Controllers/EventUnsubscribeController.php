@@ -169,7 +169,7 @@ class EventUnsubscribeController extends Controller
             // Get the MASTERUUID from the response
             $attendanceMasterUuid = $json['UUID'];
 
-            \Log::info('masterUuid: ' . $attendanceMasterUuid);
+            \Log::info('attendance masterUuid: ' . $attendanceMasterUuid);
 
             // Now you can use $masterUuid for whatever you need
         } catch (\GuzzleHttp\Exception\RequestException $e) {
