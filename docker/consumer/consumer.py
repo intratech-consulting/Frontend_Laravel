@@ -23,7 +23,7 @@ def create_user(user_data):
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        persoonlijkId =  1023#int(uuid.uuid4())
+        persoonlijkId = get_next_persoonlijk_id()
 
         user_values = (
             persoonlijkId,
@@ -231,7 +231,7 @@ def create_company(company_data):
 
         hashed_password = hashed_password.replace('$2b$', '$2y$', 1)
 
-        persoonlijkId =  1023#int(uuid.uuid4())
+        persoonlijkId = get_next_persoonlijk_id()
 
 
         sql = """INSERT INTO companies (id, name, email, telephone, logo, country, state, city, zip, street, house_number, type, invoice, user_role, password, created_at, updated_at)
@@ -423,7 +423,7 @@ def create_event(event_data):
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        persoonlijkId =  1023#int(uuid.uuid4())
+        persoonlijkId = get_next_persoonlijk_id()
 
         event_values = (
             persoonlijkId,
@@ -731,6 +731,21 @@ def process_event(root):
 
     except Exception as e:
         print("Error processing event data:", e)
+
+def get_next_persoonlijk_id():
+    try:
+        mysql_cursor.execute("SELECT MAX(persoonlijk_id) FROM users")
+        result = mysql_cursor.fetchone()[0]
+        if result is not None:
+            return result + 1
+        else:
+            return 2000  # Start from 2000 if no users exist yet
+    except mysql.connector.Error as error:
+        print("Failed to get next persoonlijkId:", error)
+        return None
+
+
+
 
 mysql_connection = mysql.connector.connect(
     host=GENERAL_IP,
