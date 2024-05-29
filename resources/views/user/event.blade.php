@@ -161,7 +161,8 @@
             <div class="col col-4">
                 <div class="event-card">
                     <img src="https://images.unsplash.com/photo-1560439514-4e9645039924?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Event Image">
-                    <h3>Event at {{$events->location}}</h3>
+                    <h3>{{$events->title}}</h3>
+                    <p>Event bij {{$events->location}}</p>
                     <p>{{$events->description}}</p> <!-- to be in details-->
                     <div class="details-container">
                         <p class="list-text">{{$events->max_registrations}} Registraties</p>
