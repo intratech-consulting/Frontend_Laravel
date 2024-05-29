@@ -68,6 +68,7 @@ class EventRegistrationController extends Controller
 
         $event->available_seats -= 1;
         $event->save();
+        
 
         try{
 
@@ -151,13 +152,55 @@ class EventRegistrationController extends Controller
             throw new \Exception('Failed to retrieve masterUuid: ' . $e->getMessage());
         }
 
+        //haal id op van attendance
+        $createdAttendance = Attendance::where('user_id', $user->id)
+                                        ->where('event_id', $event->id)
+                                        ->first();
+
+
+        //create masterUuid from attendance
+        $attendanceMasterUuid = null;
+
+        $client = new \GuzzleHttp\Client();
+
+        $data = [
+            'ServiceId' => $createdAttendance->id,
+            'Service' => 'frontend',
+        ];
+
+        try {
+            $response = $client->post('http://' . env('GENERAL_IP') . ':6000/createMasterUuid', [
+                'json' => $data
+            ]);
+
+            // Get the response body
+            $body = $response->getBody();
+
+            \Log::info('UUID Response Body: ' . $body);
+
+            // Decode the JSON response
+            $json = json_decode($body, true);
+
+            // Get the MASTERUUID from the response
+            $attendanceMasterUuid = $json['MasterUuid'];
+
+            \Log::info('masterUuid: ' . $attendanceMasterUuid);
+
+            // Now you can use $masterUuid for whatever you need
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            // Send logs to ControlRoom
+            $this->rabbitMQService->sendLogEntryToTopic('get_UUID', 'Error: ' . $e->getMessage(), true);
+
+            // Handle the exception
+            throw new \Exception('Failed to retrieve masterUuid: ' . $e->getMessage());
+        }
 
 
         // Create XML message
         $xmlMessage = new \SimpleXMLElement('<attendance/>');
         $xmlMessage->addChild('routing_key', 'attendance.frontend');
         $xmlMessage->addChild('crud_operation', 'create');
-        $xmlMessage->addChild('id', $attendance->id);
+        $xmlMessage->addChild('id', $attendanceMasterUuid);
         $xmlMessage->addChild('user_id', $userMasterUuid);
         $xmlMessage->addChild('event_id', $eventMasterUuid);
 
