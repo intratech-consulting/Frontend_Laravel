@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 
 
@@ -57,9 +60,16 @@ class CompanyController extends Controller
     public function create_company(Request $request)
     {
         try {
+            Validator::extend('unique_across_tables', function ($attribute, $value, $parameters, $validator) {
+                $companiesCount = DB::table('companies')->where('email', $value)->count();
+                $usersCount = DB::table('users')->where('email', $value)->count();
+
+                return $companiesCount + $usersCount === 0;
+            });
+
             $companyData = $request->validate([
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'email', 'max:255'],
+                'email' => ['required', 'unique_across_tables', 'string', 'email', 'max:255'],
                 'telephone' => ['required', 'string', 'max:20'],
                 'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
                 'country' => ['required', 'string', 'max:255'],
@@ -160,6 +170,29 @@ class CompanyController extends Controller
     public function updateProfile(Request $request)
     {
         $company = Auth::guard('company')->user();
+
+        Validator::extend('unique_across_tables', function ($attribute, $value, $parameters, $validator) {
+            $companiesCount = DB::table('companies')->where('email', $value)->count();
+            $usersCount = DB::table('users')->where('email', $value)->count();
+
+            return $companiesCount + $usersCount === 0;
+        });
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'unique_across_tables', 'string', 'email', 'max:255'],
+            'telephone' => ['required', 'string', 'max:20'],
+            'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
+            'country' => ['required', 'string', 'max:255'],
+            'state' => ['required', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:255'],
+            'zip' => ['required', 'string', 'max:20'],
+            'street' => ['required', 'string', 'max:255'],
+            'house_number' => ['required', 'string', 'max:20'],
+            'invoice' => ['required', 'string', 'max:255'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
 
         $companyData = [
             'name' => $request->name,
