@@ -39,6 +39,7 @@ class EmployeeController extends Controller
 
     public function register(Request $request)
     {
+        \Log::info('Starting user registration process');
         $userData = $request->validate([
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -76,6 +77,8 @@ class EmployeeController extends Controller
                 'user_role' => $userData['user_role'],
                 'company_id' => $company->id,
             ]);
+
+            \Log::info('User created successfully: ' . $user->email);
 
             $client = new Client();
             $data = [
@@ -124,6 +127,7 @@ class EmployeeController extends Controller
                 ->route('user.home')
                 ->with('success', 'Je account is succesvol aangemaakt ' . $user->first_name . ' ' . $user->last_name . '!');
         } catch (Exception $e) {
+            \Log::error('Error during user registration: ' . $e->getMessage());
             $this->rabbitMQService->sendLogEntryToTopic('create user', 'Error: [User (name: ' . $userData['first_name'] . ' ' . $userData['last_name'] . ') failed to create successfully] -> ' . $e->getMessage(), true);
 
             return redirect()->back()->withErrors(['failed' => 'Je account is niet succesvol aangemaakt ' . $userData['first_name'] . ' ' . $userData['last_name'] . '!']);
