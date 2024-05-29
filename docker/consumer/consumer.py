@@ -231,6 +231,8 @@ def create_company(company_data):
 
         hashed_password = hashed_password.replace('$2b$', '$2y$', 1)
 
+        persoonlijkId =  1023#int(uuid.uuid4())
+
 
         sql = """INSERT INTO companies (id, name, email, telephone, logo, country, state, city, zip, street, house_number, type, invoice, user_role, password, created_at, updated_at)
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
@@ -238,7 +240,7 @@ def create_company(company_data):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         company_values = (
-            company_data['id'],
+            persoonlijkId,
             company_data['name'],
             company_data['email'],
             company_data['telephone'],
@@ -260,6 +262,25 @@ def create_company(company_data):
         mysql_cursor.execute(sql, company_values)
         mysql_connection.commit()
         print("Company inserted successfully!")
+
+        #MasterUuid
+        masterUuid_url = f"http://{GENERAL_IP}:6000/addServiceId"
+        masterUuid_payload = json.dumps(
+            {
+                "MasterUuid": f"{company_data['id']}",
+                "Service": "frontend",
+                "ServiceId": f"{persoonlijkId}"
+            }
+        )
+        uid_headers={
+        'Content-type':'application/json',
+        'Accept':'application/json'
+        }
+        print(f"uid: {company_data['id']}")
+        response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        print(response)
+            
+
     except mysql.connector.Error as error:
         mysql_connection.rollback()
         print("Failed to insert company:", error)
@@ -268,6 +289,27 @@ def update_company(company_data):
     try:
         sql = "UPDATE companies SET "
         values = []
+
+    #get company id from masteruid
+        masterUuid_url = f"http://{GENERAL_IP}:6000/getServiceId"
+        masterUuid_payload = json.dumps(
+            {
+                "MASTERUUID": f"{company_data['id']}",
+                "Service": "frontend",
+            }
+        )
+        uid_headers={
+        'Content-type':'application/json',
+        'Accept':'application/json'
+        }
+        print(f"uid: {company_data['id']}")
+        response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        data = response.json()
+        print(data)
+        company_pk=data["frontend"]
+        print(company_pk)
+
+        companyID = company_pk
 
         if company_data.get('name'):
             sql += "name = %s, "
@@ -309,7 +351,7 @@ def update_company(company_data):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         sql += "updated_at = %s WHERE id = %s"
         values.append(now)
-        values.append(company_data['id'])
+        values.append(companyID)
         mysql_cursor.execute(sql, values)
         mysql_connection.commit()
         print("Company updated successfully!")
@@ -320,9 +362,57 @@ def update_company(company_data):
 def delete_company(company_id):
     try:
         sql = "DELETE FROM companies WHERE id = %s"
-        mysql_cursor.execute(sql, (company_id,))
+
+        #get company id from masteruid
+        masterUuid_url = f"http://{GENERAL_IP}:6000/getServiceId"
+        masterUuid_payload = json.dumps(
+            {
+                "MASTERUUID": f"{company_id}",
+                "Service": "frontend",
+            }
+        )
+        uid_headers={
+        'Content-type':'application/json',
+        'Accept':'application/json'
+        }
+        print(f"uid: {company_id}")
+        response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        print(response)
+
+        data = response.json()
+        print(data)
+        company_pk=data["frontend"]
+        print(company_pk)
+
+        companyID = company_pk
+        values = []
+        values.append(companyID)
+
+        mysql_cursor.execute(sql, values)
         mysql_connection.commit()
         print("Company deleted successfully!")
+        
+
+        #Update company id
+        masterUuid_url = f"http://{GENERAL_IP}:6000/updateServiceId"
+        masterUuid_payload = json.dumps(
+            {
+                "MASTERUUID": f"{company_id}",
+                "Service": "frontend",
+                "ServiceId": "NULL",
+
+            }
+        )
+        uid_headers={
+        'Content-type':'application/json',
+        'Accept':'application/json'
+        }
+        print(f"uid: {company_id}")
+        response2 = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        print(response2)
+
+
+
     except mysql.connector.Error as error:
         mysql_connection.rollback()
         print("Failed to delete company:", error)
@@ -333,9 +423,10 @@ def create_event(event_data):
                  VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        persoonlijkId =  1023#int(uuid.uuid4())
 
         event_values = (
-            event_data['id'],
+            persoonlijkId,
             event_data['date'],
             event_data['start_time'],
             event_data['end_time'],
@@ -352,6 +443,26 @@ def create_event(event_data):
         mysql_cursor.execute(sql, event_values)
         mysql_connection.commit()
         print("Event inserted successfully!")
+
+
+        #MasterUuid
+        masterUuid_url = f"http://{GENERAL_IP}:6000/addServiceId"
+        masterUuid_payload = json.dumps(
+            {
+                "MasterUuid": f"{event_data['id']}",
+                "Service": "frontend",
+                "ServiceId": f"{persoonlijkId}"
+            }
+        )
+        uid_headers={
+        'Content-type':'application/json',
+        'Accept':'application/json'
+        }
+        print(f"uid: {event_data['id']}")
+        response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        print(response)
+            
+
     except mysql.connector.Error as error:
         mysql_connection.rollback()
         print("Failed to insert event:", error)
@@ -360,6 +471,29 @@ def update_event(event_data):
     try:
         sql = "UPDATE events SET "
         values = []
+
+    #get event id from masteruid
+        masterUuid_url = f"http://{GENERAL_IP}:6000/getServiceId"
+        masterUuid_payload = json.dumps(
+            {
+                "MASTERUUID": f"{event_data['id']}",
+                "Service": "frontend",
+            }
+        )
+        uid_headers={
+        'Content-type':'application/json',
+        'Accept':'application/json'
+        }
+        print(f"uid: {event_data['id']}")
+        response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        data = response.json()
+        print(data)
+        event_pk=data["frontend"]
+        print(event_pk)
+
+        eventID = event_pk
+
+
 
         if event_data.get('date'):
             sql += "date = %s, "
@@ -392,7 +526,7 @@ def update_event(event_data):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         sql += "updated_at = %s WHERE id = %s"
         values.append(now)
-        values.append(event_data['id'])
+        values.append(eventID)
 
         mysql_cursor.execute(sql, values)
         mysql_connection.commit()
@@ -404,9 +538,58 @@ def update_event(event_data):
 def delete_event(event_id):
     try:
         sql = "DELETE FROM events WHERE id = %s"
-        mysql_cursor.execute(sql, (event_id,))
+        
+        #get event id from masteruid
+        masterUuid_url = f"http://{GENERAL_IP}:6000/getServiceId"
+        masterUuid_payload = json.dumps(
+            {
+                "MASTERUUID": f"{event_id}",
+                "Service": "frontend",
+            }
+        )
+        uid_headers={
+        'Content-type':'application/json',
+        'Accept':'application/json'
+        }
+        print(f"uid: {event_id}")
+        response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        print(response)
+
+        data = response.json()
+        print(data)
+        event_pk=data["frontend"]
+        print(event_pk)
+
+        eventID = event_pk
+        values = []
+        values.append(eventID)
+
+
+        mysql_cursor.execute(sql, values)
         mysql_connection.commit()
         print("Event deleted successfully!")
+
+
+        #Update event id
+        masterUuid_url = f"http://{GENERAL_IP}:6000/updateServiceId"
+        masterUuid_payload = json.dumps(
+            {
+                "MASTERUUID": f"{event_id}",
+                "Service": "frontend",
+                "ServiceId": "NULL",
+
+            }
+        )
+        uid_headers={
+        'Content-type':'application/json',
+        'Accept':'application/json'
+        }
+        print(f"uid: {event_id}")
+        response2 = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        print(response2)
+
+
+
     except mysql.connector.Error as error:
         mysql_connection.rollback()
         print("Failed to delete event:", error)
