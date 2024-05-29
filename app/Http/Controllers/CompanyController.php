@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 
 
@@ -56,10 +59,17 @@ class CompanyController extends Controller
 
     public function create_company(Request $request)
     {
-        try {
+        
+            Validator::extend('unique_across_tables', function ($attribute, $value, $parameters, $validator) {
+                $companiesCount = DB::table('companies')->where('email', $value)->count();
+                $usersCount = DB::table('users')->where('email', $value)->count();
+
+                return $companiesCount + $usersCount === 0;
+            });
+
             $companyData = $request->validate([
                 'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'email', 'max:255'],
+                'email' => ['required', 'unique_across_tables', 'string', 'email', 'max:255'],
                 'telephone' => ['required', 'string', 'max:20'],
                 'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,svg,webp', 'max:2048'],
                 'country' => ['required', 'string', 'max:255'],
@@ -71,7 +81,8 @@ class CompanyController extends Controller
                 'invoice' => ['required', 'string', 'max:255'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ]);
-
+            
+            try {
             $logoPath = $request->hasFile('logo') ? $request->file('logo')->store('logos', 'public') : null;
 
             $company = Company::create([
@@ -146,7 +157,7 @@ class CompanyController extends Controller
             return redirect()->route('user.home')->with('success', 'Je bedrijf is succesvol aangemaakt ' . $company->name . '!');
         } catch (\Exception $e) {
             $this->rabbitMQService->sendLogEntryToTopic('create company', 'Error: [Company (name: ' . $companyData['name'] . ') created unsuccessfully] -> ' . $e->getMessage(), true);
-            return Redirect::back()->withErrors('failed', 'Je bedrijf ' . $company->name . ' is niet succesvol aangemaakt!');
+            return Redirect::back()->withErrors('failed', 'Je bedrijf  is niet succesvol aangemaakt!');
         }
     }
 
@@ -161,6 +172,27 @@ class CompanyController extends Controller
     {
         $company = Auth::guard('company')->user();
 
+        Validator::extend('unique_across_tables', function ($attribute, $value, $parameters, $validator) use ($company) {
+            $companiesCount = DB::table('companies')->where('email', $value)->where('id', '!=', $company->id)->count();
+            $usersCount = DB::table('users')->where('email', $value)->count();
+
+            return $companiesCount + $usersCount === 0;
+        });
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'unique_across_tables', 'string', 'email', 'max:255'],
+            'telephone' => ['required', 'string', 'max:20'],
+            'country' => ['required', 'string', 'max:255'],
+            'state' => ['required', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:255'],
+            'zip' => ['required', 'string', 'max:20'],
+            'street' => ['required', 'string', 'max:255'],
+            'house_number' => ['required', 'string', 'max:20'],
+            'invoice' => ['required', 'string', 'max:255'],
+        ]);
+
+
         $companyData = [
             'name' => $request->name,
             'email' => $request->email,
@@ -174,18 +206,8 @@ class CompanyController extends Controller
             'invoice' => $request->invoice,
         ];
 
-        if ($request->hasFile('logo')) {
-            if ($company->logo) {
-                Storage::disk('public')->delete($company->logo);
-            }
-
-            $logoPath = $request->file('logo')->store('logos', 'public');
-            $companyData['logo'] = $logoPath;
-        }
-
         $company->update($companyData);
 
-        try {
             // Retrieve the authenticated company
             $company = Auth::guard('company')->user();
 
@@ -193,7 +215,7 @@ class CompanyController extends Controller
 
             // Store the old email for comparison
             $oldEmail = $company->email;
-
+        try{
             // Fill the company model with validated data from the request
             $company->fill($request->all());
             $company->save();
@@ -301,7 +323,7 @@ class CompanyController extends Controller
             }
 
             //send log
-            $this->rabbitMQService->sendLogEntryToTopic('update company', 'Company (masterUuid: ' . $masterUuid .  ', name: ' . $company->name . ' updated successfully', false);
+            $this->rabbitMQService->sendLogEntryToTopic('update company', 'Company (id: ' . $company->id .  ', name: ' . $company->name . ' updated successfully', false);
 
             // Redirect back to the profile edit page with a success message
             return Redirect::route('company-profile.edit')->with('success', 'Profile updated successfully');
@@ -309,7 +331,7 @@ class CompanyController extends Controller
             \Log::error('Error updating profile: ' . $e->getMessage()); // Log the error
 
             //send log
-            $this->rabbitMQService->sendLogEntryToTopic('update company', 'Error: [Company (masterUuid: ' . $masterUuid .  ', name: ' . $company->name . ' updated unsuccessfully] -> ' . $e->getMessage(), true);
+            $this->rabbitMQService->sendLogEntryToTopic('update company', 'Error: [Company (id: ' . $company->id .   ', name: ' . $company->name . ' updated unsuccessfully] -> ' . $e->getMessage(), true);
 
             // Handle any exceptions and redirect back with an error message
             return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);

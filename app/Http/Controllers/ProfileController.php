@@ -10,8 +10,12 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+
 
 class ProfileController extends Controller
 {
@@ -50,37 +54,44 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
-        
+
         \Log::info('Update method called');
 
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'string|email|max:255' . $request->user()->id,
-            'telephone' => 'nullable|string|max:20',
-            'birthday' => 'nullable|date',
-            'country' => 'nullable|string|max:255',
-            'state' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'zip' => 'nullable|string|max:10',
-            'street' => 'nullable|string|max:255',
-            'house_number' => 'nullable|string|max:10',
-            'company_email' => 'nullable|string|email|max:255',
-            'company_id' => 'nullable|string|max:255',
-            'user_role' => 'string|max:255',
-            'invoice' => 'nullable|string|max:255',
-        ]);
+        Validator::extend('unique_across_tables', function ($attribute, $value, $parameters, $validator) use ($user) {
+            $usersCount = DB::table('users')->where('email', $value)->where('id', '!=', $user->id)->count();
+            $companiesCount = DB::table('companies')->where('email', $value)->count();
 
-        try {
+            return $usersCount + $companiesCount === 0;
+        });
+
+        $validatedData = $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'unique_across_tables', 'string', 'email', 'max:255'],
+            'telephone' => ['required', 'string', 'max:20'],
+            'birthday' => ['required', 'date'],
+            'country' => ['required', 'string', 'max:255'],
+            'state' => ['required', 'string', 'max:255'],
+            'city' => ['required', 'string', 'max:255'],
+            'zip' => ['required', 'string', 'max:10'],
+            'street' => ['required', 'string', 'max:255'],
+            'house_number' => ['required', 'string', 'max:10'],
+            'invoice' => ['required'],
+            'company_email' => ['nullable', 'string', 'email', 'max:255'],
+            'company_id' => ['nullable', 'string', 'max:255'],
+            'user_role' => ['string', 'max:255'],
+        ]);
+            // Retrieve the authenticated user
             // Retrieve the authenticated user
             $user = $request->user();
 
-            // Store the old email for comparison
-            $oldEmail = $user->email;
+    // Fill the user model with validated data
+            $user->fill($validatedData);
 
-            // Fill the user model with validated data from the request
-            $user->fill($request->all());
+    // Save the user model
             $user->save();
+
+            try {
 
             // Create a new Guzzle HTTP client
             $client = new \GuzzleHttp\Client();
@@ -173,13 +184,13 @@ class ProfileController extends Controller
             }
 
             //send log
-            $this->rabbitMQService->sendLogEntryToTopic('update user', 'User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ' updated successfully', false);
+            $this->rabbitMQService->sendLogEntryToTopic('update user', 'User (id: ' . $user->id .  ', name: ' . $user->first_name . " " . $user->last_name . ' updated successfully', false);
 
             // Redirect back to the profile edit page with a success message
             return Redirect::route('profile.edit')->with('status', 'profile-updated');
         } catch (\Exception $e) {
             //send log
-            $this->rabbitMQService->sendLogEntryToTopic('update user', 'Error: [User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ' updated unsuccessfully] -> ' . $e->getMessage(), true);
+            $this->rabbitMQService->sendLogEntryToTopic('update user', 'Error: [User (id: ' . $user->id .  ', name: ' . $user->first_name . " " . $user->last_name . ' updated unsuccessfully] -> ' . $e->getMessage(), true);
 
             // Handle any exceptions and redirect back with an error message
             return Redirect::back()->withErrors(['error' => 'An error occurred while updating your profile. Please try again later.']);
@@ -192,12 +203,13 @@ class ProfileController extends Controller
      */
     public function destroy(Request $request)
     {
-        try{
         $request->validateWithBag('userDeletion', [
             'password' => ['required', 'current_password'],
         ]);
 
         $user = $request->user();
+
+        try{
 
         // Create a new Guzzle HTTP client
         $client = new \GuzzleHttp\Client();
@@ -295,7 +307,7 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         //send log
-        $this->rabbitMQService->sendLogEntryToTopic('delete user', 'User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ' deleted successfully', false);
+        $this->rabbitMQService->sendLogEntryToTopic('delete user', 'User (id: ' . $user->id .  ', name: ' . $user->first_name . " " . $user->last_name . ' deleted successfully', false);
 
         return view('user.home');
         }
@@ -303,7 +315,7 @@ class ProfileController extends Controller
             \Log::error('Error deleting company: ' . $e->getMessage());
 
             //send log
-            $this->rabbitMQService->sendLogEntryToTopic('delete user', 'Error: [User (masterUuid: ' . $masterUuid .  ', name: ' . $user->first_name . " " . $user->last_name . ' deleted unsuccessfully] -> ' . $e->getMessage(), true);
+            $this->rabbitMQService->sendLogEntryToTopic('delete user', 'Error: [User (id: ' . $user->id .  ', name: ' . $user->first_name . " " . $user->last_name . ' deleted unsuccessfully] -> ' . $e->getMessage(), true);
 
             return Redirect::back()->withErrors(['error' => 'An error occurred while deleting the user. Please try again later.']);
         }

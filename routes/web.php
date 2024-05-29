@@ -14,6 +14,7 @@ use App\Http\Controllers\CreateEventController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\EventRegistrationController;
 use App\Http\Controllers\EventUnsubscribeController;
+use App\Http\Controllers\EmployeeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -108,6 +109,9 @@ Route::middleware('web')->group(function () {
     Route::post('/create_company', [CompanyController::class, 'create_company'])->name('create_company');
     // Route::match(['get', 'post'], '/create_company', [CompanyController::class, 'test'])->name('test_company');
     Route::post('/send-message-to-topics_company', [CompanyController::class, 'sendMessageToTopic'])->name('sendMessageToTopic_company');
+
+    Route::get('/register-employee', [EmployeeController::class, 'showRegistrationForm'])->name('employee.RegistrationForm');
+    Route::post('/employee/register', [EmployeeController::class, 'register'])->name('employee.register');
 
     // Role register
     Route::get('/register-speaker', [RoleRegisterController::class, 'register_speaker'])->name('register_speaker');

@@ -19,62 +19,73 @@
         <div class="form-group">
             <x-input-label for="first_name" :value="__('Voornaam')" />
             <x-text-input id="first_name" name="first_name" type="text" class="mt-1 block w-full" :value="old('first_name', $user->first_name)" required autofocus autocomplete="first_name" />
-            <x-input-error class="mt-2" :messages="$errors->get('first_name')" />
+            @error('first_name')
+            <span class="error-message">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="form-group">
             <x-input-label for="last_name" :value="__('Achtenaam')" />
             <x-text-input id="last_name" name="last_name" type="text" class="mt-1 block w-full" :value="old('last_name', $user->last_name)" required autofocus autocomplete="last_name" />
-            <x-input-error class="mt-2" :messages="$errors->get('last_name')" />
-        </div>
+            @error('last_name')
+            <span class="error-message">{{ $message }}</span>
+            @enderror        </div>
 
         <div class="form-group">
             <x-input-label for="birthday" :value="__('Geboortedatum')" />
             <x-text-input id="birthday" name="birthday" type="date" class="mt-1 block w-full" :value="old('birthday', $user->birthday)" required autofocus autocomplete="birthday" />
-            <x-input-error class="mt-2" :messages="$errors->get('birthday')" />
-        </div>
+            @error('birthday')
+            <span class="error-message">{{ $message }}</span>
+            @enderror        </div>
 
         <div class="form-group">
             <x-input-label for="telephone" :value="__('Telefoon')" />
             <x-text-input id="telephone" name="telephone" type="text" class="mt-1 block w-full" :value="old('telephone', $user->telephone)" required autofocus autocomplete="telephone" />
-            <x-input-error class="mt-2" :messages="$errors->get('telephone')" />
-        </div>
+            @error('telephone')
+            <span class="error-message">{{ $message }}</span>
+            @enderror        </div>
 
         <div class="form-group">
             <x-input-label for="street" :value="__('Straat')" />
             <x-text-input id="street" name="street" type="text" class="mt-1 block w-full" :value="old('street', $user->street)" required autofocus autocomplete="street" />
-            <x-input-error class="mt-2" :messages="$errors->get('street')" />
-        </div>
+            @error('street')
+            <span class="error-message">{{ $message }}</span>
+            @enderror        </div>
 
         <div class="form-group">
             <x-input-label for="house_number" :value="__('Huisnummer')" />
             <x-text-input id="house_number" name="house_number" type="text" class="mt-1 block w-full" :value="old('house_number', $user->house_number)" required autofocus autocomplete="house_number" />
-            <x-input-error class="mt-2" :messages="$errors->get('house_number')" />
-        </div>
+            @error('house_number')
+            <span class="error-message">{{ $message }}</span>
+            @enderror        </div>
 
         <div class="form-group">
             <x-input-label for="city" :value="__('Stad')" />
             <x-text-input id="city" name="city" type="text" class="mt-1 block w-full" :value="old('city', $user->city)" required autofocus autocomplete="city" />
-            <x-input-error class="mt-2" :messages="$errors->get('city')" />
-        </div>
+            @error('city')
+            <span class="error-message">{{ $message }}</span>
+            @enderror        </div>
 
         <div class="form-group">
             <x-input-label for="zip" :value="__('Postcode')" />
             <x-text-input id="zip" name="zip" type="text" class="mt-1 block w-full" :value="old('zip', $user->zip)" required autofocus autocomplete="zip" />
-            <x-input-error class="mt-2" :messages="$errors->get('zip')" />
-        </div>
+            @error('zip')
+            <span class="error-message">{{ $message }}</span>
+            @enderror        </div>
 
         <div class="form-group">
             <x-input-label for="state" :value="__('Provincie')" />
             <x-text-input id="state" name="state" type="text" class="mt-1 block w-full" :value="old('state', $user->state)" required autofocus autocomplete="state" />
-            <x-input-error class="mt-2" :messages="$errors->get('state')" />
-        </div>
+            @error('state')
+            <span class="error-message">{{ $message }}</span>
+            @enderror        </div>
 
         <div class="form-group">
             <x-input-label for="country" :value="__('Land')" />
             <x-text-input id="country" name="country" type="text" class="mt-1 block w-full" :value="old('country', $user->country)" required autofocus autocomplete="country" />
-            <x-input-error class="mt-2" :messages="$errors->get('country')" />
-        </div>
+            @error('country')
+            <span class="error-message">{{ $message }}</span>
+            @enderror        </div>
 
         <div class="form-group">
             <label for="invoice" class="block font-medium text-gray-700">Factuur</label>
@@ -97,7 +108,9 @@
         <div class="form-group">
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+            @error('email')
+            <span class="error-message">{{ $message }}</span>
+            @enderror
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
                 <div class="mt-2">
@@ -123,15 +136,6 @@
                 <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)" class="text-sm text-gray-600">
                     {{ __('Opgeslagen') }}
                 </p>
-            @endif
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
             @endif
         </div>
     </form>

@@ -7,6 +7,7 @@
 
 <style>
         .container {
+            min-height: 100vh;
             max-width: 800px;
             margin: 0 auto;
             background: white;
@@ -43,7 +44,7 @@
 
 <div class="container">
 
-<h1>My Reservations</h1>
+<h1>Mijn reservaties</h1>
     @foreach($attendances as $attendance)
         @php
             $event = $events->firstWhere('id', $attendance->event_id);
@@ -51,6 +52,7 @@
         @if($event)
             <div class="reservation-card">
                 <h2>Event bij {{$event->location}}</h2>
+                <p>{{$event->title}}</p>
                 <p>{{$event->description}}</p>
                 <p>Gehost door {{$event->users->first_name}} van {{$event->speaker_company_id}}</p>
                 <p>Datum: {{$event->date}}, Tijd: {{$event->start_time}} - {{$event->end_time}}</p>

@@ -170,8 +170,8 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'email' => [
+            'unique_across_tables' => 'This email address has already been taken.',
         ],
     ],
 

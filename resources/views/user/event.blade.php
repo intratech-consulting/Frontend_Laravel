@@ -137,14 +137,6 @@
         border-radius: 3px;
     }
 
-    .button-container div,
-    .button-container form {
-        display: inline-block;
-    }
-
-    .button-container button:first-child {
-        margin-right: 30px;
-    }
 
 
 
@@ -160,39 +152,29 @@
         @foreach($event as $events)
             <div class="col col-4">
                 <div class="event-card">
-                    <img src="#" alt="Event Image">
-                    <h3>Event at {{$events->location}}</h3>
+                    <img src="https://images.unsplash.com/photo-1560439514-4e9645039924?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Event Image">
+                    <h3>{{$events->title}}</h3>
+                    <p>Event bij {{$events->location}}</p>
                     <p>{{$events->description}}</p> <!-- to be in details-->
                     <div class="details-container">
-                        <img src="assets/img/check-square.svg" alt="tick" class="list-icon">
                         <p class="list-text">{{$events->max_registrations}} Registraties</p>
                     </div>
                     <div class="details-container">
-                        <img src="assets/img/check-square.svg" alt="tick" class="list-icon">
                         <p class="list-text">{{$events->available_seats}} Beschikbare plaatsen</p>
                     </div>
                     <p class="amount-text">Gehost door {{$events->users->first_name}} van {{$events->companies->name}}</p>
                     <p class="amount-text">Datum: {{$events->date}}, Tijd: {{$events->start_time}} - {{$events->end_time}}</p>
 
-
-
-
-
-                    <div class="buttons-container">
-                        <div class="button-container">
-                            <button type="button" class="button" onclick="window.location.href='{{ url('event_details' , $events->id) }}'">Meer weergeven</button>
-                            @auth('web')
-                                <form action="{{ route('events.register') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="event_id" value="{{$events->id}}">
-                                    <button type="submit" class="button">Registreren</button>
-                                </form>
-                            @elseauth('company')
-                            @else
-                                <button type="button" class="button" onclick="window.location.href='{{ route('login') }}'">log in to register</button>
-                            @endauth
-                        </div>
-                    </div>
+                    @auth('web')
+                        <form action="{{ route('events.register') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="event_id" value="{{$events->id}}">
+                            <button type="submit" class="button">Inschrijven</button>
+                        </form>
+                    @elseauth('company')
+                    @else
+                        <button type="button" class="button" onclick="window.location.href='{{ route('login') }}'">log in to register</button>
+                    @endauth
 
 
                 </div>

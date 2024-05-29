@@ -111,10 +111,10 @@ class EventController extends Controller
 
 */
 
-    try{
         //generate event id 
         $eventid = mt_rand(100000, 999999);
-
+        
+        try{
 
         $xmlEvent = new \SimpleXMLElement('<event/>');
 

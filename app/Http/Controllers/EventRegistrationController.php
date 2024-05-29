@@ -42,9 +42,10 @@ class EventRegistrationController extends Controller
 
     public function register(Request $request)
     {
-        try{
         $user = Auth::user();
         $eventId = $request->input('event_id');
+
+        $event = Event::findOrFail($eventId);
 
         // check of user al bestaat
         $existingAttendance = Attendance::where('user_id', $user->id)
@@ -52,7 +53,11 @@ class EventRegistrationController extends Controller
                                         ->first();
 
         if ($existingAttendance) {
-            return redirect()->back()->with('error', 'Dit event bestaat al.');
+            return redirect()->back()->with('error', 'Je bent al ingeschreven voor dit event.');
+        }
+
+        if ($event->available_seats <= 0) {
+            return redirect()->back()->with('error', 'Het maximum aantal inschrijvingen voor dit event is bereikt.');
         }
 
         // maak een nieuwe attendance
@@ -61,13 +66,100 @@ class EventRegistrationController extends Controller
             'event_id' => $eventId,
         ]);
 
+        $event->available_seats -= 1;
+        $event->save();
+
+        try{
+
+        //get masterUuid from user
+        $userMasterUuid = null;
+
+
+        // Create a new Guzzle HTTP client
+        $client = new \GuzzleHttp\Client();
+
+        // Define the data for the request
+        $data = [
+            'ServiceId' => $user->id,
+            'Service' => 'frontend',
+        ];
+
+        try {
+            $response = $client->post('http://' . env('GENERAL_IP') . ':6000/getMasterUuid', [
+                'json' => $data
+            ]);
+
+            // Get the response body
+            $body = $response->getBody();
+
+            \Log::info('UUID Response Body: ' . $body);
+
+            // Decode the JSON response
+            $json = json_decode($body, true);
+
+            // Get the MASTERUUID from the response
+            $userMasterUuid = $json['UUID'];
+
+            \Log::info('masterUuid: ' . $userMasterUuid);
+
+            // Now you can use $masterUuid for whatever you need
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            // Send logs to ControlRoom
+            $this->rabbitMQService->sendLogEntryToTopic('get_UUID', 'Error: ' . $e->getMessage(), true);
+
+            // Handle the exception
+            throw new \Exception('Failed to retrieve masterUuid: ' . $e->getMessage());
+        }
+
+        //get masterUuid from event
+        $eventMasterUuid = null;
+
+
+        // Create a new Guzzle HTTP client
+        $client = new \GuzzleHttp\Client();
+
+        // Define the data for the request
+        $data = [
+            'ServiceId' => $event->id,
+            'Service' => 'frontend',
+        ];
+
+        try {
+            $response = $client->post('http://' . env('GENERAL_IP') . ':6000/getMasterUuid', [
+                'json' => $data
+            ]);
+
+            // Get the response body
+            $body = $response->getBody();
+
+            \Log::info('UUID Response Body: ' . $body);
+
+            // Decode the JSON response
+            $json = json_decode($body, true);
+
+            // Get the MASTERUUID from the response
+            $eventMasterUuid = $json['UUID'];
+
+            \Log::info('masterUuid: ' . $eventMasterUuid);
+
+            // Now you can use $masterUuid for whatever you need
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            // Send logs to ControlRoom
+            $this->rabbitMQService->sendLogEntryToTopic('get_UUID', 'Error: ' . $e->getMessage(), true);
+
+            // Handle the exception
+            throw new \Exception('Failed to retrieve masterUuid: ' . $e->getMessage());
+        }
+
+
+
         // Create XML message
         $xmlMessage = new \SimpleXMLElement('<attendance/>');
         $xmlMessage->addChild('routing_key', 'attendance.frontend');
         $xmlMessage->addChild('crud_operation', 'create');
         $xmlMessage->addChild('id', $attendance->id);
-        $xmlMessage->addChild('user_id', $user->id);
-        $xmlMessage->addChild('event_id', $eventId);
+        $xmlMessage->addChild('user_id', $userMasterUuid);
+        $xmlMessage->addChild('event_id', $eventMasterUuid);
 
         // Convert XML to string
         $message = $xmlMessage->asXML();

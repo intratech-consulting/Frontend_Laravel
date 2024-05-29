@@ -86,52 +86,82 @@
         <div class="form-group">
             <label for="name">Naam</label>
             <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
+            @error('name')
+            <span class="error-message">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="form-group">
             <label for="email">Email</label>
             <input id="email" type="email" name="email" value="{{ old('email') }}" required>
+            @error('email')
+            <span class="error-message">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="form-group">
             <label for="telephone">Telefoon</label>
             <input id="telephone" type="text" name="telephone" value="{{ old('telephone') }}" required>
+            @error('telephone')
+            <span class="error-message">{{ $message }}</span>
+            @enderror
         </div>
 
          <div class="form-group">
             <label for="logo">Logo</label>
             <input id="logo" type="file" name="logo" accept="image/*">
             <small class="error-message">{{ $errors->first('logo') }}</small>
+             @error('logo')
+             <span class="error-message">{{ $message }}</span>
+             @enderror
         </div>
 
         <div class="form-group">
             <label for="street">Straat</label>
             <input id="street" type="text" name="street" value="{{ old('street') }}" required>
+            @error('street')
+            <span class="error-message">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="form-group">
             <label for="house_number">Huisnummer</label>
             <input id="house_number" type="text" name="house_number" value="{{ old('house_number') }}" required>
+            @error('house_number')
+            <span class="error-message">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="form-group">
             <label for="city">Stad</label>
             <input id="city" type="text" name="city" value="{{ old('city') }}" required>
+            @error('city')
+            <span class="error-message">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="form-group">
             <label for="zip">Postcode</label>
             <input id="zip" type="text" name="zip" value="{{ old('zip') }}" required>
+            @error('zip')
+            <span class="error-message">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="form-group">
             <label for="state">Provincie</label>
             <input id="state" type="text" name="state" value="{{ old('state') }}" required>
+            @error('state')
+            <span class="error-message">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="form-group">
             <label for="country">Land</label>
             <input id="country" type="text" name="country" value="{{ old('country') }}" required>
+            @error('country')
+            <span class="error-message">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="form-group">
@@ -148,11 +178,17 @@
         <div class="form-group">
             <label for="password">Wachtwoord</label>
             <input id="password" type="password" name="password" required autocomplete="new-password">
+            @error('password')
+            <span class="error-message">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="form-group">
             <label for="password_confirmation">Wachtwoord bevestigen</label>
             <input id="password_confirmation" type="password" name="password_confirmation" required>
+            @error('password_confirmation')
+            <span class="error-message">{{ $message }}</span>
+            @enderror
         </div>
 
         <div class="button-container">

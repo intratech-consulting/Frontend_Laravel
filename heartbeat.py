@@ -5,6 +5,7 @@ from datetime import datetime
 import logging
 
 TEAM = 'frontend'
+GENERAL_IP
 
 def main(timestamp):
     global TEAM
@@ -58,7 +59,7 @@ def main(timestamp):
         logger.error('XML is not valid')
 
     credentials = pika.PlainCredentials('user', 'password')
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='10.2.160.51', credentials=credentials))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=GENERAL_IP, credentials=credentials))
     channel = connection.channel()
 
     channel.queue_declare(queue='heartbeat_queue', durable=True)
