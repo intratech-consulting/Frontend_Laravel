@@ -69,6 +69,7 @@ class EventRegistrationController extends Controller
         ]);
 
         \Log::info('Attendance created: ' . $attendance);
+        \Log::info('AttendanceID: ' . $attendance->id);
 
         $event->available_seats -= 1;
         $event->save();
@@ -126,7 +127,7 @@ class EventRegistrationController extends Controller
 
         // Define the data for the request
         $data = [
-            'ServiceId' => $event->id,
+            'ServiceId' => $eventId,
             'Service' => 'frontend',
         ];
 
@@ -146,7 +147,7 @@ class EventRegistrationController extends Controller
             // Get the MASTERUUID from the response
             $eventMasterUuid = $json['UUID'];
 
-            \Log::info('get masterUuid: ' . $eventMasterUuid);
+            \Log::info('get event masterUuid: ' . $eventMasterUuid);
 
             // Now you can use $masterUuid for whatever you need
         } catch (\GuzzleHttp\Exception\RequestException $e) {
@@ -158,15 +159,23 @@ class EventRegistrationController extends Controller
             throw new \Exception('Failed to retrieve masterUuid: ' . $e->getMessage());
         }
 
+        \Log::info('DEBUG 1');
+
         //create masterUuid from attendance
         $attendanceMasterUuid = null;
 
+        \Log::info('DEBUG 2');
+
         $client = new \GuzzleHttp\Client();
+
+        \Log::info('DEBUG 3');
 
         $data = [
             'ServiceId' => $attendance->id,
             'Service' => 'frontend',
         ];
+
+        \Log::info('DEBUG 4');
 
         try {
             \Log::info('create attendance masterUuid: ' . $data);
