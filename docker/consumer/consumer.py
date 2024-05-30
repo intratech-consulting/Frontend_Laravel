@@ -1,5 +1,4 @@
 import json
-import colorlog
 import requests
 import json
 import uuid
@@ -8,47 +7,13 @@ import xml.etree.ElementTree as ET
 import mysql.connector
 from datetime import datetime
 import bcrypt
-import logging
-
-def configure_logger(logger):
-    # Set level for the logger
-    logger.setLevel(logging.DEBUG)
-
-    # Create a color formatter
-    formatter = colorlog.ColoredFormatter(
-        '%(log_color)s%(asctime)s:%(levelname)s:%(name)s:%(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S',
-        log_colors={
-            'DEBUG': 'cyan',
-            'INFO': 'green',
-            'WARNING': 'yellow',
-            'ERROR': 'red',
-            'CRITICAL': 'red,bg_white',
-        },
-    )
-
-    # Create a stream handler and set the formatter
-    handler = logging.StreamHandler()
-    handler.setFormatter(formatter)
-
-    # Add the handler to the logger
-    logger.addHandler(handler)
-
-
-def init_logger(name):
-    logger = logging.getLogger(name)
-    configure_logger(logger)
-    return logger
-
-log = init_logger(__name__)
 
 GENERAL_IP=
 
-log.info(f"Starting consumer... with GENERAL_IP: {GENERAL_IP}")
+print(f"Starting consumer... with GENERAL_IP: {GENERAL_IP}")
 
 def create_user(user_data):
     global mysql_connection, mysql_cursor
-    log.debug(f"Creating user: {user_data}, {mysql_connection}, {mysql_cursor}")
     try:
         default_password = "azerty123"
         hashed_password = bcrypt.hashpw(default_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -58,7 +23,6 @@ def create_user(user_data):
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         persoonlijkId = get_next_persoonlijk_id()
-        log.debug(f"Next persoonlijkId: {persoonlijkId}")
 
         user_values = (
             persoonlijkId,
@@ -75,20 +39,17 @@ def create_user(user_data):
             user_data['house_number'],
             user_data.get('company_email', None),
             user_data.get('company_id', None),
-            user_data['user_role'],
-            user_data['invoice'],
+            user_data['user_role'] if user_data.get('user_role') else 'individual',
+            user_data['invoice'] if user_data.get('invoice') else 'No',
             user_data['calendar_link'],
             hashed_password,
             now,
             now
         )
-        log.debug(f"User data: {user_values}")
-        sql_with_values = mysql_cursor.mogrify(sql, user_values)
-        log.debug(f"Executing SQL with values: {sql_with_values}")
 
         mysql_cursor.execute(sql, user_values)
         mysql_connection.commit()
-        log.info("User inserted successfully!")
+        print("User inserted successfully!")
 
         # MasterUuid
         masterUuid_url = f"http://{GENERAL_IP}:6000/addServiceId"
@@ -103,12 +64,11 @@ def create_user(user_data):
             'Content-type': 'application/json',
             'Accept': 'application/json'
         }
-        log.debug(f"uid: {user_data['id']}")
         response = requests.post(masterUuid_url, headers=uid_headers, data=masterUuid_payload)
-        log.debug(response)
+        print(response)
 
     except mysql.connector.Error as error:
-        log.error("Failed to insert user: %s", error)
+        print("Failed to insert user: %s", error)
         mysql_connection.rollback()
 
 
