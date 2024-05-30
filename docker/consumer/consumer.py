@@ -52,13 +52,12 @@ def create_user(user_data):
     try:
         default_password = "azerty123"
         hashed_password = bcrypt.hashpw(default_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-
         hashed_password = hashed_password.replace('$2b$', '$2y$', 1)
 
-        sql = "INSERT INTO users (id, first_name, last_name, email, telephone, birthday, country, state, city, zip, street, house_number, company_email, company_id, user_role, invoice, calendar_link, password, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        sql = (f"INSERT INTO users (id, first_name, last_name, email, telephone, birthday, country, state, city, zip, street, house_number, company_email, company_id, user_role, invoice, calendar_link, password, created_at, updated_at)
+               VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
 
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
         persoonlijkId = get_next_persoonlijk_id()
         log.debug(f"Next persoonlijkId: {persoonlijkId}")
 
@@ -85,14 +84,14 @@ def create_user(user_data):
             now
         )
         log.debug(f"User data: {user_values}")
+        sql_with_values = mysql_cursor.mogrify(sql, user_values)
+        log.debug(f"Executing SQL with values: {sql_with_values}")
 
-        log.debug(f"Executing SQL: {sql}")
         mysql_cursor.execute(sql, user_values)
         mysql_connection.commit()
         log.info("User inserted successfully!")
 
-
-        #MasterUuid
+        # MasterUuid
         masterUuid_url = f"http://{GENERAL_IP}:6000/addServiceId"
         masterUuid_payload = json.dumps(
             {
@@ -101,17 +100,18 @@ def create_user(user_data):
                 "ServiceId": f"{persoonlijkId}"
             }
         )
-        uid_headers={
-        'Content-type':'application/json',
-        'Accept':'application/json'
+        uid_headers = {
+            'Content-type': 'application/json',
+            'Accept': 'application/json'
         }
         log.debug(f"uid: {user_data['id']}")
-        response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
+        response = requests.post(masterUuid_url, headers=uid_headers, data=masterUuid_payload)
         log.debug(response)
 
     except mysql.connector.Error as error:
-        log.error("Failed to insert user:", error)
+        log.error("Failed to insert user: %s", error)
         mysql_connection.rollback()
+
 
 
 def update_user(user_data):
