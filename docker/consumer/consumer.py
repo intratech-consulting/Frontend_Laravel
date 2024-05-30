@@ -48,7 +48,7 @@ log.info(f"Starting consumer... with GENERAL_IP: {GENERAL_IP}")
 
 def create_user(user_data):
     global mysql_connection, mysql_cursor
-    log.debug(f"Creating user: {user_data}")
+    log.debug(f"Creating user: {user_data}, {mysql_connection}, {mysql_cursor}")
     try:
         default_password = "azerty123"
         hashed_password = bcrypt.hashpw(default_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -88,6 +88,7 @@ def create_user(user_data):
         )
         log.debug(f"User data: {user_values}")
 
+        log.debug(f"Executing SQL: {sql}")
         mysql_cursor.execute(sql, user_values)
         mysql_connection.commit()
         log.info("User inserted successfully!")
@@ -111,8 +112,9 @@ def create_user(user_data):
         log.debug(response)
 
     except mysql.connector.Error as error:
-        mysql_connection.rollback()
         log.error("Failed to insert user:", error)
+        mysql_connection.rollback()
+
 
 def update_user(user_data):
     try:
