@@ -94,7 +94,7 @@ class EventRegistrationController extends Controller
             // Get the response body
             $body = $response->getBody();
 
-            \Log::info('UUID Response Body: ' . $body);
+            \Log::info('get UUID Response Body: ' . $body);
 
             // Decode the JSON response
             $json = json_decode($body, true);
@@ -102,7 +102,7 @@ class EventRegistrationController extends Controller
             // Get the MASTERUUID from the response
             $userMasterUuid = $json['UUID'];
 
-            \Log::info('masterUuid: ' . $userMasterUuid);
+            \Log::info('get masterUuid: ' . $userMasterUuid);
 
             // Now you can use $masterUuid for whatever you need
         } catch (\GuzzleHttp\Exception\RequestException $e) {
@@ -134,7 +134,7 @@ class EventRegistrationController extends Controller
             // Get the response body
             $body = $response->getBody();
 
-            \Log::info('UUID Response Body: ' . $body);
+            \Log::info('get UUID Response Body: ' . $body);
 
             // Decode the JSON response
             $json = json_decode($body, true);
@@ -142,7 +142,7 @@ class EventRegistrationController extends Controller
             // Get the MASTERUUID from the response
             $eventMasterUuid = $json['UUID'];
 
-            \Log::info('masterUuid: ' . $eventMasterUuid);
+            \Log::info('get masterUuid: ' . $eventMasterUuid);
 
             // Now you can use $masterUuid for whatever you need
         } catch (\GuzzleHttp\Exception\RequestException $e) {
@@ -177,7 +177,7 @@ class EventRegistrationController extends Controller
             // Get the response body
             $body = $response->getBody();
 
-            \Log::info('UUID Response Body: ' . $body);
+            \Log::info('create UUID Response Body: ' . $body);
 
             // Decode the JSON response
             $json = json_decode($body, true);
@@ -185,7 +185,7 @@ class EventRegistrationController extends Controller
             // Get the MASTERUUID from the response
             $attendanceMasterUuid = $json['MasterUuid'];
 
-            \Log::info('attendance masterUuid: ' . $attendanceMasterUuid);
+            \Log::info('create attendance masterUuid: ' . $attendanceMasterUuid);
 
             // Now you can use $masterUuid for whatever you need
         } catch (\GuzzleHttp\Exception\RequestException $e) {
