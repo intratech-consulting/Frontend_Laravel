@@ -47,6 +47,7 @@ GENERAL_IP=
 log.info(f"Starting consumer... with GENERAL_IP: {GENERAL_IP}")
 
 def create_user(user_data):
+    global mysql_connection, mysql_cursor
     log.debug(f"Creating user: {user_data}")
     try:
         default_password = "azerty123"
