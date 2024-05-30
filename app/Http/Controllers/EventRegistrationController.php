@@ -159,30 +159,20 @@ class EventRegistrationController extends Controller
             throw new \Exception('Failed to retrieve masterUuid: ' . $e->getMessage());
         }
 
-        \Log::info('DEBUG 1');
-
         //create masterUuid from attendance
         $attendanceMasterUuid = null;
 
-        \Log::info('DEBUG 2');
-
         $client = new \GuzzleHttp\Client();
-
-        \Log::info('DEBUG 3');
 
         $data = [
             'ServiceId' => $attendance->id,
             'Service' => 'frontend',
         ];
 
-        \Log::info('DEBUG 4');
-
         try {
             $response = $client->post('http://' . env('GENERAL_IP') . ':6000/createMasterUuid', [
                 'json' => $data
             ]);
-
-            \Log::info('DEBUG 5');
 
             // Get the response body
             $body = $response->getBody();
