@@ -36,6 +36,7 @@ class EventRegistrationController extends Controller
 
             return response()->json(['message' => 'Message sent successfully'], 200);
         } catch (\Exception $e) {
+            \Log::error('Error sending message to RabbitMQ: ' . $e->getMessage());
             $this->rabbitMQService->sendLogEntryToTopic('send_event_to_queue', 'Event registration message not sent: ' . $e->getMessage(), true);
             return response()->json(['error' => $e->getMessage()], 500);
         }
@@ -106,6 +107,7 @@ class EventRegistrationController extends Controller
 
             // Now you can use $masterUuid for whatever you need
         } catch (\GuzzleHttp\Exception\RequestException $e) {
+            \Log::error('Failed to retrieve masterUuid: ' . $e->getMessage());
             // Send logs to ControlRoom
             $this->rabbitMQService->sendLogEntryToTopic('get_UUID', 'Error: ' . $e->getMessage(), true);
 
@@ -146,6 +148,7 @@ class EventRegistrationController extends Controller
 
             // Now you can use $masterUuid for whatever you need
         } catch (\GuzzleHttp\Exception\RequestException $e) {
+            \Log::error('Failed to retrieve masterUuid: ' . $e->getMessage());
             // Send logs to ControlRoom
             $this->rabbitMQService->sendLogEntryToTopic('get_UUID', 'Error: ' . $e->getMessage(), true);
 
@@ -190,6 +193,7 @@ class EventRegistrationController extends Controller
 
             // Now you can use $masterUuid for whatever you need
         } catch (\GuzzleHttp\Exception\RequestException $e) {
+            \Log::error('Failed to retrieve masterUuid: ' . $e->getMessage());
             // Send logs to ControlRoom
             $this->rabbitMQService->sendLogEntryToTopic('get_UUID', 'Error: ' . $e->getMessage(), true);
 
@@ -197,7 +201,7 @@ class EventRegistrationController extends Controller
             throw new \Exception('Failed to retrieve masterUuid: ' . $e->getMessage());
         }
 
-
+        \Log::info("I don't know how, but we are here!");
         // Create XML message
         $xmlMessage = new \SimpleXMLElement('<attendance/>');
         $xmlMessage->addChild('routing_key', 'attendance.frontend');
