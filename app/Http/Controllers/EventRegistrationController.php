@@ -68,6 +68,8 @@ class EventRegistrationController extends Controller
             'event_id' => $eventId,
         ]);
 
+        \Log::info('Attendance created: ' . $attendance);
+
         $event->available_seats -= 1;
         $event->save();
         
@@ -103,7 +105,7 @@ class EventRegistrationController extends Controller
             // Get the MASTERUUID from the response
             $userMasterUuid = $json['UUID'];
 
-            \Log::info('get masterUuid: ' . $userMasterUuid);
+            \Log::info('get user masterUuid: ' . $userMasterUuid);
 
             // Now you can use $masterUuid for whatever you need
         } catch (\GuzzleHttp\Exception\RequestException $e) {
@@ -158,7 +160,7 @@ class EventRegistrationController extends Controller
 
         //haal id op van attendance
         $createdAttendance = Attendance::where('user_id', $user->id)
-                                        ->where('event_id', $event->id)
+                                        ->where('event_id', $eventId)
                                         ->first();
 
 
