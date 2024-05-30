@@ -30,6 +30,7 @@ class EventRegistrationController extends Controller
     {
         try {
             // stuur message naar rabbitMQ
+            \Log::info('Sending message to RabbitMQ' . $message . ' with routing key ' . $routingKey);
             $this->rabbitMQService->sendMessageToTopic($routingKey, $message);
             $this->rabbitMQService->sendLogEntryToTopic('send_event_to_queue', 'Event registration message sent successfully', false);
 
