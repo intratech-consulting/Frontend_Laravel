@@ -1,4 +1,5 @@
 import json
+import colorlog
 import requests
 import json
 import uuid
@@ -7,8 +8,43 @@ import xml.etree.ElementTree as ET
 import mysql.connector
 from datetime import datetime
 import bcrypt
+import logging
+
+def configure_logger(logger):
+    # Set level for the logger
+    logger.setLevel(logging.DEBUG)
+
+    # Create a color formatter
+    formatter = colorlog.ColoredFormatter(
+        '%(log_color)s%(asctime)s:%(levelname)s:%(name)s:%(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S',
+        log_colors={
+            'DEBUG': 'cyan',
+            'INFO': 'green',
+            'WARNING': 'yellow',
+            'ERROR': 'red',
+            'CRITICAL': 'red,bg_white',
+        },
+    )
+
+    # Create a stream handler and set the formatter
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+
+    # Add the handler to the logger
+    logger.addHandler(handler)
+
+
+def init_logger(name):
+    logger = logging.getLogger(name)
+    configure_logger(logger)
+    return logger
+
+log = init_logger(__name__)
 
 GENERAL_IP=
+
+log.info(f"Starting consumer... with GENERAL_IP: {GENERAL_IP}")
 
 def create_user(user_data):
     try:
