@@ -158,19 +158,13 @@ class EventRegistrationController extends Controller
             throw new \Exception('Failed to retrieve masterUuid: ' . $e->getMessage());
         }
 
-        //haal id op van attendance
-        $createdAttendance = Attendance::where('user_id', $user->id)
-                                        ->where('event_id', $eventId)
-                                        ->first();
-
-
         //create masterUuid from attendance
         $attendanceMasterUuid = null;
 
         $client = new \GuzzleHttp\Client();
 
         $data = [
-            'ServiceId' => $createdAttendance->id,
+            'ServiceId' => $attendance->id,
             'Service' => 'frontend',
         ];
 
