@@ -175,14 +175,14 @@ class EventRegistrationController extends Controller
             'Service' => 'frontend',
         ];
 
-        \Log::info('create attendance masterUuid: ' . $data);
-
         \Log::info('DEBUG 4');
 
         try {
             $response = $client->post('http://' . env('GENERAL_IP') . ':6000/createMasterUuid', [
                 'json' => $data
             ]);
+
+            \Log::info('DEBUG 5');
 
             // Get the response body
             $body = $response->getBody();
