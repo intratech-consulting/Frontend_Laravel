@@ -16,7 +16,6 @@ jobs:
       SSH_USER: ${{ secrets.SSH_USER }}
       SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      SSH_PORT: ${{ secrets.SSH_PORT }}
       APP_DEBUG: ${{ secrets.APP_DEBUG }}
       APP_ENV: ${{ secrets.APP_ENV }}
 
@@ -42,10 +41,14 @@ jobs:
           ls -l
           docker compose down
           git checkout main
-          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R group2:group2 .
           git clean -fd
           git stash
           git pull
+          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R group2:group2 .
+          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/production/frontend/Frontend_Laravel/storage
+          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/production/frontend/Frontend_Laravel/public
+          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod -R 775 /home/***/production/frontend/Frontend_Laravel/storage
+          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod -R 775 /home/***/production/frontend/Frontend_Laravel/public
           cp -f .env.example .env
           sed -i 's/DB_HOST=.*/DB_HOST=${{ secrets.SSH_HOST }}/' .env
           sed -i 's/GENERAL_IP=.*/GENERAL_IP=${{ secrets.SSH_HOST }}/' .env
@@ -56,9 +59,5 @@ jobs:
           sed -i '0,/GENERAL_IP.*/s//GENERAL_IP = "${{ secrets.SSH_HOST }}"/' heartbeat.py
           docker compose up --build -d
           docker exec -it frontend_laravel-php-fpm-1 bash -c "cd laravel/current && composer install && composer update && npm install"
-          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/production/frontend/Frontend_Laravel/storage
-          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chown -R www-data:www-data /home/***/production/frontend/Frontend_Laravel/public
-          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod -R 775 /home/***/production/frontend/Frontend_Laravel/storage
-          echo ${{ secrets.SSH_PASSWORD }} | sudo -S chmod -R 775 /home/***/production/frontend/Frontend_Laravel/public
           nohup npm run dev > /dev/null 2>&1 &
           ENDSSH
