@@ -47,6 +47,7 @@ GENERAL_IP=
 log.info(f"Starting consumer... with GENERAL_IP: {GENERAL_IP}")
 
 def create_user(user_data):
+    log.debug(f"Creating user: {user_data}")
     try:
         default_password = "azerty123"
         hashed_password = bcrypt.hashpw(default_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -60,6 +61,7 @@ def create_user(user_data):
         now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
         persoonlijkId = get_next_persoonlijk_id()
+        log.debug(f"Next persoonlijkId: {persoonlijkId}")
 
         user_values = (
             persoonlijkId,
@@ -83,10 +85,11 @@ def create_user(user_data):
             now,
             now
         )
+        log.debug(f"User data: {user_values}")
 
         mysql_cursor.execute(sql, user_values)
         mysql_connection.commit()
-        print("User inserted successfully!")
+        log.info("User inserted successfully!")
 
 
         #MasterUuid
@@ -102,13 +105,13 @@ def create_user(user_data):
         'Content-type':'application/json',
         'Accept':'application/json'
         }
-        print(f"uid: {user_data['id']}")
+        log.debug(f"uid: {user_data['id']}")
         response = requests.request("POST", masterUuid_url, headers=uid_headers ,data=masterUuid_payload)
-        print(response)
+        log.debug(response)
 
     except mysql.connector.Error as error:
         mysql_connection.rollback()
-        print("Failed to insert user:", error)
+        log.error("Failed to insert user:", error)
 
 def update_user(user_data):
     try:
